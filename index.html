@@ -49,6 +49,7 @@
             </td>
           </tr>
         </tbody></table>
+        
         <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
             <tr>
             <td style="padding:20px;width:100%;vertical-align:middle">
@@ -60,7 +61,50 @@
           </tr>
         </tbody></table>
         <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+          <tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
+            <td style="padding:20px;width:25%;vertical-align:middle">
+              <div class="one">
+                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
+                <source src="images/hypernerf_after.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+                </video></div>
+                <img
+                  src='images/oracle_guidance.png'
+                  width="160" xmlns="http://www.w3.org/2000/svg"
+                > 
+              </div>
+              <script type="text/javascript">
+                function hypernerf_start() {
+                  document.getElementById('hypernerf_image').style.opacity = "1";
+                }
 
+                function hypernerf_stop() {
+                  document.getelementbyid('hypernerf_image').style.opacity = "0";
+                }
+                hypernerf_stop()
+              </script>
+            </td>
+            <td style="padding:20px;width:75%;vertical-align:middle">
+              <a href="https://openreview.net/forum?id=rNh4AhVdPW5">
+                <papertitle>Oracle Guided Image Synthesis with Relative Queries</papertitle>
+              </a>
+              <br>
+                <strong>Alec Helbling</strong>,
+                Christopher John Rozell,
+                Matthew O'Shaughnessy,
+                Kion Fallah
+              <br>
+              <em>International Conference on Learning Representations</em>
+              <br>
+              <em>Workshop on Deep Generative Models for Highly Structured Data</em>, 2022
+              <br>
+              <a href="https://openreview.net/forum?id=rNh4AhVdPW5">OpenReview</a>
+              <p></p>
+              <p>We developed a method for guiding the generative process of VAEs by asking user's relative queries of of the form <em>"do you prefer image a or image b?"</em>
+              From these queries we could infer what images a user prefers and use that understanding of user preferences to generate reccomendation images with our VAE. 
+              </p>
+            </td>
+          </tr>
           <tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
             <td style="padding:20px;width:25%;vertical-align:middle">
               <div class="one">
@@ -98,8 +142,62 @@
               <p></p>
               <p>We applied convolutional neural networks to the problem of predicting whether or not a protein-ligan pair are likely to bind. We developed methods of visualizing and understanding the learned structure of these models. </p>
             </td>
-          </tr> 
+          </tr>
+          
         </tbody></table>
+
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+          <tr>
+          <td style="padding:20px;width:100%;vertical-align:middle">
+            <heading>Projects</heading>
+          </td>
+          </tr>
+      </tbody></table>
+      <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+        <tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
+          <td style="padding:20px;width:25%;vertical-align:middle">
+            <div class="one">
+              <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
+              <source src="images/hypernerf_after.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+              </video></div>
+              <img
+                src='images/WebsiteLogo.gif'
+                width="160" xmlns="http://www.w3.org/2000/svg"
+              > 
+            </div>
+            <script type="text/javascript">
+              function hypernerf_start() {
+                document.getElementById('hypernerf_image').style.opacity = "1";
+              }
+
+              function hypernerf_stop() {
+                document.getelementbyid('hypernerf_image').style.opacity = "0";
+              }
+              hypernerf_stop()
+            </script>
+          </td>
+          <td style="padding:20px;width:75%;vertical-align:middle">
+            <a href="https://openreview.net/forum?id=rNh4AhVdPW5">
+              <papertitle>Manim Machine Learning</papertitle>
+            </a>
+            <br>
+            <strong>Alec Helbling</strong>
+            <br>
+            <a href="https://github.com/helblazer811/ManimMachineLearning">Github</a> <span>    (Currently 52 	&#11088;)</span>
+            <br>
+            <p></p>
+            <p>
+              Manim Machine Learning is a project focused on providing animations and visualizations of 
+              common machine learning concepts with the <a href="https://www.manim.community/">Manim Community Library</a>.
+              I want this project to be a compilation of primitive visualizations that can be easily combined to 
+              create videos about complex machine learning concepts. Additionally, we want to provide a set of 
+              abstractions which allow users to focus on explanations instead of software engineering. 
+            </p>
+          </td>
+        </tr>
+      </tbody></table>
+      
         <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
           <tr>
             <td style="padding:0px;text-align:center;">
