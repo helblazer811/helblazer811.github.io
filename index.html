@@ -30,9 +30,14 @@
   }
 };
 	
-manim_ml_star_count = getStar("helblazer811/ManimMachineLearning");
-console.log("ManimML star count: " + manim_ml_star_count);
-document.getElementById("manimml_star_count").innerText = "" + manim_ml_star_count;
+getStar("helblazer811/ManimMachineLearning").then(
+  (count) => {
+	document.getElementById("manimml_star_count").innerText = "" + count;
+        console.log("ManimML star count: " + manim_ml_star_count);
+  }	
+);
+
+	
 </script>
   
   <link rel="stylesheet" type="text/css" href="stylesheet.css">
