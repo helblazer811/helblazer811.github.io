@@ -19,7 +19,7 @@
  * Parse the star of the given github repository.
  * @param {string} repo Github repo address
  */
-export const getStar = async repo => {
+ const getStar = async repo => {
   const res = await fetch(`https://api.github.com/repos/${repo}`);
   const dataJSON = await res.json();
 
