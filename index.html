@@ -93,7 +93,49 @@ getStar("3dmol/3Dmol.js").then(
         </tbody></table>
         <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
 
+		<tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
+            <td style="padding:20px;width:25%;vertical-align:middle">
+              <div class="one">
+                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
+                <source src="images/hypernerf_after.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+                </video></div>
+                <img
+                  src='images/SimpleHarmFilter.png'
+                  width="160" xmlns="http://www.w3.org/2000/svg"
+                > 
+              </div>
+              <script type="text/javascript">
+                function hypernerf_start() {
+                  document.getElementById('hypernerf_image').style.opacity = "1";
+                }
 
+                function hypernerf_stop() {
+                  document.getelementbyid('hypernerf_image').style.opacity = "0";
+                }
+                hypernerf_stop()
+              </script>
+            </td>
+            <td style="padding:20px;width:75%;vertical-align:middle">
+              <a href="https://arxiv.org/abs/2306.17108">
+                <papertitle>
+			LLM Self Defense: By Self Examination, LLMs Know They Are Being Tricked
+		</papertitle>
+              </a>
+              <br>
+                <strong>Alec Helbling</strong>,
+		Mansi Phute,
+		Matthew Hull,
+		Duen Horng (Polo) Chau
+	      <br>
+              <a href="https://arxiv.org/abs/2308.07308">Arxiv</a>
+		<br>
+              <p>
+		We showed that it is possible to defend against adversarial attacks on language models, which encourage LLMs to produce harmful content, by simply filtering out this content using another instance of an LLM. 
+              </p>
+            </td>
+          </tr>
+		
 		<tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
             <td style="padding:20px;width:25%;vertical-align:middle">
               <div class="one">
