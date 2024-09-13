@@ -42,7 +42,13 @@ getStar("3dmol/3Dmol.js").then(
 	document.getElementById("3dmol_star_count").innerText = "" + count;
   }	
 );
-	
+
+getStar("https://github.com/poloclub/transformer-explainerg").then(
+  (count) => {
+	document.getElementById("transformer_explainer_star_count").innerText = "" + count;
+        console.log("Transformer Explainer star count: " + transformer_explainer_star_count);
+  }	
+);
 
 	
 </script>
