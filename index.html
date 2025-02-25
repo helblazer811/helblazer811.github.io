@@ -51,6 +51,14 @@ getStar("poloclub/transformer-explainer").then(
 );
 
 	
+getStar("helblazer811/ConceptAttention").then(
+  (count) => {
+	document.getElementById("concept_attention_star_count").innerText = "" + count;
+        console.log("ConceptAttention star count: " + transformer_explainer_star_count);
+  }	
+);
+
+	
 </script>
   
   <link rel="stylesheet" type="text/css" href="stylesheet.css">
