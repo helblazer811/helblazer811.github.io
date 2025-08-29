@@ -115,6 +115,51 @@ getStar("helblazer811/ConceptAttention").then(
                 Your browser does not support the video tag.
                 </video></div>
                 <img
+                  src='images/DiffusionExplorer'
+                  width="160" xmlns="http://www.w3.org/2000/svg"
+                > 
+              </div>
+              <script type="text/javascript">
+                function hypernerf_start() {
+                  document.getElementById('hypernerf_image').style.opacity = "1";
+                }
+
+                function hypernerf_stop() {
+                  document.getelementbyid('hypernerf_image').style.opacity = "0";
+                }
+                hypernerf_stop()
+              </script>
+            </td>
+            <td style="padding:20px;width:75%;vertical-align:middle">
+              <a href="https://arxiv.org/abs/2507.01178">
+                <papertitle>
+					Diffusion Explorer: Interactive Exploration of Diffusion Models
+				</papertitle>
+              </a>
+              <br>
+		<strong> Alec Helbling</strong>,
+		Duen Horng (Polo) Chau
+	      <br>
+ 	      <em>IEEE VIS</em>, 2025
+	      <br>
+                <a href="https://github.com/helblazer811/Diffusion-Explorer">Github</a> <span> (Currently <span id="diffusion_explorer_star_count"> </span> &#11088;)  </span>
+               <br>
+              <a href="https://arxiv.org/abs/2507.01178">Arxiv</a>
+		<br>
+              <p>
+				We developed an interactive tool for explaining the geometric properties of diffusion models. 
+              </p>
+            </td>
+          </tr>
+
+		<tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
+            <td style="padding:20px;width:25%;vertical-align:middle">
+              <div class="one">
+                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
+                <source src="images/hypernerf_after.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+                </video></div>
+                <img
                   src='images/ConceptAttention.png'
                   width="160" xmlns="http://www.w3.org/2000/svg"
                 > 
