@@ -58,6 +58,14 @@ getStar("helblazer811/ConceptAttention").then(
   }	
 );
 
+
+getStar("helblazer811/DiffusionExplorer").then(
+  (count) => {
+	document.getElementById("diffusion_explorer_star_count").innerText = "" + count;
+        console.log("DiffusionExplorer star count: " + diffusion_explorer_star_count);
+  }	
+);
+
 	
 </script>
   
@@ -145,7 +153,9 @@ getStar("helblazer811/ConceptAttention").then(
                 <a href="https://github.com/helblazer811/Diffusion-Explorer">Github</a> <span> (Currently <span id="diffusion_explorer_star_count"> </span> &#11088;)  </span>
                <br>
               <a href="https://arxiv.org/abs/2507.01178">Arxiv</a>
-		<br>
+				<br>
+				<a href="https://alechelbling.com/Diffusion-Explorer/">Tool</a>
+				<br>
               <p>
 				We developed an interactive tool for explaining the geometric properties of diffusion models. 
               </p>
