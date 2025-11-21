@@ -1,0 +1,217 @@
+<!DOCTYPE HTML>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <title>Blog - Alec Helbling</title>
+
+  <meta name="author" content="Alec Helbling">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  <link rel="icon" type="image/png" href="images/seal_icon.png">
+  <style>
+    .blog-container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .year-section {
+      margin-bottom: 60px;
+    }
+
+    .year-section h2 {
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      font-size: 22px;
+      font-weight: normal;
+    }
+
+    .posts-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .post-card {
+      flex: 0 0 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .media-frame {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background-color: #f0f0f0;
+      overflow: hidden;
+      margin-bottom: 12px;
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .media-frame img,
+    .media-frame video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .post-card:hover .media-frame img {
+      opacity: 0.9;
+    }
+
+    .post-title {
+      font-family: 'Lato', Verdana, Helvetica, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      margin: 0;
+      color: #1772d0;
+    }
+
+    .post-card a:hover .post-title {
+      color: #f09228;
+    }
+
+    .post-meta {
+      color: #666;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    @media (min-width: 600px) {
+      .post-card {
+        flex: 0 0 calc(50% - 15px);
+      }
+    }
+
+    @media (min-width: 900px) {
+      .post-card {
+        flex: 0 0 calc(33.333% - 20px);
+      }
+    }
+
+    .back-link {
+      margin-bottom: 40px;
+    }
+  </style>
+  <script>
+    /**
+     * Load and render blog posts organized by year
+     */
+    let blogPosts = [];
+    fetch('data/blog_posts.json')
+      .then(response => response.json())
+      .then(data => {
+        blogPosts = data;
+        renderBlogPostsByYear();
+      })
+      .catch(error => console.error('Error loading blog posts:', error));
+
+    /**
+     * Render blog posts grouped by year
+     */
+    function renderBlogPostsByYear() {
+      const container = document.getElementById('blog-posts-container');
+      if (!container) return;
+
+      // Group posts by year in descending order
+      const postsByYear = {};
+      blogPosts.forEach(post => {
+        if (!postsByYear[post.year]) {
+          postsByYear[post.year] = [];
+        }
+        postsByYear[post.year].push(post);
+      });
+
+      // Sort years in descending order
+      const sortedYears = Object.keys(postsByYear).sort((a, b) => b - a);
+
+      sortedYears.forEach(year => {
+        // Create year section
+        const yearSection = document.createElement('section');
+        yearSection.className = 'year-section';
+
+        const heading = document.createElement('h2');
+        heading.innerText = year;
+        yearSection.appendChild(heading);
+
+        // Create posts grid for this year
+        const grid = document.createElement('div');
+        grid.className = 'posts-grid';
+
+        postsByYear[year].forEach(post => {
+          const article = document.createElement('article');
+          article.className = 'post-card';
+
+          const link = document.createElement('a');
+          link.href = post.link;
+
+          const mediaFrame = document.createElement('div');
+          mediaFrame.className = 'media-frame';
+
+          if (post.imageUrl) {
+            const img = document.createElement('img');
+            img.src = post.imageUrl;
+            img.alt = post.title;
+            mediaFrame.appendChild(img);
+          } else if (post.videoUrl) {
+            const video = document.createElement('video');
+            video.autoplay = true;
+            video.muted = true;
+            video.loop = true;
+            video.playsinline = true;
+            const source = document.createElement('source');
+            source.src = post.videoUrl;
+            source.type = 'video/mp4';
+            video.appendChild(source);
+            mediaFrame.appendChild(video);
+          }
+
+          const title = document.createElement('div');
+          title.className = 'post-title';
+          title.innerText = post.title;
+
+          link.appendChild(mediaFrame);
+          link.appendChild(title);
+          article.appendChild(link);
+
+          const meta = document.createElement('div');
+          meta.className = 'post-meta';
+          const date = new Date(post.date);
+          meta.innerText = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+          article.appendChild(meta);
+
+          grid.appendChild(article);
+        });
+
+        yearSection.appendChild(grid);
+        container.appendChild(yearSection);
+      });
+    }
+  </script>
+</head>
+
+<body>
+  <table style="width:100%;max-width:960px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+    <tr style="padding:0px">
+      <td style="padding:0px">
+        <div class="blog-container">
+          <div class="back-link">
+            <a href="index.html">← Back to Home</a>
+          </div>
+
+          <p style="text-align:center">
+            <name>Blog</name>
+          </p>
+          <p style="text-align:center">Thoughts, videos, and updates.</p>
+
+          <div id="blog-posts-container"></div>
+
+        </div>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>

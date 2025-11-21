@@ -63,14 +63,279 @@ getStar("helblazer811/Diffusion-Explorer").then(
   (count) => {
 	document.getElementById("diffusion_explorer_star_count").innerText = "" + count;
         console.log("DiffusionExplorer star count: " + diffusion_explorer_star_count);
-  }	
+  }
 );
 
-	
+/**
+ * Load publications from JSON and render them
+ */
+let publications = [];
+fetch('data/publications.json')
+  .then(response => response.json())
+  .then(data => {
+    publications = data;
+    renderPublications();
+    fetchGitHubStars();
+  })
+  .catch(error => console.error('Error loading publications:', error));
+
+/**
+ * Render publications from JSON data
+ */
+function renderPublications() {
+  const container = document.getElementById('publications-container');
+  if (!container) return;
+
+  publications.forEach(pub => {
+    const tr = document.createElement('tr');
+    tr.setAttribute('onmouseout', 'hypernerf_stop()');
+    tr.setAttribute('onmouseover', 'hypernerf_start()');
+
+    const imageTd = document.createElement('td');
+    imageTd.style.padding = '20px';
+    imageTd.style.width = '25%';
+    imageTd.style.verticalAlign = 'middle';
+
+    const imageDiv = document.createElement('div');
+    imageDiv.className = 'one';
+
+    const videoDiv = document.createElement('div');
+    videoDiv.className = 'two';
+    videoDiv.id = `hypernerf_image_${pub.id}`;
+    const video = document.createElement('video');
+    video.width = '100%';
+    video.height = '100%';
+    video.muted = true;
+    video.autoplay = true;
+    video.loop = true;
+    const source = document.createElement('source');
+    source.src = pub.videoUrl;
+    source.type = 'video/mp4';
+    video.appendChild(source);
+    videoDiv.appendChild(video);
+
+    const img = document.createElement('img');
+    img.src = pub.imageUrl;
+    img.width = '160';
+
+    imageDiv.appendChild(videoDiv);
+    imageDiv.appendChild(img);
+    imageTd.appendChild(imageDiv);
+
+    const contentTd = document.createElement('td');
+    contentTd.style.padding = '20px';
+    contentTd.style.width = '75%';
+    contentTd.style.verticalAlign = 'middle';
+
+    let contentHTML = '';
+
+    // Title link
+    const primaryLink = pub.links.arxiv || pub.links.openreview || pub.links.github || '#';
+    contentHTML += `<a href="${primaryLink}"><papertitle>${pub.title}</papertitle></a><br>`;
+
+    // Authors
+    contentHTML += pub.authors.map(author => {
+      return author.isHighlighted ? `<strong>${author.name}</strong>` : author.name;
+    }).join(', ') + '<br>';
+
+    // Venue and year
+    contentHTML += `<em>${pub.venue}</em>, ${pub.year}<br>`;
+
+    // Awards
+    if (pub.awards && pub.awards.length > 0) {
+      pub.awards.forEach(award => {
+        contentHTML += `🏆 ${award}<br>`;
+      });
+    }
+
+    // Links
+    if (pub.githubRepo) {
+      contentHTML += `<a href="${pub.links.github}">Github</a> <span>(Currently <span id="${pub.id}_star_count"></span> &#11088;)</span><br>`;
+    }
+    if (pub.links.arxiv && !pub.githubRepo) {
+      contentHTML += `<a href="${pub.links.arxiv}">Arxiv</a><br>`;
+    } else if (pub.links.arxiv) {
+      contentHTML += `<a href="${pub.links.arxiv}">Arxiv</a><br>`;
+    }
+    if (pub.links.openreview) {
+      contentHTML += `<a href="${pub.links.openreview}">OpenReview</a><br>`;
+    }
+    if (pub.links.tool) {
+      contentHTML += `<a href="${pub.links.tool}">Tool</a><br>`;
+    }
+
+    // Description
+    contentHTML += `<p>${pub.description}</p>`;
+
+    contentTd.innerHTML = contentHTML;
+    tr.appendChild(imageTd);
+    tr.appendChild(contentTd);
+    container.appendChild(tr);
+  });
+}
+
+/**
+ * Fetch GitHub star counts for publications
+ */
+function fetchGitHubStars() {
+  publications.forEach(pub => {
+    if (pub.githubRepo) {
+      getStar(pub.githubRepo).then(count => {
+        const element = document.getElementById(`${pub.id}_star_count`);
+        if (element) {
+          element.innerText = count;
+        }
+      });
+    }
+  });
+}
+
+/**
+ * Load and render recent blog posts
+ */
+let blogPosts = [];
+fetch('data/blog_posts.json')
+  .then(response => response.json())
+  .then(data => {
+    blogPosts = data;
+    renderRecentBlogPosts();
+  })
+  .catch(error => console.error('Error loading blog posts:', error));
+
+/**
+ * Render recent blog posts (top 3)
+ */
+function renderRecentBlogPosts() {
+  const container = document.getElementById('recent-blog-posts-container');
+  if (!container) return;
+
+  const recentPosts = blogPosts.slice(0, 3);
+
+  recentPosts.forEach(post => {
+    const article = document.createElement('article');
+    article.className = 'post-card';
+
+    const link = document.createElement('a');
+    link.href = post.link;
+
+    const mediaFrame = document.createElement('div');
+    mediaFrame.className = 'media-frame';
+
+    if (post.imageUrl) {
+      const img = document.createElement('img');
+      img.src = post.imageUrl;
+      img.alt = post.title;
+      mediaFrame.appendChild(img);
+    } else if (post.videoUrl) {
+      const video = document.createElement('video');
+      video.autoplay = true;
+      video.muted = true;
+      video.loop = true;
+      video.playsinline = true;
+      const source = document.createElement('source');
+      source.src = post.videoUrl;
+      source.type = 'video/mp4';
+      video.appendChild(source);
+      mediaFrame.appendChild(video);
+    }
+
+    const title = document.createElement('div');
+    title.className = 'post-title';
+    title.innerText = post.title;
+
+    link.appendChild(mediaFrame);
+    link.appendChild(title);
+    article.appendChild(link);
+
+    const meta = document.createElement('div');
+    meta.className = 'post-meta';
+    const date = new Date(post.date);
+    meta.innerText = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    article.appendChild(meta);
+
+    container.appendChild(article);
+  });
+}
+
+
 </script>
   
   <link rel="stylesheet" type="text/css" href="stylesheet.css">
   <link rel="icon" type="image/png" href="images/seal_icon.png">
+  <style>
+    .recent-posts-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 20px;
+    }
+
+    .post-card {
+      flex: 0 0 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .media-frame {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background-color: #f0f0f0;
+      overflow: hidden;
+      margin-bottom: 12px;
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .media-frame img,
+    .media-frame video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .post-card:hover .media-frame img {
+      opacity: 0.9;
+    }
+
+    .post-title {
+      font-family: 'Lato', Verdana, Helvetica, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      margin: 0;
+      color: #1772d0;
+    }
+
+    .post-card a:hover .post-title {
+      color: #f09228;
+    }
+
+    .post-meta {
+      color: #666;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    @media (min-width: 600px) {
+      .post-card {
+        flex: 0 0 calc(50% - 15px);
+      }
+    }
+
+    @media (min-width: 900px) {
+      .post-card {
+        flex: 0 0 calc(33.333% - 20px);
+      }
+    }
+
+    .view-all-link {
+      display: inline-block;
+      margin-top: 20px;
+      text-align: center;
+      width: 100%;
+    }
+  </style>
 </head>
 
 <body>
@@ -94,7 +359,8 @@ getStar("helblazer811/Diffusion-Explorer").then(
                 <a href="data/CV.pdf">CV</a> &nbsp/&nbsp
                 <a href="https://scholar.google.com/citations?user=hwY7DI8AAAAJ&hl=en">Google Scholar</a> &nbsp/&nbsp
                 <a href="https://twitter.com/alec_helbling">Twitter</a> &nbsp/&nbsp
-                <a href="https://github.com/helblazer811/">Github</a>
+                <a href="https://github.com/helblazer811/">Github</a> &nbsp/&nbsp
+                <a href="blog.html">Blog</a>
               </p>
             </td>
             <td style="padding:2.5%;width:40%;max-width:40%">
@@ -106,6 +372,24 @@ getStar("helblazer811/Diffusion-Explorer").then(
         <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
             <tr>
             <td style="padding:20px;width:100%;vertical-align:middle">
+              <heading>Recent Blog Posts</heading>
+            </td>
+          </tr>
+        </tbody></table>
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tr>
+            <td style="padding:20px;width:100%;vertical-align:middle">
+              <div class="recent-posts-grid" id="recent-blog-posts-container"></div>
+              <div class="view-all-link">
+                <a href="blog.html">View all posts →</a>
+              </div>
+            </td>
+          </tr>
+        </tbody></table>
+
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+            <tr>
+            <td style="padding:20px;width:100%;vertical-align:middle">
               <heading>Research</heading>
               <p>
 			  I am most interested in generative models, multimodal machine learning, and ML interpretability.
@@ -113,712 +397,7 @@ getStar("helblazer811/Diffusion-Explorer").then(
             </td>
           </tr>
         </tbody></table>
-        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-
-		<tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
-            <td style="padding:20px;width:25%;vertical-align:middle">
-              <div class="one">
-                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
-                <source src="images/hypernerf_after.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-                </video></div>
-                <img
-                  src='images/ConceptAttention.png'
-                  width="160" xmlns="http://www.w3.org/2000/svg"
-                > 
-              </div>
-              <script type="text/javascript">
-                function hypernerf_start() {
-                  document.getElementById('hypernerf_image').style.opacity = "1";
-                }
-
-                function hypernerf_stop() {
-                  document.getelementbyid('hypernerf_image').style.opacity = "0";
-                }
-                hypernerf_stop()
-              </script>
-            </td>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="https://arxiv.org/abs/2502.04320">
-                <papertitle>
-			ConceptAttention: Diffusion Transformers Learn Highly Interpretable Features
-		</papertitle>
-              </a>
-              <br>
-		<strong> Alec Helbling</strong>,
-		Tuna Han Salih Meral,
-		Benjamin Hoover, 
-		Pinar Yanardag,
-		Duen Horng (Polo) Chau
-	      <br>
- 	      <em>ICML</em>, 2025
-	      <br>
- 	      🏆 Oral Presentation (top 1% of 12,000 submissions)
-		  <br>
-		  🏆 Best Paper Award CVPR 2025 Workshop on Visual Concepts
-	      <br>
-                <a href="https://github.com/helblazer811/ConceptAttention">Github</a> <span> (Currently <span id="concept_attention_star_count"> </span> &#11088;)  </span>
-               <br>
-              <a href="https://arxiv.org/abs/2502.04320">Arxiv</a>
-		<br>
-              <p>
-		We developed an approach to interpreting the intermediate representations of diffusion transformer models. 
-              </p>
-            </td>
-          </tr>
-
-		
-		<tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
-            <td style="padding:20px;width:25%;vertical-align:middle">
-              <div class="one">
-                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
-                <source src="images/hypernerf_after.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-                </video></div>
-                <img
-                  src='images/WebsiteLogo.gif'
-                  width="160" xmlns="http://www.w3.org/2000/svg"
-                > 
-              </div>
-              <script type="text/javascript">
-                function hypernerf_start() {
-                  document.getElementById('hypernerf_image').style.opacity = "1";
-                }
-
-                function hypernerf_stop() {
-                  document.getelementbyid('hypernerf_image').style.opacity = "0";
-                }
-                hypernerf_stop()
-              </script>
-            </td>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="https://arxiv.org/abs/2306.17108">
-                <papertitle>
-ManimML: Communicating Machine Learning Architectures with Animation</papertitle>
-              </a>
-              <br>
-                <strong>Alec Helbling</strong>,
-		Duen Horng (Polo) Chau
-	      <br>
- 	      <em>IEEE VIS: Visualization and Visual Analytics</em>, 2023
-  	      <br>
- 	      🏆 Won Best Poster Award! 
-	      <br>
-              <a href="https://arxiv.org/abs/2306.17108">Arxiv</a>
-		<br>
-                <a href="https://github.com/helblazer811/ManimMachineLearning">Github</a> <span> (Currently <span id="manimml_star_count"> </span> &#11088;)  </span>
-               <br>
-              <p>
-		      We developed ManimML, an open-source Python library for easily generating animations of ML algorithms directly from code.  ManimML has a familiar syntax for specifying neural networks that mimics popular deep learning frameworks like Pytorch. A user can take a preexisting neural network architecture and easily write a specification for an animation in ManimML, which will then automatically compose animations for different components of the system into a final animation of the entire neural network. 
-              </p>
-            </td>
-          </tr>
-
-			
-		<tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
-            <td style="padding:20px;width:25%;vertical-align:middle">
-              <div class="one">
-                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
-                <source src="images/hypernerf_after.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-                </video></div>
-                <img
-                  src='images/DiffusionExplorer.png'
-                  width="160" xmlns="http://www.w3.org/2000/svg"
-                > 
-              </div>
-              <script type="text/javascript">
-                function hypernerf_start() {
-                  document.getElementById('hypernerf_image').style.opacity = "1";
-                }
-
-                function hypernerf_stop() {
-                  document.getelementbyid('hypernerf_image').style.opacity = "0";
-                }
-                hypernerf_stop()
-              </script>
-            </td>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="https://arxiv.org/abs/2507.01178">
-                <papertitle>
-					Diffusion Explorer: Interactive Exploration of Diffusion Models
-				</papertitle>
-              </a>
-              <br>
-		<strong> Alec Helbling</strong>,
-		Duen Horng (Polo) Chau
-	      <br>
- 	      <em>IEEE VIS</em>, 2025
-	      <br>
-                <a href="https://github.com/helblazer811/Diffusion-Explorer">Github</a> <span> (Currently <span id="diffusion_explorer_star_count"> </span> &#11088;)  </span>
-               <br>
-              <a href="https://arxiv.org/abs/2507.01178">Arxiv</a>
-				<br>
-				Link to <a href="https://alechelbling.com/Diffusion-Explorer/">Tool</a>
-				<br>
-              <p>
-				We developed an interactive tool for explaining the geometric properties of diffusion models. 
-              </p>
-            </td>
-          </tr>
-
-		<tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
-            <td style="padding:20px;width:25%;vertical-align:middle">
-              <div class="one">
-                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
-                <source src="images/hypernerf_after.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-                </video></div>
-                <img
-                  src='images/TransformerExplainer.gif'
-                  width="160" xmlns="http://www.w3.org/2000/svg"
-                > 
-              </div>
-              <script type="text/javascript">
-                function hypernerf_start() {
-                  document.getElementById('hypernerf_image').style.opacity = "1";
-                }
-
-                function hypernerf_stop() {
-                  document.getelementbyid('hypernerf_image').style.opacity = "0";
-                }
-                hypernerf_stop()
-              </script>
-            </td>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="https://arxiv.org/abs/2408.04619">
-                <papertitle>
-			Transformer Explainer: Interactive Learning of Text-Generative Models
-		</papertitle>
-              </a>
-              <br>
-		Aeree Cho (*), 
-		Grace C Kim (*), 
-		Alexander Karpekov (*), 
-		<strong>Alec Helbling</strong>, 
-		Zijie J Wang, 
-		Seongmin Lee, 
-		Benjamin Hoover, 
-		Duen Horng Chau
-	      <br>
- 	      <em>IEEE VIS: Visualization & Visual Analytics</em>, 2024
-		   <br>
- 	      🏆 Best Poster Award
-	      <br>
-	      <br>
-		
-                <a href="https://github.com/poloclub/transformer-explainer">Github</a> <span> (Currently <span id="transformer_explainer_star_count"> </span> &#11088;)  </span>
-               <br>
-              <a href="https://arxiv.org/abs/2408.04619">Arxiv</a>
-		<br>
-              <p>
-		We developed an interactive tool for explaining the transformer architecture. 
-              </p>
-            </td>
-          </tr>
-
-		<tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
-            <td style="padding:20px;width:25%;vertical-align:middle">
-              <div class="one">
-                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
-                <source src="images/hypernerf_after.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-                </video></div>
-                <img
-                  src='images/NonRobustFeatures.png'
-                  width="160" xmlns="http://www.w3.org/2000/svg"
-                > 
-              </div>
-              <script type="text/javascript">
-                function hypernerf_start() {
-                  document.getElementById('hypernerf_image').style.opacity = "1";
-                }
-
-                function hypernerf_stop() {
-                  document.getelementbyid('hypernerf_image').style.opacity = "0";
-                }
-                hypernerf_stop()
-              </script>
-            </td>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="https://arxiv.org/abs/2407.06372">
-                <papertitle>
-			Non-Robust Features are Not Always Useful in One-Class Classification
-		</papertitle>
-              </a>
-              <br>
-		Matthew Lau, 
-		Haoran Wang,
-		<strong>Alec Helbling</strong>, 
-		Matthew Hull, 
-		ShengYun Peng, 
-		Martin Andreoni, 
-		Willian T. Lunardi, 
-		Wenke Lee
-	      <br>
- 	      <em>CVPR, Workshop on Visual Anomaly and Novelty Detection</em>, 2024
-	      <br>
-              <a href="https://arxiv.org/abs/2407.06372">Arxiv</a>
-		<br>
-              <p>
-		Analysis of the adversarial robustness of one-class classifiers for anomoly detection.
-              </p>
-            </td>
-          </tr>
-
-		<tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
-            <td style="padding:20px;width:25%;vertical-align:middle">
-              <div class="one">
-                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
-                <source src="images/hypernerf_after.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-                </video></div>
-                <img
-                  src='images/ClickDiffusion.png'
-                  width="160" xmlns="http://www.w3.org/2000/svg"
-                > 
-              </div>
-              <script type="text/javascript">
-                function hypernerf_start() {
-                  document.getElementById('hypernerf_image').style.opacity = "1";
-                }
-
-                function hypernerf_stop() {
-                  document.getelementbyid('hypernerf_image').style.opacity = "0";
-                }
-                hypernerf_stop()
-              </script>
-            </td>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="https://arxiv.org/abs/2404.04376">
-                <papertitle>
-			ClickDiffusion: Harnessing LLMs for Interactive Precise Image Editing
-		</papertitle>
-              </a>
-              <br>
-		<strong>Alec Helbling</strong>, 
-		Seongmin Lee, 
-		Polo Chau
-	      <br>
- 	      <em>CVPR, Workshop on AI for Content Creation</em>, 2024
-	      <br>
-              <a href="https://arxiv.org/abs/2404.04376">Arxiv</a>
-		<br>
-              <p>
-		ClickDiffusion is an approach to image editing that aggregates a combination of mouse feedback and text instructions. 
-              </p>
-            </td>
-          </tr>
-
-
-
-<tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
-            <td style="padding:20px;width:25%;vertical-align:middle">
-              <div class="one">
-                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
-                <source src="images/hypernerf_after.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-                </video></div>
-                <img
-                  src='images/LLMAttributor.png'
-                  width="160" xmlns="http://www.w3.org/2000/svg"
-                > 
-              </div>
-              <script type="text/javascript">
-                function hypernerf_start() {
-                  document.getElementById('hypernerf_image').style.opacity = "1";
-                }
-
-                function hypernerf_stop() {
-                  document.getelementbyid('hypernerf_image').style.opacity = "0";
-                }
-                hypernerf_stop()
-              </script>
-            </td>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="https://arxiv.org/abs/2404.01361">
-                <papertitle>
-			LLM Attributor: Interactive Visual Attribution for LLM Generation
-		</papertitle>
-              </a>
-              <br>
-		Seongmin Lee, 
-		Zijie J Wang, 
-		Aishwarya Chakravarthy, 
-		<strong> Alec Helbling</strong>, 
-		ShengYun Peng,
-		Mansi Phute, 
-		Duen Horng Chau, 
-		Minsuk Kahng
-	      <br>
- 	      <em>IEEE VIS: Visualization and Visual Analytics</em>, 2024
-	      <br>
-              <a href="https://arxiv.org/abs/2404.01361">Arxiv</a>
-		<br>
-              <p>
-		We developed a visual interface for attributing LLM generations to their sources. 
-              </p>
-            </td>
-          </tr>
-
-		
-		<tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
-            <td style="padding:20px;width:25%;vertical-align:middle">
-              <div class="one">
-                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
-                <source src="images/hypernerf_after.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-                </video></div>
-                <img
-                  src='images/MobileFittingRoom.png'
-                  width="160" xmlns="http://www.w3.org/2000/svg"
-                > 
-              </div>
-              <script type="text/javascript">
-                function hypernerf_start() {
-                  document.getElementById('hypernerf_image').style.opacity = "1";
-                }
-
-                function hypernerf_stop() {
-                  document.getelementbyid('hypernerf_image').style.opacity = "0";
-                }
-                hypernerf_stop()
-              </script>
-            </td>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="https://arxiv.org/abs/2402.01877">
-                <papertitle>
-			Mobile Fitting Room: On-device Virtual Try-on via Diffusion Models
-		</papertitle>
-              </a>
-              <br>
-		Justin Blalock, 
-		David Munechika,
-		Harsha Karanth, 
-		<strong>Alec Helbling </strong>, 
-		Pratham Mehta, 
-		Seongmin Lee, 
-		Duen Horng Chau
-	      <br>
- 	      <em>CVPR 2024, Workshop on Virtual Try-on</em>, 2023
-  	      <br>
- 	      Invited Talk!
-	      <br>
-              <a href="https://arxiv.org/abs/2402.01877">Arxiv</a>
-		<br>
-              <p>
-		We developed an on-device approach to virtual try-on using diffusion models. 
-              </p>
-            </td>
-          </tr>
-
-
-		<tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
-            <td style="padding:20px;width:25%;vertical-align:middle">
-              <div class="one">
-                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
-                <source src="images/hypernerf_after.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-                </video></div>
-                <img
-                  src='images/ObjectComposerTeaser.png'
-                  width="160" xmlns="http://www.w3.org/2000/svg"
-                > 
-              </div>
-              <script type="text/javascript">
-                function hypernerf_start() {
-                  document.getElementById('hypernerf_image').style.opacity = "1";
-                }
-
-                function hypernerf_stop() {
-                  document.getelementbyid('hypernerf_image').style.opacity = "0";
-                }
-                hypernerf_stop()
-              </script>
-            </td>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="https://arxiv.org/abs/2310.06968">
-                <papertitle>
-			ObjectComposer: Consistent Generation of Multiple Objects Without Fine-tuning
-		</papertitle>
-              </a>
-              <br>
-                <strong>Alec Helbling</strong>,
-		Evan Montoya,
-		Duen Horng (Polo) Chau
-	      <br>
-              <a href="https://arxiv.org/abs/2310.06968">Arxiv</a>
-		<br>
-              <p>
-		We developed a technique for generating image compositions containing multiple concepts that are faithful to reference images. 
-              </p>
-            </td>
-          </tr>
-		
-
-		<tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
-            <td style="padding:20px;width:25%;vertical-align:middle">
-              <div class="one">
-                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
-                <source src="images/hypernerf_after.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-                </video></div>
-                <img
-                  src='images/SimpleHarmFilter.png'
-                  width="160" xmlns="http://www.w3.org/2000/svg"
-                > 
-              </div>
-              <script type="text/javascript">
-                function hypernerf_start() {
-                  document.getElementById('hypernerf_image').style.opacity = "1";
-                }
-
-                function hypernerf_stop() {
-                  document.getelementbyid('hypernerf_image').style.opacity = "0";
-                }
-                hypernerf_stop()
-              </script>
-            </td>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="https://arxiv.org/abs/2308.07308">
-                <papertitle>
-			LLM Self Defense: By Self Examination, LLMs Know They Are Being Tricked
-		</papertitle>
-              </a>
-              <br>
-                <strong>Alec Helbling</strong>,
-		Mansi Phute,
-		Matthew Hull,
-		Duen Horng (Polo) Chau
-	      <br>
-              <a href="https://arxiv.org/abs/2308.07308">Arxiv</a>
-		<br>
-              <p>
-		We showed that it is possible to defend against adversarial attacks on language models, which encourage LLMs to produce harmful content, by simply filtering out this content using another instance of an LLM. 
-              </p>
-            </td>
-          </tr>
-		
-
-		<tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
-            <td style="padding:20px;width:25%;vertical-align:middle">
-              <div class="one">
-                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
-                <source src="images/hypernerf_after.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-                </video></div>
-                <img
-                  src='images/ManifoldCLR Figure Single Narrow.png'
-                  width="160" xmlns="http://www.w3.org/2000/svg"
-                > 
-              </div>
-              <script type="text/javascript">
-                function hypernerf_start() {
-                  document.getElementById('hypernerf_image').style.opacity = "1";
-                }
-
-                function hypernerf_stop() {
-                  document.getelementbyid('hypernerf_image').style.opacity = "0";
-                }
-                hypernerf_stop()
-              </script>
-            </td>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="https://arxiv.org/abs/2306.13544">
-                <papertitle>Manifold Contrastive Learning with Variational Lie Group Operators </papertitle>
-              </a>
-              <br>
-                Kion Fallah,
-                <strong>Alec Helbling</strong>,
-		Kyle A. Johnsen,
-                Christopher John Rozell
-	      <br>
- 	      Preprint 2023
-  	      <br>
-              <a href="https://arxiv.org/abs/2306.13544">Arxiv</a>
-              <p></p>
-              <p>We developed a self-supervised learning approach derived from Lie algebra to apply automatic data augmentations to image data that stay on low-dimensional manifolds in high-dimensional latent representations. 
-              </p>
-            </td>
-          </tr>
-		
-		
-		
-	<tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
-            <td style="padding:20px;width:25%;vertical-align:middle">
-              <div class="one">
-                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
-                <source src="images/hypernerf_after.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-                </video></div>
-                <img
-                  src='images/QueryUpdate.png'
-                  width="160" xmlns="http://www.w3.org/2000/svg"
-                > 
-              </div>
-              <script type="text/javascript">
-                function hypernerf_start() {
-                  document.getElementById('hypernerf_image').style.opacity = "1";
-                }
-
-                function hypernerf_stop() {
-                  document.getelementbyid('hypernerf_image').style.opacity = "0";
-                }
-                hypernerf_stop()
-              </script>
-            </td>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="https://arxiv.org/abs/2304.00185">
-                <papertitle>PrefGen: Preference Guided Image Generation with Relative Attributes</papertitle>
-              </a>
-              <br>
-                <strong>Alec Helbling</strong>,
-                Christopher John Rozell,
-                Matthew O'Shaughnessy,
-                Kion Fallah
-	      <br>
- 	      Preprint 2023
-  	      <br>
-              <a href="https://arxiv.org/abs/2304.00185">Arxiv</a>
-              <p></p>
-              <p>We developed a method for controlling the features of images generating with a GAN by asking user's relative queries of of the form <em>"do you prefer image a or image b?"</em>
-              From these queries we could infer what images a user prefers and use that understanding of user preferences to generate reccomendation images.
-              </p>
-            </td>
-          </tr>
-          <tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
-            <td style="padding:20px;width:25%;vertical-align:middle">
-              <div class="one">
-                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
-                <source src="images/hypernerf_after.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-                </video></div>
-                <img
-                  src='images/oracle_guidance.png'
-                  width="160" xmlns="http://www.w3.org/2000/svg"
-                > 
-              </div>
-              <script type="text/javascript">
-                function hypernerf_start() {
-                  document.getElementById('hypernerf_image').style.opacity = "1";
-                }
-
-                function hypernerf_stop() {
-                  document.getelementbyid('hypernerf_image').style.opacity = "0";
-                }
-                hypernerf_stop()
-              </script>
-            </td>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="https://openreview.net/forum?id=rNh4AhVdPW5">
-                <papertitle>Oracle Guided Image Synthesis with Relative Queries</papertitle>
-              </a>
-              <br>
-                <strong>Alec Helbling</strong>,
-                Christopher John Rozell,
-                Matthew O'Shaughnessy,
-                Kion Fallah
-              <br>
-              <em>International Conference on Learning Representations</em>
-              <br>
-              <em>Workshop on Deep Generative Models for Highly Structured Data</em>, 2022
-              <br>
-              <a href="https://openreview.net/forum?id=rNh4AhVdPW5">OpenReview</a>
-              <p></p>
-              <p>We developed a method for guiding the generative process of VAEs by asking user's relative queries of of the form <em>"do you prefer image a or image b?"</em>
-              From these queries we could infer what images a user prefers and use that understanding of user preferences to generate reccomendation images with our VAE. 
-              </p>
-            </td>
-          </tr>
-          <tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
-            <td style="padding:20px;width:25%;vertical-align:middle">
-              <div class="one">
-                <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
-                <source src="images/hypernerf_after.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-                </video></div>
-                <img src='images/protein.png' width="160">
-              </div>
-              <script type="text/javascript">
-                function hypernerf_start() {
-                  document.getElementById('hypernerf_image').style.opacity = "1";
-                }
-
-                function hypernerf_stop() {
-                  document.getelementbyid('hypernerf_image').style.opacity = "0";
-                }
-                hypernerf_stop()
-              </script>
-            </td>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <a href="https://arxiv.org/abs/1803.02398">
-                <papertitle>Visualizing Convolutional Neural Network Protein-Ligand Scoring</papertitle>
-              </a>
-              <br>
-			  Joshua Hochuli, 
-              <strong>Alec Helbling</strong>,
-			  Tamar Skaist,
-			  Matthew Ragoza,
-			  David Ryan Koes
-              <br>
-              <em>Journal of Molecular Graphics and Modeling</em>, 2018 
-              <br>
-              <a href="https://arxiv.org/abs/1803.02398">arXiv</a>
-              <p></p>
-              <p>We applied convolutional neural networks to the problem of predicting whether or not a protein-ligan pair are likely to bind. We developed methods of visualizing and understanding the learned structure of these models. </p>
-            </td>
-          </tr>
-          
-        </tbody></table>
-
-        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-          <tr>
-          <td style="padding:20px;width:100%;vertical-align:middle">
-            <heading>Projects</heading>
-          </td>
-          </tr>
-      </tbody></table>
-      <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-
-
-	 <tr onmouseout="hypernerf_stop()" onmouseover="hypernerf_start()">
-          <td style="padding:20px;width:25%;vertical-align:middle">
-            <div class="one">
-              <div class="two" id='hypernerf_image'><video  width=100% height=100% muted autoplay loop>
-              <source src="images/hypernerf_after.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-              </video></div>
-              <img
-                src='images/3dmol_image.png'
-                width="160" xmlns="http://www.w3.org/2000/svg"
-              > 
-            </div>
-            <script type="text/javascript">
-              function hypernerf_start() {
-                document.getElementById('hypernerf_image').style.opacity = "1";
-              }
-
-              function hypernerf_stop() {
-                document.getelementbyid('hypernerf_image').style.opacity = "0";
-              }
-              hypernerf_stop()
-            </script>
-          </td>
-          <td style="padding:20px;width:75%;vertical-align:middle">
-            <a href="https://github.com/3dmol/3Dmol.js">
-              <papertitle>3Dmol.js</papertitle>
-            </a>
-	    <br>
-            <a href="https://github.com/3dmol/3Dmol.js">Github</a> <span> (Currently <span id="3dmol_star_count"> </span> &#11088;)  </span>
-            <br>
-            <p></p>
-            <p>
-              I made significant contributions to 3Dmol.js while working with David Koes at the University of Pittsburgh Department of Computational and Systems Biology. 3Dmol.js is a JavaScript tool allowing biologists to easily visualize 3D molecular structures like proteins.  
-            </p>
-          </td>
-        </tr>
-	      
-      </tbody></table>
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody id="publications-container"></tbody></table>
 
         <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
           <tr>
