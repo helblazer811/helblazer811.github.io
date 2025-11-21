@@ -1,0 +1,409 @@
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Lato Italic'), local('Lato-Italic'), url(https://fonts.gstatic.com/s/lato/v15/S6u8w4BMUTPHjxsAUi-qNiXg7eU0.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Lato Italic'), local('Lato-Italic'), url(https://fonts.gstatic.com/s/lato/v15/S6u8w4BMUTPHjxsAXC-qNiXg7Q.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url(https://fonts.gstatic.com/s/lato/v15/S6u_w4BMUTPHjxsI5wq_FQftx9897sxZ.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url(https://fonts.gstatic.com/s/lato/v15/S6u_w4BMUTPHjxsI5wq_Gwftx9897g.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v15/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v15/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Lato Bold'), local('Lato-Bold'), url(https://fonts.gstatic.com/s/lato/v15/S6u9w4BMUTPHh6UVSwaPGQ3q5d0N7w.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Lato Bold'), local('Lato-Bold'), url(https://fonts.gstatic.com/s/lato/v15/S6u9w4BMUTPHh6UVSwiPGQ3q5d0.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+a {
+  color: #1772d0;
+  text-decoration: none;
+}
+
+a:focus,
+a:hover {
+  color: #f09228;
+  text-decoration: none;
+}
+
+body,
+td,
+th,
+tr,
+p,
+a {
+  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+  font-size: 14px
+}
+
+strong {
+  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+heading {
+  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+  font-size: 22px;
+}
+
+papertitle {
+  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 700
+}
+
+name {
+  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+  font-size: 32px;
+}
+
+.one {
+  width: 160px;
+  height: 160px;
+  position: relative;
+}
+
+.two {
+  width: 160px;
+  height: 160px;
+  position: absolute;
+  transition: opacity .2s ease-in-out;
+  -moz-transition: opacity .2s ease-in-out;
+  -webkit-transition: opacity .2s ease-in-out;
+}
+
+.fade {
+  transition: opacity .2s ease-in-out;
+  -moz-transition: opacity .2s ease-in-out;
+  -webkit-transition: opacity .2s ease-in-out;
+}
+
+span.highlight {
+  background-color: #ffffd0;
+}
+
+/* Main page wrapper */
+.page-wrapper {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* Profile/Hero section */
+.profile-section {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 40px;
+  padding: 0 20px;
+}
+
+.profile-content {
+  flex: 1;
+}
+
+.profile-content .name-heading {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-content .bio-links {
+  text-align: center;
+}
+
+.profile-content .bio-links a {
+  margin: 0 5px;
+}
+
+/* Section header styling */
+.section-header {
+  padding: 20px;
+  width: 100%;
+}
+
+.section-header heading {
+  margin: 0;
+}
+
+/* Footer styling */
+.footer {
+  padding: 20px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.footer p {
+  margin: 10px 0;
+}
+
+.profile-photo {
+  width: 100%;
+  max-width: 200px;
+  display: block;
+  border-radius: 4px;
+}
+
+.profile-photo-link {
+  display: inline-block;
+}
+
+.profile-photo-cell {
+  text-align: center;
+}
+
+.recent-posts-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-bottom: 20px;
+  padding: 0 20px;
+}
+
+.post-card {
+  flex: 0 0 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.media-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #f0f0f0;
+  overflow: hidden;
+  margin-bottom: 12px;
+  border-radius: 4px;
+  position: relative;
+}
+
+.media-frame img,
+.media-frame video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.post-card:hover .media-frame img {
+  opacity: 0.9;
+}
+
+.post-title {
+  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+  color: #1772d0;
+}
+
+.post-card a:hover .post-title {
+  color: #f09228;
+}
+
+.post-meta {
+  color: #666;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.view-all-link {
+  display: inline-block;
+  margin-top: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .post-card {
+    flex: 0 0 calc(50% - 15px);
+  }
+}
+
+@media (min-width: 900px) {
+  .post-card {
+    flex: 0 0 calc(33.333% - 20px);
+  }
+}
+
+/* Publications container and items */
+.publications-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.publication-item {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.publication-item:last-child {
+  border-bottom: none;
+}
+
+.publication-image {
+  flex: 0 0 25%;
+  min-width: 160px;
+}
+
+.publication-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.publication-item:hover .publication-image img {
+  opacity: 0.9;
+}
+
+.publication-item:hover papertitle {
+  color: #f09228;
+}
+
+.publication-content {
+  flex: 1;
+  padding: 0;
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 767px) {
+  /* Profile section: stack bio and photo vertically */
+  .profile-section {
+    flex-direction: column;
+    align-items: center;
+    padding: 0 15px;
+  }
+
+  .profile-content {
+    width: 100%;
+  }
+
+  .profile-photo-cell {
+    width: 100% !important;
+    display: block;
+    padding: 20px 0 !important;
+  }
+
+  .profile-photo {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .one {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .one img {
+    width: 100%;
+    height: auto;
+    max-width: 300px;
+    display: block;
+  }
+
+  /* Section headers: adjust padding on mobile */
+  .section-header {
+    padding: 15px;
+  }
+
+  /* Recent blog posts: match section header padding on mobile */
+  .recent-posts-grid {
+    padding: 0 15px;
+  }
+
+  /* Publications container: match section header padding on mobile */
+  .publications-container {
+    padding: 0 15px;
+  }
+
+  /* Publication section: stack content and image vertically */
+  .publication-item {
+    flex-direction: column-reverse;
+    gap: 20px;
+  }
+
+  .publication-image {
+    flex: 1;
+    min-width: auto;
+  }
+
+  .publication-image img {
+    max-width: 100%;
+    margin: 0 auto;
+    display: block;
+  }
+
+  .publication-content {
+    flex: 1;
+  }
+
+  /* Footer: adjust padding on mobile */
+  .footer {
+    padding: 15px;
+  }
+
+  /* Adjust name font size for mobile */
+  name {
+    font-size: 24px;
+  }
+}

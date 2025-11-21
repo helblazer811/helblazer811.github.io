@@ -13,12 +13,12 @@
     "year": 2025,
     "description": "We developed an approach to interpreting the intermediate representations of diffusion transformer models.",
     "imageUrl": "images/ConceptAttention.png",
-    "videoUrl": "images/hypernerf_after.mp4",
     "links": {
       "arxiv": "https://arxiv.org/abs/2502.04320",
       "github": "https://github.com/helblazer811/ConceptAttention"
     },
     "githubRepo": "helblazer811/ConceptAttention",
+    "show_star_count": true,
     "awards": [
       "Oral Presentation (top 1% of 12,000 submissions)",
       "Best Paper Award CVPR 2025 Workshop on Visual Concepts"
@@ -35,12 +35,12 @@
     "year": 2023,
     "description": "We developed ManimML, an open-source Python library for easily generating animations of ML algorithms directly from code. ManimML has a familiar syntax for specifying neural networks that mimics popular deep learning frameworks like Pytorch. A user can take a preexisting neural network architecture and easily write a specification for an animation in ManimML, which will then automatically compose animations for different components of the system into a final animation of the entire neural network.",
     "imageUrl": "images/WebsiteLogo.gif",
-    "videoUrl": "images/hypernerf_after.mp4",
     "links": {
       "arxiv": "https://arxiv.org/abs/2306.17108",
       "github": "https://github.com/helblazer811/ManimMachineLearning"
     },
     "githubRepo": "helblazer811/ManimMachineLearning",
+    "show_star_count": true,
     "awards": [
       "Best Poster Award"
     ]
@@ -56,13 +56,13 @@
     "year": 2025,
     "description": "We developed an interactive tool for explaining the geometric properties of diffusion models.",
     "imageUrl": "images/DiffusionExplorer.png",
-    "videoUrl": "images/hypernerf_after.mp4",
     "links": {
       "arxiv": "https://arxiv.org/abs/2507.01178",
       "github": "https://github.com/helblazer811/Diffusion-Explorer",
       "tool": "https://alechelbling.com/Diffusion-Explorer/"
     },
     "githubRepo": "helblazer811/Diffusion-Explorer",
+    "show_star_count": true,
     "awards": []
   },
   {
@@ -82,12 +82,12 @@
     "year": 2024,
     "description": "We developed an interactive tool for explaining the transformer architecture.",
     "imageUrl": "images/TransformerExplainer.gif",
-    "videoUrl": "images/hypernerf_after.mp4",
     "links": {
       "arxiv": "https://arxiv.org/abs/2408.04619",
       "github": "https://github.com/poloclub/transformer-explainer"
     },
     "githubRepo": "poloclub/transformer-explainer",
+    "show_star_count": true,
     "awards": [
       "Best Poster Award"
     ]
@@ -109,7 +109,6 @@
     "year": 2024,
     "description": "Analysis of the adversarial robustness of one-class classifiers for anomaly detection.",
     "imageUrl": "images/NonRobustFeatures.png",
-    "videoUrl": "images/hypernerf_after.mp4",
     "links": {
       "arxiv": "https://arxiv.org/abs/2407.06372"
     },
@@ -128,7 +127,6 @@
     "year": 2024,
     "description": "ClickDiffusion is an approach to image editing that aggregates a combination of mouse feedback and text instructions.",
     "imageUrl": "images/ClickDiffusion.png",
-    "videoUrl": "images/hypernerf_after.mp4",
     "links": {
       "arxiv": "https://arxiv.org/abs/2404.04376"
     },
@@ -152,7 +150,6 @@
     "year": 2024,
     "description": "We developed a visual interface for attributing LLM generations to their sources.",
     "imageUrl": "images/LLMAttributor.png",
-    "videoUrl": "images/hypernerf_after.mp4",
     "links": {
       "arxiv": "https://arxiv.org/abs/2404.01361"
     },
@@ -175,7 +172,6 @@
     "year": 2024,
     "description": "We developed an on-device approach to virtual try-on using diffusion models.",
     "imageUrl": "images/MobileFittingRoom.png",
-    "videoUrl": "images/hypernerf_after.mp4",
     "links": {
       "arxiv": "https://arxiv.org/abs/2402.01877"
     },
@@ -196,7 +192,6 @@
     "year": 2023,
     "description": "We developed a technique for generating image compositions containing multiple concepts that are faithful to reference images.",
     "imageUrl": "images/ObjectComposerTeaser.png",
-    "videoUrl": "images/hypernerf_after.mp4",
     "links": {
       "arxiv": "https://arxiv.org/abs/2310.06968"
     },
@@ -216,7 +211,6 @@
     "year": 2023,
     "description": "We showed that it is possible to defend against adversarial attacks on language models, which encourage LLMs to produce harmful content, by simply filtering out this content using another instance of an LLM.",
     "imageUrl": "images/SimpleHarmFilter.png",
-    "videoUrl": "images/hypernerf_after.mp4",
     "links": {
       "arxiv": "https://arxiv.org/abs/2308.07308"
     },
@@ -236,7 +230,6 @@
     "year": 2023,
     "description": "We developed a self-supervised learning approach derived from Lie algebra to apply automatic data augmentations to image data that stay on low-dimensional manifolds in high-dimensional latent representations.",
     "imageUrl": "images/ManifoldCLR Figure Single Narrow.png",
-    "videoUrl": "images/hypernerf_after.mp4",
     "links": {
       "arxiv": "https://arxiv.org/abs/2306.13544"
     },
@@ -256,7 +249,6 @@
     "year": 2023,
     "description": "We developed a method for controlling the features of images generating with a GAN by asking users relative queries of the form \"do you prefer image a or image b?\" From these queries we could infer what images a user prefers and use that understanding of user preferences to generate recommendation images.",
     "imageUrl": "images/QueryUpdate.png",
-    "videoUrl": "images/hypernerf_after.mp4",
     "links": {
       "arxiv": "https://arxiv.org/abs/2304.00185"
     },
@@ -276,7 +268,6 @@
     "year": 2022,
     "description": "We developed a method for guiding the generative process of VAEs by asking users relative queries of the form \"do you prefer image a or image b?\" From these queries we could infer what images a user prefers and use that understanding of user preferences to generate recommendation images with our VAE.",
     "imageUrl": "images/oracle_guidance.png",
-    "videoUrl": "images/hypernerf_after.mp4",
     "links": {
       "openreview": "https://openreview.net/forum?id=rNh4AhVdPW5"
     },
@@ -297,7 +288,6 @@
     "year": 2018,
     "description": "We applied convolutional neural networks to the problem of predicting whether or not a protein-ligand pair are likely to bind. We developed methods of visualizing and understanding the learned structure of these models.",
     "imageUrl": "images/protein.png",
-    "videoUrl": "images/hypernerf_after.mp4",
     "links": {
       "arxiv": "https://arxiv.org/abs/1803.02398"
     },
@@ -315,11 +305,11 @@
     "year": 2024,
     "description": "I made significant contributions to 3Dmol.js while working with David Koes at the University of Pittsburgh Department of Computational and Systems Biology. 3Dmol.js is a JavaScript tool allowing biologists to easily visualize 3D molecular structures like proteins.",
     "imageUrl": "images/3dmol_image.png",
-    "videoUrl": "images/hypernerf_after.mp4",
     "links": {
       "github": "https://github.com/3dmol/3Dmol.js"
     },
     "githubRepo": "3dmol/3Dmol.js",
+    "show_star_count": true,
     "awards": []
   }
 ]

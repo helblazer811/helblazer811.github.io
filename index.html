@@ -29,42 +29,6 @@
     return '';
   }
 };
-	
-getStar("helblazer811/ManimMachineLearning").then(
-  (count) => {
-	document.getElementById("manimml_star_count").innerText = "" + count;
-        console.log("ManimML star count: " + manim_ml_star_count);
-  }	
-);
-
-getStar("3dmol/3Dmol.js").then(
-  (count) => {
-	document.getElementById("3dmol_star_count").innerText = "" + count;
-  }	
-);
-
-getStar("poloclub/transformer-explainer").then(
-  (count) => {
-	document.getElementById("transformer_explainer_star_count").innerText = "" + count;
-        console.log("Transformer Explainer star count: " + transformer_explainer_star_count);
-  }	
-);
-
-	
-getStar("helblazer811/ConceptAttention").then(
-  (count) => {
-	document.getElementById("concept_attention_star_count").innerText = "" + count;
-        console.log("ConceptAttention star count: " + transformer_explainer_star_count);
-  }	
-);
-
-
-getStar("helblazer811/Diffusion-Explorer").then(
-  (count) => {
-	document.getElementById("diffusion_explorer_star_count").innerText = "" + count;
-        console.log("DiffusionExplorer star count: " + diffusion_explorer_star_count);
-  }
-);
 
 /**
  * Load publications from JSON and render them
@@ -87,50 +51,31 @@ function renderPublications() {
   if (!container) return;
 
   publications.forEach(pub => {
-    const tr = document.createElement('tr');
-    tr.setAttribute('onmouseout', 'hypernerf_stop()');
-    tr.setAttribute('onmouseover', 'hypernerf_start()');
+    const pubItem = document.createElement('div');
+    pubItem.className = 'publication-item';
 
-    const imageTd = document.createElement('td');
-    imageTd.style.padding = '20px';
-    imageTd.style.width = '25%';
-    imageTd.style.verticalAlign = 'middle';
+    // Determine primary link once
+    const primaryLink = pub.links.arxiv || pub.links.openreview || pub.links.github || '#';
 
     const imageDiv = document.createElement('div');
-    imageDiv.className = 'one';
+    imageDiv.className = 'publication-image';
 
-    const videoDiv = document.createElement('div');
-    videoDiv.className = 'two';
-    videoDiv.id = `hypernerf_image_${pub.id}`;
-    const video = document.createElement('video');
-    video.width = '100%';
-    video.height = '100%';
-    video.muted = true;
-    video.autoplay = true;
-    video.loop = true;
-    const source = document.createElement('source');
-    source.src = pub.videoUrl;
-    source.type = 'video/mp4';
-    video.appendChild(source);
-    videoDiv.appendChild(video);
+    const imageLink = document.createElement('a');
+    imageLink.href = primaryLink;
 
     const img = document.createElement('img');
     img.src = pub.imageUrl;
-    img.width = '160';
+    img.alt = pub.title;
 
-    imageDiv.appendChild(videoDiv);
-    imageDiv.appendChild(img);
-    imageTd.appendChild(imageDiv);
+    imageLink.appendChild(img);
+    imageDiv.appendChild(imageLink);
 
-    const contentTd = document.createElement('td');
-    contentTd.style.padding = '20px';
-    contentTd.style.width = '75%';
-    contentTd.style.verticalAlign = 'middle';
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'publication-content';
 
     let contentHTML = '';
 
     // Title link
-    const primaryLink = pub.links.arxiv || pub.links.openreview || pub.links.github || '#';
     contentHTML += `<a href="${primaryLink}"><papertitle>${pub.title}</papertitle></a><br>`;
 
     // Authors
@@ -167,27 +112,39 @@ function renderPublications() {
     // Description
     contentHTML += `<p>${pub.description}</p>`;
 
-    contentTd.innerHTML = contentHTML;
-    tr.appendChild(imageTd);
-    tr.appendChild(contentTd);
-    container.appendChild(tr);
+    contentDiv.innerHTML = contentHTML;
+    pubItem.appendChild(imageDiv);
+    pubItem.appendChild(contentDiv);
+    container.appendChild(pubItem);
   });
 }
 
 /**
  * Fetch GitHub star counts for publications
+ * Uses Promise.all() for concurrent requests and checks show_star_count flag
  */
 function fetchGitHubStars() {
-  publications.forEach(pub => {
-    if (pub.githubRepo) {
-      getStar(pub.githubRepo).then(count => {
-        const element = document.getElementById(`${pub.id}_star_count`);
+  const starPromises = publications
+    .filter(pub => pub.show_star_count && pub.githubRepo)
+    .map(pub =>
+      getStar(pub.githubRepo)
+        .then(count => ({ id: pub.id, count }))
+        .catch(error => {
+          console.warn(`Failed to fetch stars for ${pub.id}:`, error);
+          return { id: pub.id, count: '—' };
+        })
+    );
+
+  if (starPromises.length > 0) {
+    Promise.all(starPromises).then(results => {
+      results.forEach(({ id, count }) => {
+        const element = document.getElementById(`${id}_star_count`);
         if (element) {
           element.innerText = count;
         }
       });
-    }
-  });
+    }).catch(error => console.error('Error fetching GitHub stars:', error));
+  }
 }
 
 /**
@@ -226,17 +183,6 @@ function renderRecentBlogPosts() {
       img.src = post.imageUrl;
       img.alt = post.title;
       mediaFrame.appendChild(img);
-    } else if (post.videoUrl) {
-      const video = document.createElement('video');
-      video.autoplay = true;
-      video.muted = true;
-      video.loop = true;
-      video.playsinline = true;
-      const source = document.createElement('source');
-      source.src = post.videoUrl;
-      source.type = 'video/mp4';
-      video.appendChild(source);
-      mediaFrame.appendChild(video);
     }
 
     const title = document.createElement('div');
@@ -260,157 +206,51 @@ function renderRecentBlogPosts() {
 
 </script>
   
-  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  <link rel="stylesheet" type="text/css" href="styles/index.css">
   <link rel="icon" type="image/png" href="images/seal_icon.png">
-  <style>
-    .recent-posts-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 30px;
-      margin-bottom: 20px;
-    }
-
-    .post-card {
-      flex: 0 0 100%;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .media-frame {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background-color: #f0f0f0;
-      overflow: hidden;
-      margin-bottom: 12px;
-      border-radius: 4px;
-      position: relative;
-    }
-
-    .media-frame img,
-    .media-frame video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: opacity 0.2s ease-in-out;
-    }
-
-    .post-card:hover .media-frame img {
-      opacity: 0.9;
-    }
-
-    .post-title {
-      font-family: 'Lato', Verdana, Helvetica, sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      margin: 0;
-      color: #1772d0;
-    }
-
-    .post-card a:hover .post-title {
-      color: #f09228;
-    }
-
-    .post-meta {
-      color: #666;
-      font-size: 12px;
-      margin-top: 4px;
-    }
-
-    @media (min-width: 600px) {
-      .post-card {
-        flex: 0 0 calc(50% - 15px);
-      }
-    }
-
-    @media (min-width: 900px) {
-      .post-card {
-        flex: 0 0 calc(33.333% - 20px);
-      }
-    }
-
-    .view-all-link {
-      display: inline-block;
-      margin-top: 20px;
-      text-align: center;
-      width: 100%;
-    }
-  </style>
 </head>
 
 <body>
-  <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-    <tr style="padding:0px">
-      <td style="padding:0px">
-        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-          <tr style="padding:0px">
-            <td style="padding:2.5%;width:63%;vertical-align:middle">
-              <p style="text-align:center">
-                <name>Alec Helbling</name>
-              </p>
-			  <p> I am an ML PhD student at <a href="https://www.gatech.edu/">Georgia Tech's</a> College of Computing, working with <a href="https://poloclub.github.io/polochau/"> Polo Chau </a> and supported by the National Science Foundation Graduate Research Fellowship. </p>
+  <div class="page-wrapper">
+    <div class="profile-section">
+      <div class="profile-content">
+        <p class="name-heading">
+          <name>Alec Helbling</name>
+        </p>
+        <p>I am an ML PhD student at <a href="https://www.gatech.edu/">Georgia Tech's</a> College of Computing, working with <a href="https://poloclub.github.io/polochau/"> Polo Chau </a> and supported by the National Science Foundation Graduate Research Fellowship.</p>
 
-			  <p> My work centers on methods for guiding generative models, particularly ones for image generation. I am broadly interested also in the application of data visualization and HCI to understanding and guiding machine learning systems. </p>
+        <p>My work centers on methods for guiding generative models, particularly ones for image generation. I am broadly interested also in the application of data visualization and HCI to understanding and guiding machine learning systems.</p>
 
-			  <p> I previously worked with <a href="http://siplab.gatech.edu/rozell.html">Chris Rozell</a> at Georgia Tech on methods for guiding generative models based on human feedback. I have also interned at Adobe on the Firefly team under <a href="https://blog.adobe.com/en/authors/oliver-brdiczka">Oliver Brdiczka </a>. Prior to that I interned at <a href="https://research.ibm.com/">IBM Research</a> with <a href="https://researcher.watson.ibm.com/researcher/view.php?person=us-achille"> Achille Fokue </a> where my work focused on applying graph neural networks at large scale language models to the task of document summarization. Prior to that I was a software engineering intern at <a href="microsoft.com"> Microsoft </a> where I worked on scaling a data analytics service. I also was an intern in the Machine Learning and Instrument Autonomy Group at <a href="https://www.jpl.nasa.gov/">NASA Jet Propulsion Laboratory</a> with <a ="https://ml.jpl.nasa.gov/people/mandrake/mandrake.html">Lukas Mandrake</a>. At NASA my work focused on developing web-based visualization tools for interacting with machine learning models. I started my research career working with <a href="http://bits.csb.pitt.edu/">David Koes</a> at the <a href="https://www.pitt.edu/">University of Pittsburgh</a>. There I worked on machine learning applications to computational drug discovery, specifically trying to understand protein-ligand interactions. I also worked on a web-based molecular visualization library called <a href="https://github.com/3dmol/3Dmol.js">3Dmol.js</a>. </p>
-              </p>
-              <p style="text-align:center">
-                <a href="mailto:alechelbling1@gmail.com">Email</a> &nbsp/&nbsp
-                <a href="data/CV.pdf">CV</a> &nbsp/&nbsp
-                <a href="https://scholar.google.com/citations?user=hwY7DI8AAAAJ&hl=en">Google Scholar</a> &nbsp/&nbsp
-                <a href="https://twitter.com/alec_helbling">Twitter</a> &nbsp/&nbsp
-                <a href="https://github.com/helblazer811/">Github</a> &nbsp/&nbsp
-                <a href="blog.html">Blog</a>
-              </p>
-            </td>
-            <td style="padding:2.5%;width:40%;max-width:40%">
-              <a href="images/alec_photo.jpg"><img style="width:100%;max-width:100%" alt="profile photo" src="images/alec_photo.jpg" class="hoverZoomLink"></a>
-            </td>
-          </tr>
-        </tbody></table>
-        
-        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-            <tr>
-            <td style="padding:20px;width:100%;vertical-align:middle">
-              <heading>Recent Blog Posts</heading>
-            </td>
-          </tr>
-        </tbody></table>
-        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-            <tr>
-            <td style="padding:20px;width:100%;vertical-align:middle">
-              <div class="recent-posts-grid" id="recent-blog-posts-container"></div>
-              <div class="view-all-link">
-                <a href="blog.html">View all posts →</a>
-              </div>
-            </td>
-          </tr>
-        </tbody></table>
+        <p>I previously worked with <a href="http://siplab.gatech.edu/rozell.html">Chris Rozell</a> at Georgia Tech on methods for guiding generative models based on human feedback. I have also interned at Adobe on the Firefly team under <a href="https://blog.adobe.com/en/authors/oliver-brdiczka">Oliver Brdiczka </a>. Prior to that I interned at <a href="https://research.ibm.com/">IBM Research</a> with <a href="https://researcher.watson.ibm.com/researcher/view.php?person=us-achille"> Achille Fokue </a> where my work focused on applying graph neural networks at large scale language models to the task of document summarization. Prior to that I was a software engineering intern at <a href="microsoft.com"> Microsoft </a> where I worked on scaling a data analytics service. I also was an intern in the Machine Learning and Instrument Autonomy Group at <a href="https://www.jpl.nasa.gov/">NASA Jet Propulsion Laboratory</a> with <a ="https://ml.jpl.nasa.gov/people/mandrake/mandrake.html">Lukas Mandrake</a>. At NASA my work focused on developing web-based visualization tools for interacting with machine learning models. I started my research career working with <a href="http://bits.csb.pitt.edu/">David Koes</a> at the <a href="https://www.pitt.edu/">University of Pittsburgh</a>. There I worked on machine learning applications to computational drug discovery, specifically trying to understand protein-ligand interactions. I also worked on a web-based molecular visualization library called <a href="https://github.com/3dmol/3Dmol.js">3Dmol.js</a>.</p>
 
-        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-            <tr>
-            <td style="padding:20px;width:100%;vertical-align:middle">
-              <heading>Research</heading>
-              <p>
-			  I am most interested in generative models, multimodal machine learning, and ML interpretability.
-              </p>
-            </td>
-          </tr>
-        </tbody></table>
-        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody id="publications-container"></tbody></table>
+        <p class="bio-links">
+          <a href="mailto:alechelbling1@gmail.com">Email</a> &nbsp/&nbsp
+          <a href="data/CV.pdf">CV</a> &nbsp/&nbsp
+          <a href="https://scholar.google.com/citations?user=hwY7DI8AAAAJ&hl=en">Google Scholar</a> &nbsp/&nbsp
+          <a href="https://twitter.com/alec_helbling">Twitter</a> &nbsp/&nbsp
+          <a href="https://github.com/helblazer811/">Github</a> &nbsp/&nbsp
+          <a href="blog.html">Blog</a>
+        </p>
+      </div>
+      <div class="profile-photo-cell">
+        <a href="images/alec_photo.jpg" class="profile-photo-link"><img alt="profile photo" src="images/alec_photo.jpg" class="profile-photo"></a>
+      </div>
+    </div>
 
-        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-          <tr>
-            <td style="padding:0px;text-align:center;">
-              <br>
-			  This website uses a template from <a href="https://jonbarron.info/">https://jonbarron.info/</a>
-              </p>
-            </td>
-          </tr>
-        </tbody></table>
-      </td>
-    </tr>
-  </table>
+    <div class="section-header">
+      <heading>Recent Blog Posts</heading>
+    </div>
+    <div class="recent-posts-grid" id="recent-blog-posts-container"></div>
+    <div class="view-all-link">
+      <a href="blog.html">View all posts →</a>
+    </div>
+
+    <div class="section-header">
+      <heading>Research</heading>
+      <p>I am most interested in generative models, multimodal machine learning, and ML interpretability.</p>
+    </div>
+    <div id="publications-container" class="publications-container"></div>
+  </div>
 </body>
 
 </html>

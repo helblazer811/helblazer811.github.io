@@ -6,7 +6,6 @@
     "year": 2024,
     "summary": "Exploring deep learning approaches for 3D spatial data and computer vision.",
     "imageUrl": "https://picsum.photos/800/450?random=10",
-    "videoUrl": null,
     "link": "#"
   },
   {
@@ -16,7 +15,6 @@
     "year": 2024,
     "summary": "Demonstrating robotics applications in garden environments.",
     "imageUrl": null,
-    "videoUrl": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
     "link": "#"
   },
   {
@@ -26,7 +24,6 @@
     "year": 2024,
     "summary": "Deep dive into Neural Radiance Fields (NeRF) and their applications.",
     "imageUrl": "https://picsum.photos/800/450?random=11",
-    "videoUrl": null,
     "link": "#"
   },
   {
@@ -36,7 +33,6 @@
     "year": 2024,
     "summary": "A look at my new workspace and the tech I'm using.",
     "imageUrl": "https://picsum.photos/800/450?random=12",
-    "videoUrl": null,
     "link": "#"
   },
   {
@@ -46,7 +42,6 @@
     "year": 2023,
     "summary": "Key takeaways and interesting papers from ICCV 2023.",
     "imageUrl": "https://picsum.photos/800/450?random=13",
-    "videoUrl": null,
     "link": "#"
   },
   {
@@ -56,7 +51,6 @@
     "year": 2023,
     "summary": "Exploring different espresso machines and techniques to find the perfect cup.",
     "imageUrl": "https://picsum.photos/800/450?random=14",
-    "videoUrl": null,
     "link": "#"
   }
 ]
