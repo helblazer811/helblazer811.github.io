@@ -69,6 +69,17 @@
             img.src = post.imageUrl;
             img.alt = post.title;
             mediaFrame.appendChild(img);
+          } else if (post.videoUrl) {
+            const video = document.createElement('video');
+            video.autoplay = true;
+            video.muted = true;
+            video.loop = true;
+            video.playsinline = true;
+            const source = document.createElement('source');
+            source.src = post.videoUrl;
+            source.type = 'video/mp4';
+            video.appendChild(source);
+            mediaFrame.appendChild(video);
           }
 
           const title = document.createElement('div');
