@@ -1,11 +1,11 @@
 [
   {
-    "id": "understanding-isomap",
+    "id": "isomap",
     "title": "A Visual Introduction to Dimensionality Reduction with Isomap",
     "date": "2025-11-01",
     "year": 2025,
     "summary": "A visual introduction to dimensionality reduction with Isomap.",
-    "videoUrl": "videos/IsomapArticleVideo.mp4",
+    "videoUrl": "images/IsomapArticleVideo.mp4",
     "link": "https://alechelbling.com/blog/isomap"
   }
 ]
