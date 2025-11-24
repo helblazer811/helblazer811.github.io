@@ -66,6 +66,80 @@
     "awards": []
   },
   {
+    "id": "safetypairs",
+    "title": "SafetyPairs: Isolating Safety Critical Image Features with Counterfactual Image Generation",
+    "authors": [
+      {"name": "Alec Helbling", "isHighlighted": true},
+      {"name": "Shruti Palaskar", "isHighlighted": false},
+      {"name": "Kundan Krishna", "isHighlighted": false},
+      {"name": "Polo Chau", "isHighlighted": false},
+      {"name": "Leon Gatys", "isHighlighted": false},
+      {"name": "Joseph Yitan Cheng", "isHighlighted": false}
+    ],
+    "venue": "arXiv preprint",
+    "year": 2025,
+    "description": "What exactly makes a particular image unsafe? We introduce SafetyPairs, a scalable framework for generating counterfactual pairs of images that differ only in the features relevant to a given safety policy. Using image editing models, we make targeted changes to images that alter their safety labels while leaving safety-irrelevant details unchanged. We release a benchmark containing over 3,020 SafetyPair images spanning 9 safety categories, providing the first systematic resource for studying fine-grained image safety distinctions.",
+    "imageUrl": "images/SafetyPairs.png",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2510.21120"
+    },
+    "githubRepo": null,
+    "show_star_count": false,
+    "awards": []
+  },
+  {
+    "id": "undream",
+    "title": "UNDREAM: Bridging Differentiable Rendering and Photorealistic Simulation for End-to-End Adversarial Attacks",
+    "authors": [
+      {"name": "Mansi Phute", "isHighlighted": false},
+      {"name": "Willian Lunardi", "isHighlighted": false},
+      {"name": "Matthew Hull", "isHighlighted": false},
+      {"name": "Haoran Wang", "isHighlighted": false},
+      {"name": "Martin Andreoni", "isHighlighted": false},
+      {"name": "Alec Helbling", "isHighlighted": true},
+      {"name": "Wenke Lee", "isHighlighted": false},
+      {"name": "ShengYun Peng", "isHighlighted": false},
+      {"name": "Polo Chau", "isHighlighted": false}
+    ],
+    "venue": "arXiv preprint",
+    "year": 2025,
+    "description": "UNDREAM bridges differentiable rendering and photorealistic simulation to develop end-to-end adversarial attacks.",
+    "imageUrl": "images/Undream.png",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2510.16923"
+    },
+    "githubRepo": null,
+    "show_star_count": false,
+    "awards": []
+  },
+  {
+    "id": "renderbender",
+    "title": "RenderBender: A Survey on Adversarial Attacks Using Differentiable Rendering",
+    "authors": [
+      {"name": "Matthew Hull", "isHighlighted": false},
+      {"name": "Haoran Wang", "isHighlighted": false},
+      {"name": "Matthew Lau", "isHighlighted": false},
+      {"name": "Alec Helbling", "isHighlighted": true},
+      {"name": "Mansi Phute", "isHighlighted": false},
+      {"name": "Chao Zhang", "isHighlighted": false},
+      {"name": "Zsolt Kira", "isHighlighted": false},
+      {"name": "Willian Lunardi", "isHighlighted": false},
+      {"name": "Martin Andreoni", "isHighlighted": false},
+      {"name": "Wenke Lee", "isHighlighted": false},
+      {"name": "Polo Chau", "isHighlighted": false}
+    ],
+    "venue": "IJCAI Survey Track",
+    "year": 2024,
+    "description": "A comprehensive survey on adversarial attacks using differentiable rendering techniques.",
+    "imageUrl": "images/RenderBender.png",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2411.09749"
+    },
+    "githubRepo": null,
+    "show_star_count": false,
+    "awards": []
+  },
+  {
     "id": "transformer-explainer",
     "title": "Transformer Explainer: Interactive Learning of Text-Generative Models",
     "authors": [
