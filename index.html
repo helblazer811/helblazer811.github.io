@@ -1,267 +1,359 @@
-<!DOCTYPE HTML>
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-  <title>Alec Helbling</title>
-  
-  <meta name="author" content="Alec Helbling">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Alec Helbling</title>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2YQS5828VP"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <meta name="author" content="Alec Helbling" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  gtag('config', 'G-2YQS5828VP');
-	
-/**
- * Parse the star of the given github repository.
- * @param {string} repo Github repo address
- */
- const getStar = async repo => {
-  const res = await fetch(`https://api.github.com/repos/${repo}`);
-  const dataJSON = await res.json();
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-2YQS5828VP"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-  if (res.ok) {
-    return dataJSON['stargazers_count'];
-  } else {
-    return '';
-  }
-};
+      gtag("config", "G-2YQS5828VP");
 
-/**
- * Load publications from JSON and render them
- */
-let publications = [];
-fetch('data/publications.json')
-  .then(response => response.json())
-  .then(data => {
-    publications = data;
-    renderPublications();
-    fetchGitHubStars();
-  })
-  .catch(error => console.error('Error loading publications:', error));
+      /**
+       * Parse the star of the given github repository.
+       * @param {string} repo Github repo address
+       */
+      const getStar = async (repo) => {
+        const res = await fetch(`https://api.github.com/repos/${repo}`);
+        const dataJSON = await res.json();
 
-/**
- * Render publications from JSON data
- */
-function renderPublications() {
-  const container = document.getElementById('publications-container');
-  if (!container) return;
-
-  publications.forEach(pub => {
-    const pubItem = document.createElement('div');
-    pubItem.className = 'publication-item';
-
-    // Determine primary link once
-    const primaryLink = pub.links.arxiv || pub.links.openreview || pub.links.github || '#';
-
-    const imageDiv = document.createElement('div');
-    imageDiv.className = 'publication-image';
-
-    const imageLink = document.createElement('a');
-    imageLink.href = primaryLink;
-
-    const img = document.createElement('img');
-    img.src = pub.imageUrl;
-    img.alt = pub.title;
-
-    imageLink.appendChild(img);
-    imageDiv.appendChild(imageLink);
-
-    const contentDiv = document.createElement('div');
-    contentDiv.className = 'publication-content';
-
-    let contentHTML = '';
-
-    // Title link
-    contentHTML += `<a href="${primaryLink}"><papertitle>${pub.title}</papertitle></a><br>`;
-
-    // Authors
-    contentHTML += pub.authors.map(author => {
-      return author.isHighlighted ? `<strong>${author.name}</strong>` : author.name;
-    }).join(', ') + '<br>';
-
-    // Venue and year
-    contentHTML += `<em>${pub.venue}</em>, ${pub.year}<br>`;
-
-    // Awards
-    if (pub.awards && pub.awards.length > 0) {
-      pub.awards.forEach(award => {
-        contentHTML += `🏆 ${award}<br>`;
-      });
-    }
-
-    // Links
-    if (pub.githubRepo) {
-      contentHTML += `<a href="${pub.links.github}">Github</a> <span>(Currently <span id="${pub.id}_star_count"></span> &#11088;)</span><br>`;
-    }
-    if (pub.links.arxiv && !pub.githubRepo) {
-      contentHTML += `<a href="${pub.links.arxiv}">Arxiv</a><br>`;
-    } else if (pub.links.arxiv) {
-      contentHTML += `<a href="${pub.links.arxiv}">Arxiv</a><br>`;
-    }
-    if (pub.links.openreview) {
-      contentHTML += `<a href="${pub.links.openreview}">OpenReview</a><br>`;
-    }
-    if (pub.links.tool) {
-      contentHTML += `<a href="${pub.links.tool}">Tool</a><br>`;
-    }
-
-    // Description
-    contentHTML += `<p>${pub.description}</p>`;
-
-    contentDiv.innerHTML = contentHTML;
-    pubItem.appendChild(imageDiv);
-    pubItem.appendChild(contentDiv);
-    container.appendChild(pubItem);
-  });
-}
-
-/**
- * Fetch GitHub star counts for publications
- * Uses Promise.all() for concurrent requests and checks show_star_count flag
- */
-function fetchGitHubStars() {
-  const starPromises = publications
-    .filter(pub => pub.show_star_count && pub.githubRepo)
-    .map(pub =>
-      getStar(pub.githubRepo)
-        .then(count => ({ id: pub.id, count }))
-        .catch(error => {
-          console.warn(`Failed to fetch stars for ${pub.id}:`, error);
-          return { id: pub.id, count: '—' };
-        })
-    );
-
-  if (starPromises.length > 0) {
-    Promise.all(starPromises).then(results => {
-      results.forEach(({ id, count }) => {
-        const element = document.getElementById(`${id}_star_count`);
-        if (element) {
-          element.innerText = count;
+        if (res.ok) {
+          return dataJSON["stargazers_count"];
+        } else {
+          return "";
         }
-      });
-    }).catch(error => console.error('Error fetching GitHub stars:', error));
-  }
-}
+      };
 
-/**
- * Load and render recent blog posts
- */
-let blogPosts = [];
-fetch('data/blog_posts.json')
-  .then(response => response.json())
-  .then(data => {
-    blogPosts = data;
-    renderRecentBlogPosts();
-  })
-  .catch(error => console.error('Error loading blog posts:', error));
+      /**
+       * Load publications from JSON and render them
+       */
+      let publications = [];
+      fetch("data/publications.json")
+        .then((response) => response.json())
+        .then((data) => {
+          publications = data;
+          renderPublications();
+          fetchGitHubStars();
+        })
+        .catch((error) => console.error("Error loading publications:", error));
 
-/**
- * Render recent blog posts (top 3)
- */
-function renderRecentBlogPosts() {
-  const container = document.getElementById('recent-blog-posts-container');
-  if (!container) return;
+      /**
+       * Render publications from JSON data
+       */
+      function renderPublications() {
+        const container = document.getElementById("publications-container");
+        if (!container) return;
 
-  const recentPosts = blogPosts.slice(0, 3);
+        publications.forEach((pub) => {
+          const pubItem = document.createElement("div");
+          pubItem.className = "publication-item";
 
-  recentPosts.forEach(post => {
-    const article = document.createElement('article');
-    article.className = 'post-card';
+          // Determine primary link once
+          const primaryLink =
+            pub.links.arxiv || pub.links.openreview || pub.links.github || "#";
 
-    const link = document.createElement('a');
-    link.href = post.link;
+          const imageDiv = document.createElement("div");
+          imageDiv.className = "publication-image";
 
-    const mediaFrame = document.createElement('div');
-    mediaFrame.className = 'media-frame';
+          const imageLink = document.createElement("a");
+          imageLink.href = primaryLink;
 
-    if (post.imageUrl) {
-      const img = document.createElement('img');
-      img.src = post.imageUrl;
-      img.alt = post.title;
-      mediaFrame.appendChild(img);
-    } else if (post.videoUrl) {
-      const video = document.createElement('video');
-      video.autoplay = true;
-      video.muted = true;
-      video.loop = true;
-      video.playsinline = true;
-      const source = document.createElement('source');
-      source.src = post.videoUrl;
-      source.type = 'video/mp4';
-      video.appendChild(source);
-      mediaFrame.appendChild(video);
-    }
+          const img = document.createElement("img");
+          img.src = pub.imageUrl;
+          img.alt = pub.title;
 
-    const title = document.createElement('div');
-    title.className = 'post-title';
-    title.innerText = post.title;
+          imageLink.appendChild(img);
+          imageDiv.appendChild(imageLink);
 
-    link.appendChild(mediaFrame);
-    link.appendChild(title);
-    article.appendChild(link);
+          const contentDiv = document.createElement("div");
+          contentDiv.className = "publication-content";
 
-    const meta = document.createElement('div');
-    meta.className = 'post-meta';
-    const date = new Date(post.date);
-    meta.innerText = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    article.appendChild(meta);
+          let contentHTML = "";
 
-    container.appendChild(article);
-  });
-}
+          // Title link
+          contentHTML += `<a href="${primaryLink}"><papertitle>${pub.title}</papertitle></a><br>`;
 
+          // Authors
+          contentHTML +=
+            pub.authors
+              .map((author) => {
+                return author.isHighlighted
+                  ? `<strong>${author.name}</strong>`
+                  : author.name;
+              })
+              .join(", ") + "<br>";
 
-</script>
-  
-  <link rel="stylesheet" type="text/css" href="styles/index.css">
-  <link rel="icon" type="image/png" href="images/seal_icon.png">
-</head>
+          // Venue and year
+          contentHTML += `<em>${pub.venue}</em>, ${pub.year}<br>`;
 
-<body>
-  <div class="page-wrapper">
-    <div class="profile-section">
-      <div class="profile-content">
-        <p class="name-heading">
-          <name>Alec Helbling</name>
-        </p>
-        <p>I am an ML PhD student at <a href="https://www.gatech.edu/">Georgia Tech's</a> College of Computing, working with <a href="https://poloclub.github.io/polochau/"> Polo Chau </a> and supported by the National Science Foundation Graduate Research Fellowship.</p>
+          // Awards
+          if (pub.awards && pub.awards.length > 0) {
+            pub.awards.forEach((award) => {
+              contentHTML += `🏆 ${award}<br>`;
+            });
+          }
 
-        <p>My work centers on methods for guiding generative models, particularly ones for image generation. I am broadly interested also in the application of data visualization and HCI to understanding and guiding machine learning systems.</p>
+          // Links
+          if (pub.githubRepo) {
+            contentHTML += `<a href="${pub.links.github}">Github</a> <span>(Currently <span id="${pub.id}_star_count"></span> &#11088;)</span><br>`;
+          }
+          if (pub.links.arxiv && !pub.githubRepo) {
+            contentHTML += `<a href="${pub.links.arxiv}">Arxiv</a><br>`;
+          } else if (pub.links.arxiv) {
+            contentHTML += `<a href="${pub.links.arxiv}">Arxiv</a><br>`;
+          }
+          if (pub.links.openreview) {
+            contentHTML += `<a href="${pub.links.openreview}">OpenReview</a><br>`;
+          }
+          if (pub.links.tool) {
+            contentHTML += `<a href="${pub.links.tool}">Tool</a><br>`;
+          }
 
-        <p>I previously worked with <a href="http://siplab.gatech.edu/rozell.html">Chris Rozell</a> at Georgia Tech on methods for guiding generative models based on human feedback. I have also interned at Adobe on the Firefly team under <a href="https://blog.adobe.com/en/authors/oliver-brdiczka">Oliver Brdiczka </a>. Prior to that I interned at <a href="https://research.ibm.com/">IBM Research</a> with <a href="https://researcher.watson.ibm.com/researcher/view.php?person=us-achille"> Achille Fokue </a> where my work focused on applying graph neural networks at large scale language models to the task of document summarization. Prior to that I was a software engineering intern at <a href="microsoft.com"> Microsoft </a> where I worked on scaling a data analytics service. I also was an intern in the Machine Learning and Instrument Autonomy Group at <a href="https://www.jpl.nasa.gov/">NASA Jet Propulsion Laboratory</a> with <a ="https://ml.jpl.nasa.gov/people/mandrake/mandrake.html">Lukas Mandrake</a>. At NASA my work focused on developing web-based visualization tools for interacting with machine learning models. I started my research career working with <a href="http://bits.csb.pitt.edu/">David Koes</a> at the <a href="https://www.pitt.edu/">University of Pittsburgh</a>. There I worked on machine learning applications to computational drug discovery, specifically trying to understand protein-ligand interactions. I also worked on a web-based molecular visualization library called <a href="https://github.com/3dmol/3Dmol.js">3Dmol.js</a>.</p>
+          // Description
+          contentHTML += `<p>${pub.description}</p>`;
 
-        <p class="bio-links">
-          <a href="mailto:alechelbling1@gmail.com">Email</a> &nbsp/&nbsp
-          <a href="data/CV.pdf">CV</a> &nbsp/&nbsp
-          <a href="https://scholar.google.com/citations?user=hwY7DI8AAAAJ&hl=en">Google Scholar</a> &nbsp/&nbsp
-          <a href="https://twitter.com/alec_helbling">Twitter</a> &nbsp/&nbsp
-          <a href="https://github.com/helblazer811/">Github</a> &nbsp/&nbsp
-          <a href="blog.html">Blog</a>
+          contentDiv.innerHTML = contentHTML;
+          pubItem.appendChild(imageDiv);
+          pubItem.appendChild(contentDiv);
+          container.appendChild(pubItem);
+        });
+      }
+
+      /**
+       * Fetch GitHub star counts for publications
+       * Uses Promise.all() for concurrent requests and checks show_star_count flag
+       */
+      function fetchGitHubStars() {
+        const starPromises = publications
+          .filter((pub) => pub.show_star_count && pub.githubRepo)
+          .map((pub) =>
+            getStar(pub.githubRepo)
+              .then((count) => ({ id: pub.id, count }))
+              .catch((error) => {
+                console.warn(`Failed to fetch stars for ${pub.id}:`, error);
+                return { id: pub.id, count: "—" };
+              })
+          );
+
+        if (starPromises.length > 0) {
+          Promise.all(starPromises)
+            .then((results) => {
+              results.forEach(({ id, count }) => {
+                const element = document.getElementById(`${id}_star_count`);
+                if (element) {
+                  element.innerText = count;
+                }
+              });
+            })
+            .catch((error) =>
+              console.error("Error fetching GitHub stars:", error)
+            );
+        }
+      }
+
+      /**
+       * Load and render recent blog posts
+       */
+      let blogPosts = [];
+      fetch("data/blog_posts.json")
+        .then((response) => response.json())
+        .then((data) => {
+          blogPosts = data;
+          renderRecentBlogPosts();
+        })
+        .catch((error) => console.error("Error loading blog posts:", error));
+
+      /**
+       * Render recent blog posts (top 3)
+       */
+      function renderRecentBlogPosts() {
+        const container = document.getElementById(
+          "recent-blog-posts-container"
+        );
+        if (!container) return;
+
+        const recentPosts = blogPosts.slice(0, 3);
+
+        recentPosts.forEach((post) => {
+          const article = document.createElement("article");
+          article.className = "post-card";
+
+          const link = document.createElement("a");
+          link.href = post.link;
+
+          const mediaFrame = document.createElement("div");
+          mediaFrame.className = "media-frame";
+
+          if (post.imageUrl) {
+            const img = document.createElement("img");
+            img.src = post.imageUrl;
+            img.alt = post.title;
+            mediaFrame.appendChild(img);
+          } else if (post.videoUrl) {
+            const video = document.createElement("video");
+            video.autoplay = true;
+            video.muted = true;
+            video.loop = true;
+            video.playsinline = true;
+            const source = document.createElement("source");
+            source.src = post.videoUrl;
+            source.type = "video/mp4";
+            video.appendChild(source);
+            mediaFrame.appendChild(video);
+          }
+
+          const title = document.createElement("div");
+          title.className = "post-title";
+          title.innerText = post.title;
+
+          link.appendChild(mediaFrame);
+          link.appendChild(title);
+          article.appendChild(link);
+
+          const meta = document.createElement("div");
+          meta.className = "post-meta";
+          const date = new Date(post.date);
+          meta.innerText = date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+          article.appendChild(meta);
+
+          container.appendChild(article);
+        });
+      }
+    </script>
+
+    <link rel="stylesheet" type="text/css" href="styles/index.css" />
+    <link rel="icon" type="image/png" href="images/seal_icon.png" />
+  </head>
+
+  <body>
+    <div class="page-wrapper">
+      <div class="profile-section">
+        <div class="profile-content">
+          <p class="name-heading">
+            <name>Alec Helbling</name>
+          </p>
+          <p>
+            I am an ML PhD student at
+            <a href="https://www.gatech.edu/">Georgia Tech</a> advised by
+            <a href="https://poloclub.github.io/polochau/"> Polo Chau </a> and
+            supported by the NSF GRFP.
+          </p>
+
+          <p>
+            I work on methods for interpreting (e.g.,
+            <a href="https://arxiv.org/abs/2502.04320">ConceptAttention</a>),
+            visualizing (e.g.,
+            <a href="https://arxiv.org/abs/2507.01178">DiffusionExplorer</a>,
+            <a href="https://arxiv.org/abs/2306.17108">ManimML</a>), 
+            and guiding the behavior of generative models (e.g., <a href="https://arxiv.org/abs/2304.00185">PrefGen</a>)
+            the behavior of generative models. I have a particular interest in
+            models for generating images and video. I enjoy incorporating
+            tools from data visualization and HCI into my work, creating
+            interactive tools and videos for explaining how ML models and
+            techniques work.
+          </p>
+          <p>
+            I have had the opportunity to work with many great people on a
+            variety of topics in both academic and industry research labs: at <a href="https://machinelearning.apple.com/">Apple</a>
+            on the Responsible AI team on improving vision-language models,
+            at <a href="https://www.adobe.com/products/firefly.html">Adobe Firefly</a> on improving the safety of text-to-image models, at <a href="https://research.ibm.com/">IBM Research</a>
+            on natural language summarization, at <a href="https://www.jpl.nasa.gov/">NASA JPL</a> on interactive visual tools for
+            space science, and at the <a href="https://bits.csb.pitt.edu/">University of Pittsburgh</a> on computational biology.
+          </p>
+<!-- 
+          <p>
+            <a href="http://siplab.gatech.edu/rozell.html">Chris Rozell</a> at
+            Georgia Tech on methods for guiding generative models based on human
+            feedback. I have also interned at Adobe on the Firefly team under
+            <a href="https://blog.adobe.com/en/authors/oliver-brdiczka"
+              >Oliver Brdiczka </a
+            >. Prior to that I interned at
+            <a href="https://research.ibm.com/">IBM Research</a> with
+            <a
+              href="https://researcher.watson.ibm.com/researcher/view.php?person=us-achille"
+            >
+              Achille Fokue
+            </a>
+            where my work focused on applying graph neural networks at large
+            scale language models to the task of document summarization. Prior
+            to that I was a software engineering intern at
+            <a href="microsoft.com"> Microsoft </a> where I worked on scaling a
+            data analytics service. I also was an intern in the Machine Learning
+            and Instrument Autonomy Group at
+            <a href="https://www.jpl.nasa.gov/"
+              >NASA Jet Propulsion Laboratory</a
+            >
+            with
+            <a ="https://ml.jpl.nasa.gov/people/mandrake/mandrake.html"
+              >Lukas Mandrake</a
+            >. At NASA my work focused on developing web-based visualization
+            tools for interacting with machine learning models. I started my
+            research career working with
+            <a href="http://bits.csb.pitt.edu/">David Koes</a> at the
+            <a href="https://www.pitt.edu/">University of Pittsburgh</a>. There
+            I worked on machine learning applications to computational drug
+            discovery, specifically trying to understand protein-ligand
+            interactions. I also worked on a web-based molecular visualization
+            library called
+            <a href="https://github.com/3dmol/3Dmol.js">3Dmol.js</a>.
+          </p> -->
+
+          <p class="bio-links">
+            <a href="mailto:alechelbling1@gmail.com">Email</a> &nbsp/&nbsp
+            <a href="data/CV.pdf">CV</a> &nbsp/&nbsp
+            <a
+              href="https://scholar.google.com/citations?user=hwY7DI8AAAAJ&hl=en"
+              >Google Scholar</a
+            >
+            &nbsp/&nbsp
+            <a href="https://twitter.com/alec_helbling">Twitter</a> &nbsp/&nbsp
+            <a href="https://github.com/helblazer811/">Github</a> &nbsp/&nbsp
+            <a href="blog.html">Blog</a>
+          </p>
+        </div>
+        <div class="profile-photo-cell">
+          <a href="images/alec_photo.jpg" class="profile-photo-link"
+            ><img
+              alt="profile photo"
+              src="images/alec_photo.jpg"
+              class="profile-photo"
+          /></a>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <heading>Recent Blog Posts</heading>
+      </div>
+      <div class="recent-posts-grid" id="recent-blog-posts-container"></div>
+      <div class="view-all-link">
+        <a href="blog.html">View all posts →</a>
+      </div>
+
+      <div class="section-header">
+        <heading>Research</heading>
+        <p>
+          I am most interested in generative models, multimodal machine
+          learning, and ML interpretability.
         </p>
       </div>
-      <div class="profile-photo-cell">
-        <a href="images/alec_photo.jpg" class="profile-photo-link"><img alt="profile photo" src="images/alec_photo.jpg" class="profile-photo"></a>
-      </div>
+      <div id="publications-container" class="publications-container"></div>
     </div>
-
-    <div class="section-header">
-      <heading>Recent Blog Posts</heading>
-    </div>
-    <div class="recent-posts-grid" id="recent-blog-posts-container"></div>
-    <div class="view-all-link">
-      <a href="blog.html">View all posts →</a>
-    </div>
-
-    <div class="section-header">
-      <heading>Research</heading>
-      <p>I am most interested in generative models, multimodal machine learning, and ML interpretability.</p>
-    </div>
-    <div id="publications-container" class="publications-container"></div>
-  </div>
-</body>
-
+  </body>
 </html>
