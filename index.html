@@ -197,22 +197,30 @@
           const mediaFrame = document.createElement("div");
           mediaFrame.className = "media-frame";
 
-          if (post.imageUrl) {
+          if (post.previewUrl) {
+            if (post.previewUrl.endsWith(".mp4")) {
+              const video = document.createElement("video");
+              video.setAttribute("autoplay", "");
+              video.setAttribute("muted", "");
+              video.setAttribute("loop", "");
+              video.setAttribute("playsinline", "");
+              video.setAttribute("preload", "metadata");
+              const source = document.createElement("source");
+              source.src = post.previewUrl;
+              source.type = "video/mp4";
+              video.appendChild(source);
+              mediaFrame.appendChild(video);
+            } else {
+              const img = document.createElement("img");
+              img.src = post.previewUrl;
+              img.alt = post.title;
+              mediaFrame.appendChild(img);
+            }
+          } else if (post.imageUrl) {
             const img = document.createElement("img");
             img.src = post.imageUrl;
             img.alt = post.title;
             mediaFrame.appendChild(img);
-          } else if (post.videoUrl) {
-            const video = document.createElement("video");
-            video.autoplay = true;
-            video.muted = true;
-            video.loop = true;
-            video.playsinline = true;
-            const source = document.createElement("source");
-            source.src = post.videoUrl;
-            source.type = "video/mp4";
-            video.appendChild(source);
-            mediaFrame.appendChild(video);
           }
 
           const title = document.createElement("div");
