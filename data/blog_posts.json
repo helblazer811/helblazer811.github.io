@@ -7,6 +7,15 @@
     "summary": "A visual introduction to dimensionality reduction with Isomap.",
     "previewUrl": "images/IsomapArticleVideo.gif",
     "link": "https://alechelbling.com/blog/isomap"
+  },
+  {
+    "id": "diffusion-explorer",
+    "title": "Diffusion Explorer: Interactive Exploration of Diffusion Models",
+    "date": "2025-05-22",
+    "year": 2025,
+    "summary": "Explore the geometric properties of diffusion models interactively.",
+    "previewUrl": "images/DiffusionExplorer.gif",
+    "link": "https://alechelbling.com/Diffusion-Explorer/"
   }
 ]
 

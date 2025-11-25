@@ -55,7 +55,7 @@
     "venue": "IEEE VIS",
     "year": 2025,
     "description": "We developed an interactive tool for explaining the geometric properties of diffusion models.",
-    "imageUrl": "images/DiffusionExplorer.png",
+    "imageUrl": "images/DiffusionExplorer.gif",
     "links": {
       "arxiv": "https://arxiv.org/abs/2507.01178",
       "github": "https://github.com/helblazer811/Diffusion-Explorer",
