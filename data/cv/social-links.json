@@ -1,0 +1,72 @@
+[
+  {
+    "id": "email",
+    "description": "alechelbling1@gmail.com",
+    "color": "#515151",
+    "class": "fas fa-envelope icon",
+    "url": "mailto:alechelbling1@gmail.com",
+    "on-homepage": true,
+    "cv-group": 1
+  },
+  {
+    "id": "twitter",
+    "description": "@alec_helbling",
+    "color": "#1da1f2",
+    "class": "fab fa-twitter icon",
+    "url": "https://twitter.com/alec_helbling",
+    "on-homepage": true,
+    "cv-group": 2
+  },
+  {
+    "id": "github",
+    "description": "@helblazer811",
+    "color": "#6e5494",
+    "class": "fab fa-github icon",
+    "url": "https://github.com/helblazer811",
+    "on-homepage": true,
+    "cv-group": 2
+  },
+  {
+    "id": "linkedin",
+    "description": "fredhohman",
+    "color": "#0077b5",
+    "class": "fab fa-linkedin-in icon",
+    "url": "http://www.linkedin.com/in/alechelbling",
+    "on-homepage": true
+  },
+  {
+    "id": "home",
+    "description": "alechelbling.com",
+    "color": "#515151",
+    "class": "fas fa-home icon",
+    "url": "https://alechelbling.com",
+    "on-homepage": false,
+    "cv-group": 1
+  },
+  {
+    "id": "scholar",
+    "description": "Google Scholar",
+    "color": "#515151",
+    "class": "fa fa-graduation-cap icon",
+    "url": "https://scholar.google.com/citations?user=hwY7DI8AAAAJ&hl=en",
+    "on-homepage": true,
+    "cv-group": 2
+  },
+  {
+    "id": "cv",
+    "description": "CV PDF",
+    "color": "#ba2818",
+    "class": "far fa-file-pdf icon",
+    "url": "/cv.pdf",
+    "on-homepage": false,
+    "cv-group": 1
+  },
+  {
+    "id": "cv-web",
+    "description": "CV",
+    "color": "#515151",
+    "class": "fa fa-address-card icon",
+    "url": "/cv",
+    "on-homepage": false
+  }
+]

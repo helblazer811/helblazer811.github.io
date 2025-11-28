@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Human-in-the-loop Systems for Guiding Generative Models",
+    "years": "2023 — 2028",
+    "name": "NSF GRFP: National Science Foundation Graduate Research Fellowship Program",
+    "co-pis": [
+      "Duen Horng (Polo) Chau"
+    ],
+    "amount": "$80,000/year for 3 years (over of a 5 year period)",
+    "title-url": "https://www.nsf.gov/funding/opportunities/grfp-nsf-graduate-research-fellowship-program",
+    "name-url": "https://www.nsf.gov/funding/opportunities/grfp-nsf-graduate-research-fellowship-program"
+  },
+  {
+    "title": "Controlling Deep Generative Models with Pairwise Comparisons",
+    "years": "2021",
+    "name": "President's Undergraduate Research Fellowship",
+    "co-pis": [
+      "Chris Rozell"
+    ],
+    "amount": "$1500/semester for 2 semesters"
+  }
+]

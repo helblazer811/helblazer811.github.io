@@ -16,7 +16,6 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link rel="stylesheet" href="styles/cv.css" />
-    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
   </head>
   <body>
     <div id="cv" class="page-container">
@@ -50,16 +49,6 @@
       <div id="awards-section"></div>
 
       <h2 class="cv-section-title">Publications</h2>
-      <h3
-        style="
-          grid-column: 3/-1;
-          font-weight: 400;
-          font-size: 1.1rem;
-          margin-top: 0;
-        "
-      >
-        Selected
-      </h3>
       <div id="publications-section"></div>
 
       <h2 class="cv-section-title">Mentoring</h2>
@@ -87,54 +76,17 @@
         }
       };
 
-      // Utility function to load and parse YAML files
-      async function loadYAML(filePath) {
+      // Utility function to load and parse JSON files
+      async function loadJSON(filePath) {
         try {
           const response = await fetch(filePath);
-          const text = await response.text();
-          return jsyaml.load(text);
+          return await response.json();
         } catch (error) {
           console.error(`Error loading ${filePath}:`, error);
           return null;
         }
       }
 
-      // Parse markdown frontmatter (YAML between --- delimiters)
-      function parseMarkdownFrontmatter(content) {
-        const frontmatterRegex = /^---\n([\s\S]*?)\n---/;
-        const match = content.match(frontmatterRegex);
-        if (!match) return null;
-
-        try {
-          return jsyaml.load(match[1]);
-        } catch (error) {
-          console.error("Error parsing frontmatter:", error);
-          return null;
-        }
-      }
-
-      // Load a markdown file and extract its frontmatter
-      async function loadMarkdownFrontmatter(filePath) {
-        try {
-          const response = await fetch(filePath);
-          const text = await response.text();
-          return parseMarkdownFrontmatter(text);
-        } catch (error) {
-          console.error(`Error loading ${filePath}:`, error);
-          return null;
-        }
-      }
-
-      // Get list of paper markdown files from manifest
-      async function getPaperFiles() {
-        try {
-          const manifest = await loadYAML("data/cv/papers-manifest.yaml");
-          return manifest || [];
-        } catch (error) {
-          console.error("Error fetching paper manifest:", error);
-          return [];
-        }
-      }
 
       // Create entry HTML based on cv_html templates
       function createEntryHTML(entry, type = "experience") {
@@ -303,7 +255,7 @@
 
       // Render social links
       async function renderSocialLinks() {
-        const data = await loadYAML("data/cv/social-links.yaml");
+        const data = await loadJSON("data/cv/social-links.json");
         if (!data) return;
 
         // Separate links into two groups based on cv-group
@@ -354,7 +306,7 @@
 
       // Render education
       async function renderEducation() {
-        const data = await loadYAML("data/cv/education.yaml");
+        const data = await loadJSON("data/cv/education.json");
         if (!data) return;
 
         let html = "";
@@ -371,7 +323,7 @@
 
       // Render industry experience
       async function renderIndustryExperience() {
-        const data = await loadYAML("data/cv/experiences.yaml");
+        const data = await loadJSON("data/cv/experiences.json");
         if (!data) return;
 
         const industryExp = data.filter((exp) => exp.type === "industry");
@@ -384,7 +336,7 @@
 
       // Render academic experience
       async function renderAcademicExperience() {
-        const data = await loadYAML("data/cv/experiences.yaml");
+        const data = await loadJSON("data/cv/experiences.json");
         if (!data) return;
 
         const academicExp = data.filter((exp) => exp.type === "academic");
@@ -397,7 +349,7 @@
 
       // Render awards
       async function renderAwards() {
-        const data = await loadYAML("data/cv/awards.yaml");
+        const data = await loadJSON("data/cv/awards.json");
         if (!data) return;
 
         let html = "";
@@ -407,46 +359,117 @@
         document.getElementById("awards-section").innerHTML = html;
       }
 
-      // Render publications from individual markdown files
+      // Helper function to render publication HTML
+      function createPublicationHTML(pub) {
+        let html = '<div class="cv-entry">';
+        html += '<div class="cv-left-date"></div>';
+        html += '<div class="cv-right-content">';
+
+        // Wrap title, authors, and venue in a compact div
+        html += '<div class="paper-title-content">';
+
+        // Title with link
+        const titleHTML = pub.links && (pub.links.arxiv || pub.links.github || pub.links.openreview)
+          ? `<a href="${pub.links.arxiv || pub.links.github || pub.links.openreview}"><b>${pub.title}</b></a>`
+          : `<b>${pub.title}</b>`;
+        html += `<div>${titleHTML}</div>`;
+
+        // Authors
+        if (pub.authors && Array.isArray(pub.authors)) {
+          html += "<div>";
+          pub.authors.forEach((author, idx) => {
+            const name = typeof author === 'string' ? author : author.name;
+            html += name;
+            if (idx < pub.authors.length - 1) html += ", ";
+          });
+          html += "</div>";
+        }
+
+        // Venue and year
+        html += `<div><i>${pub.venue}${pub.year ? `, ${pub.year}` : ""}</i></div>`;
+
+        html += '</div>'; // Close compact div
+
+        // Awards
+        if (pub.awards && Array.isArray(pub.awards) && pub.awards.length > 0) {
+          html += '<div class="pub-misc">';
+          pub.awards.forEach((award) => {
+            html += `<span class="cv-award"><i class="fas fa-trophy"></i> ${award}</span>`;
+          });
+          html += '</div>';
+        }
+
+        // Links
+        html += '<div class="pub-misc">';
+        if (pub.links) {
+          if (pub.links.arxiv) {
+            html += `<a href="${pub.links.arxiv}"><i class="fas fa-file-pdf"></i> PDF</a>`;
+          }
+          if (pub.links.github) {
+            const codeId = pub.id ? `stars-${pub.id}` : "";
+            html += `<a href="${pub.links.github}"><i class="fas fa-code"></i> Code`;
+            if (codeId && pub.githubRepo) {
+              html += ` <span id="${codeId}"></span>`;
+            }
+            html += `</a>`;
+          }
+          if (pub.links.openreview) {
+            html += `<a href="${pub.links.openreview}"><i class="fas fa-link"></i> OpenReview</a>`;
+          }
+          if (pub.links.tool) {
+            html += `<a href="${pub.links.tool}"><i class="fas fa-link"></i> Tool</a>`;
+          }
+        }
+        html += '</div>';
+        html += "</div>"; // Close cv-right-content
+        html += "</div>"; // Close cv-entry
+        return html;
+      }
+
+      // Render publications from publications.json
       async function renderPublications() {
         try {
-          // Get all paper markdown files
-          const paperFiles = await getPaperFiles();
+          // Load publications from JSON
+          const publications = await loadJSON("data/cv/publications.json");
+          if (!publications) return;
 
-          // Load all papers in parallel
-          const paperPromises = paperFiles.map((file) =>
-            loadMarkdownFrontmatter(`data/cv/papers/${file}`)
-          );
-          const papers = await Promise.all(paperPromises);
-
-          // Sort all papers by year (newest first)
-          const sortedPapers = papers
-            .filter((paper) => paper)
-            .sort((a, b) => (b.year || 0) - (a.year || 0));
+          // Separate selected and non-selected publications
+          const selectedPubs = publications.filter((pub) => pub.selected === true);
+          const nonSelectedPubs = publications.filter((pub) => pub.selected !== true);
 
           let html = "";
-          sortedPapers.forEach((entry) => {
-            html += createEntryHTML(entry, "publication");
+
+          // Render Selected section
+          if (selectedPubs.length > 0) {
+            html += '<h3 class="pub-subsection-title" style="margin-bottom: 0.5rem;">Selected</h3>';
+            selectedPubs.forEach((pub) => {
+              html += createPublicationHTML(pub);
+            });
+          }
+
+          // Add separator if there are both selected and non-selected
+          if (selectedPubs.length > 0 && nonSelectedPubs.length > 0) {
+            html += '<div style="grid-column: 3/-1; border-top: 1px solid #eee; margin: 1rem 0;"></div>';
+            html += '<h3 class="pub-subsection-title" style="margin-bottom: 0.5rem;">All Publications</h3>';
+          }
+
+          // Render All Publications section (only non-selected)
+          nonSelectedPubs.forEach((pub) => {
+            html += createPublicationHTML(pub);
           });
+
           document.getElementById("publications-section").innerHTML = html;
 
-          // Fetch GitHub star counts for papers with code links
-          sortedPapers.forEach((paper) => {
-            if (paper.id && paper.code && paper.code.includes("github.com")) {
-              const starSpanId = `stars-${paper.id}`;
+          // Fetch GitHub star counts for all publications
+          publications.forEach((pub) => {
+            if (pub.id && pub.show_star_count && pub.githubRepo) {
+              const starSpanId = `stars-${pub.id}`;
               const starSpan = document.getElementById(starSpanId);
               if (starSpan) {
                 (async () => {
-                  // Extract owner/repo from GitHub URL
-                  const matches = paper.code.match(
-                    /github\.com\/([^\/]+)\/([^\/]+)/
-                  );
-                  if (matches) {
-                    const repo = `${matches[1]}/${matches[2]}`;
-                    const count = await getStar(repo);
-                    if (count) {
-                      starSpan.innerText = `(${count} ⭐)`;
-                    }
+                  const count = await getStar(pub.githubRepo);
+                  if (count) {
+                    starSpan.innerText = `(${count} ⭐)`;
                   }
                 })();
               }
@@ -459,7 +482,7 @@
 
       // Render mentoring
       async function renderMentoring() {
-        const data = await loadYAML("data/cv/mentoring.yaml");
+        const data = await loadJSON("data/cv/mentoring.json");
         if (!data) return;
 
         let html = "";
@@ -471,7 +494,7 @@
 
       // Render references
       async function renderReferences() {
-        const data = await loadYAML("data/cv/references.yaml");
+        const data = await loadJSON("data/cv/references.json");
         if (!data) return;
 
         let html = "";
@@ -480,41 +503,25 @@
           html += '<div class="cv-left-date"></div>';
           html += '<div class="cv-right-content">';
 
-          const nameUrl = entry.url;
-          if (nameUrl) {
-            html += `<a href="${nameUrl}" style="text-decoration: none; color: inherit;"><div><b>${entry.name}</b></div>`;
+          let nameLine = `<b>${entry.name}</b>`;
+          if (entry.position) {
+            nameLine += `, ${entry.position}`;
+          }
 
-            if (entry.position) {
-              html += `<div class="cv-position">${entry.position}</div>`;
-            }
+          html += `<div>${nameLine}</div>`;
 
-            if (entry.group) {
-              html += `<div><i>${entry.group}</i></div>`;
-            }
+          if (entry.group) {
+            html += `<div><i>${entry.group}</i></div>`;
+          }
 
-            if (entry.institution) {
-              html += `<div>${entry.institution}${
-                entry.location ? ", " + entry.location : ""
-              }</div>`;
-            }
+          if (entry.institution) {
+            html += `<div>${entry.institution}${
+              entry.location ? ", " + entry.location : ""
+            }</div>`;
+          }
 
-            html += '</a>';
-          } else {
-            html += `<div><b>${entry.name}</b></div>`;
-
-            if (entry.position) {
-              html += `<div class="cv-position">${entry.position}</div>`;
-            }
-
-            if (entry.group) {
-              html += `<div><i>${entry.group}</i></div>`;
-            }
-
-            if (entry.institution) {
-              html += `<div>${entry.institution}${
-                entry.location ? ", " + entry.location : ""
-              }</div>`;
-            }
+          if (entry.url) {
+            html += `<a href="${entry.url}" style="color: #357edd;"><i class="fas fa-link"></i> ${entry.url}</a>`;
           }
 
           html += "</div>"; // Close cv-right-content

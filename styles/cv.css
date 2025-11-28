@@ -71,6 +71,7 @@ a:hover {
 
 #cv-subtitle {
     font-size: 1.6rem;
+    font-weight: 300;
     margin-top: 0rem;
     margin-bottom: 1.5rem;
     color: var(--dark-gray);
@@ -86,9 +87,7 @@ a:hover {
     width: 100%;
     display: flex;
     font-size: 1.05rem;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 1rem;
+    margin-bottom: 0;
     gap: 0;
 }
 
@@ -127,12 +126,18 @@ a:hover {
 
 /* --- Section Headers --- */
 .cv-section-title {
-    font-size: 1.75rem;
-    font-weight: 500;
+    font-size: 2.40rem;
+    font-weight: 400;
     margin-top: 2rem;
     margin-bottom: 1rem;
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 0.25rem;
+}
+h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    margin-top: 1.5rem;
 }
 
 /* --- Experience Entries (The Grid Magic) --- */
@@ -154,6 +159,9 @@ a:hover {
 .cv-right-content {
     grid-column: 3 / -1; /* Third column */
     margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .cv-institution {
@@ -187,9 +195,10 @@ a:hover {
 }
 
 .pub-misc {
-    margin-top: 0.5rem;
+    /* margin-top: 0.5rem; */
     display: flex;
     gap: 15px;
+    row-gap: 0.5rem;
     flex-wrap: wrap;
     font-size: 1.05rem;
 }
@@ -200,6 +209,19 @@ a:hover {
 
 .pub-misc a:hover {
     text-decoration: underline;
+}
+
+.pub-subsection-title {
+    grid-column: 3/-1;
+    font-weight: 300;
+    font-size: 2.2rem;
+    margin: 0;
+}
+
+.paper-title-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 /* --- Section Containers --- */

@@ -41,7 +41,7 @@
        * Load publications from JSON and render them
        */
       let publications = [];
-      fetch("data/publications.json")
+      fetch("data/cv/publications.json")
         .then((response) => response.json())
         .then((data) => {
           publications = data;
@@ -287,7 +287,7 @@
           </p>
           <p class="bio-links">
             <a href="mailto:alechelbling1@gmail.com">Email</a> &nbsp/&nbsp
-            <a href="data/CV.pdf">CV</a> &nbsp/&nbsp
+            <a href="cv.html">CV</a> &nbsp/&nbsp
             <a
               href="https://scholar.google.com/citations?user=hwY7DI8AAAAJ&hl=en"
               >Google Scholar</a
@@ -299,10 +299,10 @@
           </p>
         </div>
         <div class="profile-photo-cell">
-          <a href="images/alec_photo.jpg" class="profile-photo-link"
+          <a href="data/images/alec_photo.jpg" class="profile-photo-link"
             ><img
               alt="profile photo"
-              src="images/alec_photo.jpg"
+              src="data/images/alec_photo.jpg"
               class="profile-photo"
           /></a>
         </div>

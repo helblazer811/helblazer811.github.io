@@ -5,7 +5,7 @@
     "date": "2025-11-01",
     "year": 2025,
     "summary": "A visual introduction to dimensionality reduction with Isomap.",
-    "previewUrl": "images/IsomapArticleVideo.gif",
+    "previewUrl": "data/images/IsomapArticleVideo.gif",
     "link": "https://alechelbling.com/blog/isomap"
   },
   {
@@ -14,7 +14,7 @@
     "date": "2025-05-22",
     "year": 2025,
     "summary": "Explore the geometric properties of diffusion models interactively.",
-    "previewUrl": "images/DiffusionExplorer.gif",
+    "previewUrl": "data/images/DiffusionExplorer.gif",
     "link": "https://alechelbling.com/Diffusion-Explorer/"
   }
 ]
