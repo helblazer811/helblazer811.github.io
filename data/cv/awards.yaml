@@ -1,0 +1,35 @@
+- name: National Science Foundation Graduate Research Fellowship
+  description: Prestegious fellowship with 3 years guaranteed funding. 
+  year: 2024
+
+- name: Oral Presentation, ICML 2025
+  description: For "ConceptAttention&#58; Diffusion Transformers Learn Highly Interpretable Features"
+  year: 2025
+
+- name: Best Paper Award, CVPR Workshop on Visual Concepts
+  description: For "ConceptAttention&#58; Diffusion Transformers Learn Highly Interpretable Features"
+  year: 2025
+
+- name: Spotlight Oral Presentation, CVPR Workshop on Visual Concepts
+  description: For "ConceptAttention&#58; Diffusion Transformers Learn Highly Interpretable Features"
+  year: 2025
+
+- name: Best Poster, IEEE VIS 2024
+  description: For "Transformer Explainer - Interactive Learning of Text-Generative Models"
+  year: 2024
+
+- name: Best Poster, IEEE VIS 2023
+  description: For "Manim ML&#58;  Communicating Machine Learning Architectures with Animation"
+  year: 2023
+
+- name: President's Fellowship at Georgia Institute of Technology
+  description: Select number of 1st year doctoral students who bring exemplary levels of scholarship and innovation to their academic departments
+  year: "2023 — Present"
+
+- name: President's Undergraduate Research Fellowship (x2)
+  description: For "PrefGenML&#58; Preference Guided Image Generation with Relative Attributes"
+  year: 2020, 2021
+
+- name: "Pittsburgh Science and Technology Academy Valedictorian"
+  description: Top of my high school class
+  year: 2018

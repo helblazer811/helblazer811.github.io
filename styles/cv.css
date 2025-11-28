@@ -1,0 +1,236 @@
+/* --- Variables (Converted from SCSS) --- */
+:root {
+    --text-color: #333;
+    --dark-gray: #4a4a4a;
+    --moon-gray: #ccc;
+    --silver: #999;
+    --blue: #3498db;
+    --dark-blue: #2980b9;
+    --orange: #e67e22;
+    --gold: #f1c40f;
+    --border-color: #eee;
+    --bg-color: #fff;
+    --mobile-width: 768px;
+}
+
+/* --- Global Reset & Typography --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    color: #414141;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    /* font-size: 1.05rem; */
+    -webkit-text-size-adjust: 100%;
+    font-size: 20px;
+    line-height: 1.5;
+}
+
+a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--dark-blue);
+}
+
+/* --- Main Layout Grid --- */
+/* This simulates the complex Jekyll grid layout locally */
+.page-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    display: grid;
+    /* Column structure: [Date/Kicker] [Gap] [Content] */
+    grid-template-columns: 140px 20px 1fr;
+    align-items: baseline;
+}
+
+/* Elements that span the full width of the content area or specific placement */
+#cv-title, #cv-subtitle, .cv-intro, .cv-section-title, .cv-spacer, .cv-image-links-wrapper {
+    grid-column: 3 / -1; /* Placed in the content column */
+}
+
+/* --- Header Styling --- */
+#cv-title {
+    margin-bottom: 0rem;
+    font-size: 2.8rem;
+    color: #333;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+#cv-title > a {
+    color: #333;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+#cv-subtitle {
+    font-size: 1.6rem;
+    margin-top: 0rem;
+    margin-bottom: 1.5rem;
+    color: var(--dark-gray);
+    grid-column: 3 / -1;
+}
+
+/* --- Intro & Social Links --- */
+.cv-intro {
+    margin-bottom: 1rem;
+}
+
+.cv-image-links-wrapper {
+    width: 100%;
+    display: flex;
+    font-size: 1.05rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+    gap: 0;
+}
+
+.cv-image-links {
+    flex: 1 1 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.cv-social-link {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.cv-social-link-icon-wrapper {
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+}
+
+.cv-social-link-icon-wrapper i {
+    color: var(--silver);
+}
+
+.cv-social-link-text-wrapper {
+    margin: 0;
+    padding: 0;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* --- Section Headers --- */
+.cv-section-title {
+    font-size: 1.75rem;
+    font-weight: 500;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.25rem;
+}
+
+/* --- Experience Entries (The Grid Magic) --- */
+/* These classes mimic the functionality of the Jekyll include files */
+
+.cv-entry {
+    display: contents; /* Allows children to participate in the main grid */
+}
+
+.cv-left-date {
+    grid-column: 1 / 2; /* First column */
+    text-align: right;
+    font-size: 0.95rem;
+    color: var(--silver);
+    padding-top: 0.2rem; /* Visual alignment with title */
+    line-height: 1.4;
+}
+
+.cv-right-content {
+    grid-column: 3 / -1; /* Third column */
+    margin-bottom: 1.5rem;
+}
+
+.cv-institution {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.cv-position {
+    font-style: italic;
+}
+
+.cv-description {
+    color: #999 !important;
+    font-size: 1.1rem;
+    font-weight: 300;
+}
+
+.cv-mentors {
+    font-size: 0.95rem;
+    color: var(--dark-gray);
+    margin-top: 0.25rem;
+}
+
+.cv-mentors span {
+    color: var(--silver);
+}
+
+.cv-award {
+    color: #ffb700;
+    font-size: 1.05rem;
+}
+
+.pub-misc {
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    font-size: 1.05rem;
+}
+
+.pub-misc a {
+    color: #357edd;
+}
+
+.pub-misc a:hover {
+    text-decoration: underline;
+}
+
+/* --- Section Containers --- */
+#education-section, #industry-section, #academic-section, #awards-section, #publications-section, #mentoring-section, #references-section {
+    display: contents; /* Allow children to participate in parent grid */
+}
+
+/* --- Utilities --- */
+.cv-spacer {
+    height: 1rem;
+}
+
+/* --- Mobile Responsive --- */
+@media screen and (max-width: 768px) {
+    .page-container {
+        display: block; /* Stack everything on mobile */
+    }
+
+    .cv-left-date {
+        text-align: left;
+        margin-bottom: 0.25rem;
+        color: var(--blue); /* Highlight date on mobile to differentiate */
+        font-weight: 500;
+    }
+
+    .cv-right-content {
+        margin-bottom: 2rem;
+        padding-left: 0;
+    }
+
+    #cv-title {
+        font-size: 2rem;
+    }
+}

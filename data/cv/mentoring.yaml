@@ -1,0 +1,13 @@
+- name: Evan Montoya
+  intern: Georgia Tech
+  # intern-url: https://www.apple.com/
+  year: "Fall 2023"
+  degree: "BS in Computer Science, Georgia Institute of Technology"
+  description: "Methods for enabling compositionality of text-to-image generation systems."
+  # url: http://angieboggust.com/
+
+- name: Aeree Cho, Grace Kim, Alexander Karpekov
+  intern: Georgia Tech
+  year: "Spring 2024"
+  degree: "MS in CS, BS in CS, MS in CS, Georgia Tech"
+  description: "Transformer Explainer: Interactive Learning of Text-Generative models"

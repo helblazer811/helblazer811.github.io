@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alec Helbling - CV</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="styles/cv.css" />
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+  </head>
+  <body>
+    <div id="cv" class="page-container">
+      <h1 id="cv-title"><a href="#">Alec Helbling</a></h1>
+      <p id="cv-subtitle"><i>Interpretable and Controllable Generative Models</i></p>
+
+      <div class="cv-intro">
+        I develop novel interfaces for controlling Generative AI. In particular,
+        I leverage a combination of machine learning and interactive
+        visualization to allow humans to control generative models.
+      </div>
+
+      <div class="cv-intro">
+        I have worked with researchers and engineers at Georgia Tech, Apple,
+        Adobe, IBM Research, NASA Jet Propulsion Laboratory, Microsoft, and the
+        University of Pittsburgh.
+      </div>
+
+      <div id="social-links" class="cv-image-links-wrapper"></div>
+
+      <h2 class="cv-section-title">Education</h2>
+      <div id="education-section"></div>
+
+      <h2 class="cv-section-title">Industry Research Experience</h2>
+      <div id="industry-section"></div>
+
+      <h2 class="cv-section-title">Academic Research Experience</h2>
+      <div id="academic-section"></div>
+
+      <h2 class="cv-section-title">Honors and Awards</h2>
+      <div id="awards-section"></div>
+
+      <h2 class="cv-section-title">Publications</h2>
+      <h3
+        style="
+          grid-column: 3/-1;
+          font-weight: 400;
+          font-size: 1.1rem;
+          margin-top: 0;
+        "
+      >
+        Selected
+      </h3>
+      <div id="publications-section"></div>
+
+      <h2 class="cv-section-title">Mentoring</h2>
+      <div id="mentoring-section"></div>
+
+      <h2 class="cv-section-title">References</h2>
+      <div id="references-section"></div>
+    </div>
+
+    <script>
+      // Get GitHub star count for a repository
+      const getStar = async (repo) => {
+        try {
+          const res = await fetch(`https://api.github.com/repos/${repo}`);
+          const dataJSON = await res.json();
+
+          if (res.ok) {
+            return dataJSON["stargazers_count"];
+          } else {
+            return "";
+          }
+        } catch (error) {
+          console.error("Error fetching star count:", error);
+          return "";
+        }
+      };
+
+      // Utility function to load and parse YAML files
+      async function loadYAML(filePath) {
+        try {
+          const response = await fetch(filePath);
+          const text = await response.text();
+          return jsyaml.load(text);
+        } catch (error) {
+          console.error(`Error loading ${filePath}:`, error);
+          return null;
+        }
+      }
+
+      // Parse markdown frontmatter (YAML between --- delimiters)
+      function parseMarkdownFrontmatter(content) {
+        const frontmatterRegex = /^---\n([\s\S]*?)\n---/;
+        const match = content.match(frontmatterRegex);
+        if (!match) return null;
+
+        try {
+          return jsyaml.load(match[1]);
+        } catch (error) {
+          console.error("Error parsing frontmatter:", error);
+          return null;
+        }
+      }
+
+      // Load a markdown file and extract its frontmatter
+      async function loadMarkdownFrontmatter(filePath) {
+        try {
+          const response = await fetch(filePath);
+          const text = await response.text();
+          return parseMarkdownFrontmatter(text);
+        } catch (error) {
+          console.error(`Error loading ${filePath}:`, error);
+          return null;
+        }
+      }
+
+      // Get list of paper markdown files from manifest
+      async function getPaperFiles() {
+        try {
+          const manifest = await loadYAML("data/cv/papers-manifest.yaml");
+          return manifest || [];
+        } catch (error) {
+          console.error("Error fetching paper manifest:", error);
+          return [];
+        }
+      }
+
+      // Create entry HTML based on cv_html templates
+      function createEntryHTML(entry, type = "experience") {
+        let html = '<div class="cv-entry">';
+
+        if (type === "education") {
+          // From degree.html
+          html += `<div class="cv-left-date">${entry["years-extra"] || ""} ${
+            entry.years || ""
+          }</div>`;
+          html += `<div class="cv-right-content"><b>${entry.degree}</b>`;
+          const instUrl = entry["institution-url"];
+          const instHTML = instUrl
+            ? `<a href="${instUrl}">${entry.institution}</a>`
+            : entry.institution;
+          html += `<div>${instHTML}${
+            entry.location ? ", " + entry.location : ""
+          }</div>`;
+
+          if (entry.thesis) {
+            const thesisLink = entry["thesis-link"];
+            const thesisHTML = thesisLink
+              ? `<a href="${thesisLink}"><i>${entry.thesis}</i></a>`
+              : `<i>${entry.thesis}</i>`;
+            html += `<div class="cv-description">Thesis: ${thesisHTML}</div>`;
+          }
+
+          if (entry.advisor) {
+            html += `<div class="cv-description">Advisor: ${entry.advisor}</div>`;
+          }
+
+          if (entry.description && Array.isArray(entry.description)) {
+            html += '<div class="cv-description">';
+            entry.description.forEach((item) => {
+              html += item;
+            });
+            html += "</div>";
+          }
+
+          if (entry.awards && Array.isArray(entry.awards)) {
+            entry.awards.forEach((award) => {
+              html += `<span class="cv-award"><i class="fas fa-trophy"></i> ${award}</span>`;
+            });
+          }
+          html += "</div>"; // Close cv-right-content
+        } else if (type === "experience") {
+          // From experience.html
+          html += `<div class="cv-left-date">${entry["year-extra"] || ""} ${
+            entry.year || ""
+          }</div>`;
+          html += '<div class="cv-right-content">';
+          const instUrl = entry["institution-url"];
+          const instHTML = instUrl
+            ? `<a href="${instUrl}"><b>${entry.institution}</b></a>`
+            : `<b>${entry.institution}</b>`;
+          html += `<div>${instHTML}${
+            entry.location ? ", " + entry.location : ""
+          }</div>`;
+
+          const groupUrl = entry["group-url"];
+          const groupHTML = groupUrl
+            ? `<a href="${groupUrl}">${entry.group}</a>`
+            : entry.group || "";
+          html += `<div><i>${entry.position}${
+            groupHTML ? ", " + groupHTML : ""
+          }</i></div>`;
+
+          if (entry.mentors && entry.mentors.length > 0) {
+            const mentorLabel = entry.advisor === true ? "Advisor" : "Mentor";
+            html += `<div class="cv-description">${mentorLabel}: ${entry.mentors.join(
+              ", "
+            )}</div>`;
+          }
+
+          if (entry.description) {
+            html += `<div class="cv-description">${entry.description}</div>`;
+          }
+          html += "</div>"; // Close cv-right-content
+        } else if (type === "publication") {
+          // From publication.html
+          html += `<div class="cv-left-date"></div>`;
+          html += '<div class="cv-right-content">';
+          const pubUrl = entry.url;
+          const titleHTML = pubUrl
+            ? `<a href="${pubUrl}"><b>${entry.title}</b></a>`
+            : `<b>${entry.title}</b>`;
+          html += `<div>${titleHTML}</div>`;
+
+          if (entry.authors && Array.isArray(entry.authors)) {
+            html += "<div>";
+            entry.authors.forEach((author, idx) => {
+              html += author;
+              if (idx < entry.authors.length - 1) html += ", ";
+            });
+            html += "</div>";
+          }
+
+          const venue = entry.venue || "";
+          const shorthand = entry["venue-shorthand"]
+            ? ` (${entry["venue-shorthand"]})`
+            : "";
+          const location = entry.location ? entry.location + ", " : "";
+          html += `<div><i>${venue}${shorthand}. ${location}${entry.year}.</i></div>`;
+
+          html += '<div class="pub-misc">';
+          if (entry.url) {
+            html += `<a href="${entry.url}"><i class="fas fa-link"></i> Project</a>`;
+          }
+          if (entry.pdf) {
+            html += `<a href="${entry.pdf}"><i class="fas fa-file-pdf"></i> PDF</a>`;
+          }
+          if (entry.code) {
+            const codeId = entry.id ? `stars-${entry.id}` : "";
+            html += `<a href="${entry.code}"><i class="fas fa-code"></i> Code`;
+            if (codeId && entry.code.includes("github.com")) {
+              html += ` <span id="${codeId}"></span>`;
+            }
+            html += `</a>`;
+          }
+          if (entry.award) {
+            html += `<span class="cv-award"><i class="fas fa-trophy"></i> ${entry.award}</span>`;
+          }
+          html += "</div>"; // Close pub-misc
+          html += "</div>"; // Close cv-right-content
+        } else if (type === "award") {
+          // From award.html
+          html += `<div class="cv-left-date">${entry.year || ""}</div>`;
+          html += '<div class="cv-right-content">';
+          html += `<div>${entry.name}</div>`;
+          if (entry.description) {
+            html += `<div class="cv-description">${entry.description}</div>`;
+          }
+          html += "</div>"; // Close cv-right-content
+        } else if (type === "mentoring") {
+          // From mentee.html
+          html += `<div class="cv-left-date">${entry.year || ""} ${
+            entry["year-extra"] || ""
+          }</div>`;
+          html += '<div class="cv-right-content">';
+          const menteeUrl = entry.url;
+          const nameHTML = menteeUrl
+            ? `<a href="${menteeUrl}"><b>${entry.name}</b></a>`
+            : `<b>${entry.name}</b>`;
+          html += `<div>${nameHTML}`;
+          if (entry.intern) {
+            const internUrl = entry["intern-url"];
+            const internHTML = internUrl
+              ? `<a href="${internUrl}">${entry.intern}</a>`
+              : entry.intern;
+            html += ` <span class="appears-on"> at ${internHTML}</span>`;
+          }
+          html += "</div>";
+
+          if (entry.degree) {
+            html += `<div><i>${entry.degree}</i></div>`;
+          }
+          if (entry.description) {
+            html += `<div class="cv-description">${entry.description}</div>`;
+          }
+          html += "</div>"; // Close cv-right-content
+        }
+
+        html += "</div>"; // Close cv-entry
+        return html;
+      }
+
+      // Render social links
+      async function renderSocialLinks() {
+        const data = await loadYAML("data/cv/social-links.yaml");
+        if (!data) return;
+
+        // Separate links into two groups based on cv-group
+        const group1 = data.filter((link) => link["cv-group"] === 1);
+        const group2 = data.filter((link) => link["cv-group"] === 2);
+
+        let html = '<div class="cv-image-links-wrapper">';
+
+        // Render group 1
+        html += '<div class="cv-image-links">';
+        group1.forEach((link) => {
+          const icon = link.class || "fas fa-link";
+          const color = link.color ? `color: ${link.color};` : "";
+          html += `
+            <div class="cv-social-link" style="display: flex">
+              <div class="cv-social-link-icon-wrapper">
+                <a href="${link.url}"><i class="${icon}" style="${color}"></i></a>
+              </div>
+              <div class="cv-social-link-text-wrapper">
+                <a href="${link.url}">${link.description}</a>
+              </div>
+            </div>
+          `;
+        });
+        html += "</div>";
+
+        // Render group 2
+        html += '<div class="cv-image-links">';
+        group2.forEach((link) => {
+          const icon = link.class || "fas fa-link";
+          const color = link.color ? `color: ${link.color};` : "";
+          html += `
+            <div class="cv-social-link" style="display: flex">
+              <div class="cv-social-link-icon-wrapper">
+                <a href="${link.url}"><i class="${icon}" style="${color}"></i></a>
+              </div>
+              <div class="cv-social-link-text-wrapper">
+                <a href="${link.url}">${link.description}</a>
+              </div>
+            </div>
+          `;
+        });
+        html += "</div>";
+
+        html += "</div>";
+        document.getElementById("social-links").innerHTML = html;
+      }
+
+      // Render education
+      async function renderEducation() {
+        const data = await loadYAML("data/cv/education.yaml");
+        if (!data) return;
+
+        let html = "";
+        data.forEach((entry) => {
+          // Use 'years' if available, otherwise fall back to 'year'
+          const entryWithYears = {
+            ...entry,
+            year: entry.years || entry.year,
+          };
+          html += createEntryHTML(entryWithYears, "education");
+        });
+        document.getElementById("education-section").innerHTML = html;
+      }
+
+      // Render industry experience
+      async function renderIndustryExperience() {
+        const data = await loadYAML("data/cv/experiences.yaml");
+        if (!data) return;
+
+        const industryExp = data.filter((exp) => exp.type === "industry");
+        let html = "";
+        industryExp.forEach((entry) => {
+          html += createEntryHTML(entry, "experience");
+        });
+        document.getElementById("industry-section").innerHTML = html;
+      }
+
+      // Render academic experience
+      async function renderAcademicExperience() {
+        const data = await loadYAML("data/cv/experiences.yaml");
+        if (!data) return;
+
+        const academicExp = data.filter((exp) => exp.type === "academic");
+        let html = "";
+        academicExp.forEach((entry) => {
+          html += createEntryHTML(entry, "experience");
+        });
+        document.getElementById("academic-section").innerHTML = html;
+      }
+
+      // Render awards
+      async function renderAwards() {
+        const data = await loadYAML("data/cv/awards.yaml");
+        if (!data) return;
+
+        let html = "";
+        data.forEach((entry) => {
+          html += createEntryHTML(entry, "award");
+        });
+        document.getElementById("awards-section").innerHTML = html;
+      }
+
+      // Render publications from individual markdown files
+      async function renderPublications() {
+        try {
+          // Get all paper markdown files
+          const paperFiles = await getPaperFiles();
+
+          // Load all papers in parallel
+          const paperPromises = paperFiles.map((file) =>
+            loadMarkdownFrontmatter(`data/cv/papers/${file}`)
+          );
+          const papers = await Promise.all(paperPromises);
+
+          // Sort all papers by year (newest first)
+          const sortedPapers = papers
+            .filter((paper) => paper)
+            .sort((a, b) => (b.year || 0) - (a.year || 0));
+
+          let html = "";
+          sortedPapers.forEach((entry) => {
+            html += createEntryHTML(entry, "publication");
+          });
+          document.getElementById("publications-section").innerHTML = html;
+
+          // Fetch GitHub star counts for papers with code links
+          sortedPapers.forEach((paper) => {
+            if (paper.id && paper.code && paper.code.includes("github.com")) {
+              const starSpanId = `stars-${paper.id}`;
+              const starSpan = document.getElementById(starSpanId);
+              if (starSpan) {
+                (async () => {
+                  // Extract owner/repo from GitHub URL
+                  const matches = paper.code.match(
+                    /github\.com\/([^\/]+)\/([^\/]+)/
+                  );
+                  if (matches) {
+                    const repo = `${matches[1]}/${matches[2]}`;
+                    const count = await getStar(repo);
+                    if (count) {
+                      starSpan.innerText = `(${count} ⭐)`;
+                    }
+                  }
+                })();
+              }
+            }
+          });
+        } catch (error) {
+          console.error("Error rendering publications:", error);
+        }
+      }
+
+      // Render mentoring
+      async function renderMentoring() {
+        const data = await loadYAML("data/cv/mentoring.yaml");
+        if (!data) return;
+
+        let html = "";
+        data.forEach((entry) => {
+          html += createEntryHTML(entry, "mentoring");
+        });
+        document.getElementById("mentoring-section").innerHTML = html;
+      }
+
+      // Render references
+      async function renderReferences() {
+        const data = await loadYAML("data/cv/references.yaml");
+        if (!data) return;
+
+        let html = "";
+        data.forEach((entry) => {
+          html += '<div class="cv-entry">';
+          html += '<div class="cv-left-date"></div>';
+          html += '<div class="cv-right-content">';
+
+          const nameUrl = entry.url;
+          if (nameUrl) {
+            html += `<a href="${nameUrl}" style="text-decoration: none; color: inherit;"><div><b>${entry.name}</b></div>`;
+
+            if (entry.position) {
+              html += `<div class="cv-position">${entry.position}</div>`;
+            }
+
+            if (entry.group) {
+              html += `<div><i>${entry.group}</i></div>`;
+            }
+
+            if (entry.institution) {
+              html += `<div>${entry.institution}${
+                entry.location ? ", " + entry.location : ""
+              }</div>`;
+            }
+
+            html += '</a>';
+          } else {
+            html += `<div><b>${entry.name}</b></div>`;
+
+            if (entry.position) {
+              html += `<div class="cv-position">${entry.position}</div>`;
+            }
+
+            if (entry.group) {
+              html += `<div><i>${entry.group}</i></div>`;
+            }
+
+            if (entry.institution) {
+              html += `<div>${entry.institution}${
+                entry.location ? ", " + entry.location : ""
+              }</div>`;
+            }
+          }
+
+          html += "</div>"; // Close cv-right-content
+          html += "</div>"; // Close cv-entry
+        });
+        document.getElementById("references-section").innerHTML = html;
+      }
+
+      // Initialize all sections
+      async function initializeCV() {
+        await Promise.all([
+          renderSocialLinks(),
+          renderEducation(),
+          renderIndustryExperience(),
+          renderAcademicExperience(),
+          renderAwards(),
+          renderPublications(),
+          renderMentoring(),
+          renderReferences(),
+        ]);
+      }
+
+      // Start loading when page loads
+      document.addEventListener("DOMContentLoaded", initializeCV);
+    </script>
+  </body>
+</html>

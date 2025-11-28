@@ -1,0 +1,25 @@
+- degree: "Ph.D. in Machine Learning"
+  institution: Georgia Institute of Technology
+  advisor: Duen Horng (Polo) Chau
+  co-advisor: None
+  location: "Atlanta, GA"
+  # thesis: "Interactive Scalable Interfaces for Machine Learning Interpretability"
+  # thesis-video: https://youtu.be/TNH8RqyNfmo
+  # thesis-link: ../dissertation/
+  # thesis-pdf: ../papers/fred-hohman-thesis.pdf
+  # advisor: Duen Horng (Polo) Chau
+  # committee: TBD
+  years: "Present"
+  years-extra: "Aug. 2023 - "
+  institution-url: https://www.gatech.edu/
+  awards:
+    - NSF Fellowship, Georgia Tech President's Fellowship
+
+- degree: "B.S. in Computer Science"
+  years: "Dec. 2022"
+  years-extra: "Aug. 2018 - "
+  institution: Georgia Institute of Technology
+  location: "Atlanta, GA"
+  description: 
+    - "Overall GPA: 3.91/4.00, Highest Honors, Threads in Intelligence and Theory"
+  institution-url: https://www.gatech.edu/
