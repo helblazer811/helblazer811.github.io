@@ -61227,18 +61227,24 @@ var Model = class _Model {
 };
 
 // ../../packages/diffusion/src/utils.ts
-function sampleUniformGrid(gridResolution, domainRange) {
-  const width = domainRange.xMax - domainRange.xMin;
-  const height = domainRange.yMax - domainRange.yMin;
-  const xMin = domainRange.xMin + 0 * width;
-  const xMax = domainRange.xMax - 0 * width;
-  const yMin = domainRange.yMin + 0 * height;
-  const yMax = domainRange.yMax - 0 * height;
-  const x = linspace(xMin, xMax, gridResolution);
-  const y = linspace(yMin, yMax, gridResolution);
-  let initialPoints = stack(meshgrid(x, y), 2);
-  initialPoints = initialPoints.reshape([gridResolution * gridResolution, 2]);
-  return initialPoints;
+function generateUniformGridSamples(gridResolution, domainRange, asTensor = false) {
+  const { xMin, xMax, yMin, yMax } = domainRange;
+  if (asTensor) {
+    const x = linspace(xMin, xMax, gridResolution);
+    const y = linspace(yMin, yMax, gridResolution);
+    const points = stack(meshgrid(x, y), 2);
+    return points.reshape([gridResolution * gridResolution, 2]);
+  } else {
+    const samples = [];
+    for (let i = 0; i < gridResolution; i++) {
+      for (let j = 0; j < gridResolution; j++) {
+        const x = xMin + (xMax - xMin) * (i / (gridResolution - 1));
+        const y = yMin + (yMax - yMin) * (j / (gridResolution - 1));
+        samples.push([x, y]);
+      }
+    }
+    return samples;
+  }
 }
 
 // ../../packages/diffusion/src/schedulers.ts
@@ -61538,7 +61544,7 @@ var FlowModel = class extends Model {
   * @returns Promise<tf.Tensor3D | null> - null if cancelled
   */
   async sample_grid(gridResolution, domainRange, num_total_steps = 100, options = {}, perStepCallback, shouldStop = () => false) {
-    const initialPoints = sampleUniformGrid(gridResolution, domainRange);
+    const initialPoints = generateUniformGridSamples(gridResolution, domainRange, true);
     return this.sample_from_initial_points(initialPoints, num_total_steps, options, perStepCallback, shouldStop);
   }
   /**
