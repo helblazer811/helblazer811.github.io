@@ -61447,7 +61447,7 @@ var FlowModel = class extends Model {
    */
   async train_rectified(data, source_distribution, num_rectified_steps, epochs_per_rectified_step, batchSize = 32, num_simulation_steps = 200, stopTraining = () => false, endEpochCallback = () => {
   }, endRectifiedStepCallback = () => {
-  }, test_source_distribution = null) {
+  }, test_source_distribution = null, reverseSampling = false) {
     const numSamples = data.shape[0];
     const dim = data.shape[1];
     let x0_coupling;
@@ -61482,46 +61482,60 @@ var FlowModel = class extends Model {
         // source distribution
       );
       if (rectifiedStep < num_rectified_steps - 1) {
-        const trajectories = await this.sample_from_initial_points(
-          x0_coupling,
-          num_simulation_steps
-        );
-        if (!trajectories) {
-          console.log(`Sampling cancelled at rectified step ${rectifiedStep}`);
-          break;
+        if (reverseSampling) {
+          const trajectories = await this.sample_from_initial_points(
+            x1_coupling,
+            num_simulation_steps,
+            { reverse: true }
+            // Time goes 1 → 0
+          );
+          if (!trajectories) {
+            console.log(`Sampling cancelled at rectified step ${rectifiedStep}`);
+            break;
+          }
+          const finalStep = trajectories.shape[0] - 1;
+          const newX0 = trajectories.slice([finalStep, 0, 0], [1, numSamples, dim]).squeeze([0]);
+          if (rectifiedStep > 0 || shouldDisposeX0) {
+            x0_coupling.dispose();
+          }
+          x0_coupling = newX0;
+          shouldDisposeX0 = true;
+          trajectories.dispose();
+        } else {
+          const trajectories = await this.sample_from_initial_points(
+            x0_coupling,
+            num_simulation_steps
+          );
+          if (!trajectories) {
+            console.log(`Sampling cancelled at rectified step ${rectifiedStep}`);
+            break;
+          }
+          const finalStep = trajectories.shape[0] - 1;
+          const newX1 = trajectories.slice([finalStep, 0, 0], [1, numSamples, dim]).squeeze([0]);
+          if (rectifiedStep > 0) {
+            x1_coupling.dispose();
+          }
+          x1_coupling = newX1;
+          trajectories.dispose();
         }
-        const finalStep = trajectories.shape[0] - 1;
-        const newX1 = trajectories.slice([finalStep, 0, 0], [1, numSamples, dim]).squeeze([0]);
-        if (rectifiedStep > 0) {
-          x1_coupling.dispose();
-        }
-        x1_coupling = newX1;
-        trajectories.dispose();
-        const intermediateSamples = await this.sampleForVisualization(
-          x0_coupling,
-          num_simulation_steps,
-          100,
-          // numVisualizationSamples
-          true
-          // returnFullTrajectories
-        );
-        endRectifiedStepCallback(rectifiedStep, intermediateSamples);
+      }
+      const sampleSource = test_source_distribution ?? x0_coupling;
+      const vizTrajectories = await this.sample_from_initial_points(
+        sampleSource,
+        num_simulation_steps
+      );
+      if (vizTrajectories) {
+        const trajArray = vizTrajectories.arraySync();
+        vizTrajectories.dispose();
+        endRectifiedStepCallback(rectifiedStep, trajArray);
       } else {
-        const finalSamples = await this.sampleForVisualization(
-          x0_coupling,
-          num_simulation_steps,
-          100,
-          // numVisualizationSamples
-          true
-          // returnFullTrajectories
-        );
-        endRectifiedStepCallback(rectifiedStep, finalSamples);
+        endRectifiedStepCallback(rectifiedStep, null);
       }
     }
     if (shouldDisposeX0) {
       x0_coupling.dispose();
     }
-    if (num_rectified_steps > 0) {
+    if (!reverseSampling && num_rectified_steps > 1) {
       x1_coupling.dispose();
     }
   }
@@ -61566,15 +61580,16 @@ var FlowModel = class extends Model {
   * Draw samples from the model using the given initial points
   * @param initial_points tf.Tensor2D of shape [num_samples, dim]
   * @param num_total_steps Number of integration steps
-  * @param options Sampling options (scheduler, etc.)
+  * @param options Sampling options (scheduler, reverse, etc.)
   * @param perStepCallback Optional callback invoked after each integration step with (step, x_t)
   * @param shouldStop Optional callback to check if sampling should be cancelled
   * @returns Promise<tf.Tensor3D | null> - null if cancelled
   */
   async sample_from_initial_points(initial_points, num_total_steps = 100, options = {}, perStepCallback, shouldStop = () => false) {
     const scheduler = options.scheduler ?? "euler_midpoint";
+    const reverse5 = options.reverse ?? false;
     const num_samples = initial_points.shape[0];
-    const t_steps = linspace(0, 1, num_total_steps + 1);
+    const t_steps = reverse5 ? linspace(1, 0, num_total_steps + 1) : linspace(0, 1, num_total_steps + 1);
     let x_t = initial_points;
     const all_step_data = [];
     for (let i = 0; i < num_total_steps; i++) {
@@ -61603,7 +61618,7 @@ var FlowModel = class extends Model {
   * @param gridResolution Number of points along each axis
   * @param domainRange The domain range for x and y coordinates
   * @param num_total_steps Number of flow steps
-  * @param options Sampling options (scheduler, etc.)
+  * @param options Sampling options (scheduler, reverse, etc.)
   * @param perStepCallback Optional callback invoked after each integration step with (step, x_t)
   * @param shouldStop Optional callback to check if sampling should be cancelled
   * @returns Promise<tf.Tensor3D | null> - null if cancelled
@@ -61611,127 +61626,6 @@ var FlowModel = class extends Model {
   async sample_grid(gridResolution, domainRange, num_total_steps = 100, options = {}, perStepCallback, shouldStop = () => false) {
     const initialPoints = generateUniformGridSamples(gridResolution, domainRange, true);
     return this.sample_from_initial_points(initialPoints, num_total_steps, options, perStepCallback, shouldStop);
-  }
-  /**
-   * Private helper: Sample trajectories for visualization
-   * @param initialPoints Initial points to sample from
-   * @param numSteps Number of ODE integration steps
-   * @param numVisualizationSamples Maximum number of samples to visualize
-   * @param returnFullTrajectories If true, returns full trajectories; if false, returns only final timestep
-   * @returns Full trajectories as 3D array or final timestep samples as 2D array, or null if cancelled
-   */
-  async sampleForVisualization(initialPoints, numSteps, numVisualizationSamples = 100, returnFullTrajectories = false) {
-    const numSamples = initialPoints.shape[0];
-    const sampleCount = Math.min(numVisualizationSamples, numSamples);
-    const subset = initialPoints.slice([0, 0], [sampleCount, -1]);
-    const trajectories = await this.sample_from_initial_points(subset, numSteps);
-    if (!trajectories) {
-      subset.dispose();
-      return null;
-    }
-    let result;
-    if (returnFullTrajectories) {
-      result = trajectories.arraySync();
-    } else {
-      const finalStep = trajectories.shape[0] - 1;
-      const finalSamples = trajectories.slice([finalStep, 0, 0], [1, -1, -1]).squeeze([0]);
-      result = finalSamples.arraySync();
-      finalSamples.dispose();
-    }
-    subset.dispose();
-    trajectories.dispose();
-    return result;
-  }
-  /**
-   * Train rectified flow and collect grid trajectories at each step.
-   * At step 0 (after initial flow matching training), samples from uniform grid.
-   * At each reflow step, trains on induced coupling and samples grid trajectories.
-   *
-   * @param data Target distribution dataset [num_samples, dim]
-   * @param source_distribution Initial source distribution [num_samples, dim]. If null, generates N(0, I)
-   * @param num_rectified_steps Number of rectification iterations
-   * @param epochs_per_rectified_step Training epochs per rectification step
-   * @param batchSize Mini-batch size for training
-   * @param num_simulation_steps ODE integration steps for sampling
-   * @param gridResolution Number of points along each axis for grid
-   * @param gridDomainRange Domain range for the uniform grid
-   * @param stopTraining Function to check if training should halt
-   * @param endEpochCallback Called after each epoch
-   * @param endRectifiedStepCallback Called after each rectification step with grid trajectories
-   * @returns Promise<number[][][][]> All grid trajectories [step][timestep][sample][dim]
-   */
-  async train_rectified_with_grid(data, source_distribution, num_rectified_steps, epochs_per_rectified_step, batchSize = 32, num_simulation_steps = 200, gridResolution = 6, gridDomainRange, stopTraining = () => false, endEpochCallback = () => {
-  }, endRectifiedStepCallback = () => {
-  }) {
-    const numSamples = data.shape[0];
-    const dim = data.shape[1];
-    const allGridTrajectories = [];
-    let x0_coupling;
-    let shouldDisposeX0 = false;
-    if (source_distribution === null) {
-      x0_coupling = randomNormal([numSamples, dim]);
-      shouldDisposeX0 = true;
-    } else {
-      x0_coupling = source_distribution;
-      shouldDisposeX0 = false;
-    }
-    let x1_coupling = data;
-    for (let rectifiedStep = 0; rectifiedStep < num_rectified_steps; rectifiedStep++) {
-      if (stopTraining()) {
-        console.log(`Training stopped at rectified step ${rectifiedStep}`);
-        break;
-      }
-      console.log(`=== Rectified Step ${rectifiedStep + 1}/${num_rectified_steps} ===`);
-      const wrappedCallback = (epoch, intermediateSamples, loss) => {
-        endEpochCallback(epoch, rectifiedStep, intermediateSamples, loss);
-      };
-      await this.train(
-        x1_coupling,
-        epochs_per_rectified_step,
-        batchSize,
-        epochs_per_rectified_step + 1,
-        stopTraining,
-        wrappedCallback,
-        x0_coupling
-      );
-      const gridTrajectories = await this.sample_grid(
-        gridResolution,
-        gridDomainRange,
-        num_simulation_steps
-      );
-      if (gridTrajectories) {
-        const gridTrajArray = gridTrajectories.arraySync();
-        allGridTrajectories.push(gridTrajArray);
-        gridTrajectories.dispose();
-        endRectifiedStepCallback(rectifiedStep, gridTrajArray);
-      } else {
-        endRectifiedStepCallback(rectifiedStep, null);
-      }
-      if (rectifiedStep < num_rectified_steps - 1) {
-        const trajectories = await this.sample_from_initial_points(
-          x0_coupling,
-          num_simulation_steps
-        );
-        if (!trajectories) {
-          console.log(`Sampling cancelled at rectified step ${rectifiedStep}`);
-          break;
-        }
-        const finalStep = trajectories.shape[0] - 1;
-        const newX1 = trajectories.slice([finalStep, 0, 0], [1, numSamples, dim]).squeeze([0]);
-        if (rectifiedStep > 0) {
-          x1_coupling.dispose();
-        }
-        x1_coupling = newX1;
-        trajectories.dispose();
-      }
-    }
-    if (shouldDisposeX0) {
-      x0_coupling.dispose();
-    }
-    if (num_rectified_steps > 0) {
-      x1_coupling.dispose();
-    }
-    return allGridTrajectories;
   }
 };
 
@@ -61943,6 +61837,10 @@ async function handleRectifiedTrainRequest(requestId, data) {
     const { pointsTensor: sourceTensor } = await loadDataset(rectifiedConfig.sourceDistributionPath);
     sourceDistribution = sourceTensor;
   }
+  let testSourceDistribution = null;
+  if (rectifiedConfig.testSourceDistributionPoints) {
+    testSourceDistribution = tensor2d(rectifiedConfig.testSourceDistributionPoints);
+  }
   const allRectifiedTrajectories = [];
   await ourModel.train_rectified(
     pointsTensor,
@@ -61972,8 +61870,15 @@ async function handleRectifiedTrainRequest(requestId, data) {
         rectifiedStep,
         trajectories
       });
-    }
+    },
+    testSourceDistribution,
+    // Pass the test source distribution
+    rectifiedConfig.reverseSampling ?? false
+    // Reverse sampling mode
   );
+  if (testSourceDistribution) {
+    testSourceDistribution.dispose();
+  }
   const modelSaveName = await saveModel(ourModel.model, trainingObjective);
   console.log("[FlowModel Worker] Rectified training complete:", { requestId, timestamp: Date.now() });
   self.postMessage({
@@ -61981,56 +61886,6 @@ async function handleRectifiedTrainRequest(requestId, data) {
     type: "result",
     tfModelPath: modelSaveName,
     allRectifiedTrajectories
-  });
-}
-async function handleRectifiedGridTrainRequest(requestId, data) {
-  const shouldStop = () => activeRequests.get(requestId)?.cancelled ?? false;
-  const { trainingObjective, modelConfig, datasetPath, rectifiedGridConfig } = data;
-  await initializeBackend();
-  const ModelClass = trainingObjectiveToModelClass[trainingObjective];
-  const ourModel = new ModelClass(modelConfig.dim, modelConfig.hidden);
-  const { pointsTensor } = await loadDataset(datasetPath);
-  let sourceDistribution = null;
-  if (rectifiedGridConfig.sourceDistributionPath) {
-    const { pointsTensor: sourceTensor } = await loadDataset(rectifiedGridConfig.sourceDistributionPath);
-    sourceDistribution = sourceTensor;
-  }
-  const allGridTrajectories = await ourModel.train_rectified_with_grid(
-    pointsTensor,
-    sourceDistribution,
-    rectifiedGridConfig.num_rectified_steps,
-    rectifiedGridConfig.epochs_per_rectified_step,
-    rectifiedGridConfig.batchSize,
-    rectifiedGridConfig.num_simulation_steps,
-    rectifiedGridConfig.gridResolution,
-    rectifiedGridConfig.gridDomainRange,
-    shouldStop,
-    (epoch, rectifiedStep, intermediateSamples, loss) => {
-      self.postMessage({
-        requestId,
-        type: "epoch_chunk",
-        epoch,
-        rectifiedStep,
-        intermediateSamples,
-        loss
-      });
-    },
-    (rectifiedStep, gridTrajectories) => {
-      self.postMessage({
-        requestId,
-        type: "rectified_step_complete",
-        rectifiedStep,
-        trajectories: gridTrajectories
-      });
-    }
-  );
-  const modelSaveName = await saveModel(ourModel.model, trainingObjective);
-  console.log("[FlowModel Worker] Rectified grid training complete:", { requestId, timestamp: Date.now() });
-  self.postMessage({
-    requestId,
-    type: "result",
-    tfModelPath: modelSaveName,
-    allRectifiedTrajectories: allGridTrajectories
   });
 }
 self.onmessage = async (e) => {
@@ -62059,9 +61914,6 @@ self.onmessage = async (e) => {
         break;
       case "train_rectified":
         await handleRectifiedTrainRequest(requestId, data);
-        break;
-      case "train_rectified_grid":
-        await handleRectifiedGridTrainRequest(requestId, data);
         break;
       default:
         throw new Error(`Unknown message type: ${type}`);
