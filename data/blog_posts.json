@@ -1,5 +1,14 @@
 [
   {
+    "id": "rectified-flow",
+    "title": "Rectified Flow Explainer",
+    "date": "2025-12-24",
+    "year": 2025,
+    "summary": "A visual introduction to rectified flows with interactive demonstrations.",
+    "previewUrl": "data/videos/RectifiedFlowIntro.mp4",
+    "link": "https://alechelbling.com/blog/rectified-flow"
+  },
+  {
     "id": "isomap",
     "title": "A Visual Introduction to Dimensionality Reduction with Isomap",
     "date": "2025-11-01",
