@@ -61311,7 +61311,7 @@ function generateUniformGridSamples(gridResolution, domainRange, asTensor = fals
   }
 }
 
-// ../../packages/diffusion/src/schedulers.ts
+// ../../packages/diffusion/src/flow_matching/schedulers.ts
 function eulerStep(x_t, t_start, t_end, vectorField) {
   return tidy(() => {
     const t0 = t_start.reshape([x_t.shape[0], 1]);
@@ -61347,7 +61347,7 @@ function getScheduler(scheduler) {
   return stepFn;
 }
 
-// ../../packages/diffusion/src/flow_matching.ts
+// ../../packages/diffusion/src/flow_matching/flow_matching.ts
 var FlowModel = class extends Model {
   constructor(dim = 2, hidden = 64) {
     super(dim, hidden);
@@ -61589,7 +61589,11 @@ var FlowModel = class extends Model {
     const scheduler = options.scheduler ?? "euler_midpoint";
     const reverse5 = options.reverse ?? false;
     const num_samples = initial_points.shape[0];
-    const t_steps = reverse5 ? linspace(1, 0, num_total_steps + 1) : linspace(0, 1, num_total_steps + 1);
+    const defaultStart = reverse5 ? 1 : 0;
+    const defaultEnd = reverse5 ? 0 : 1;
+    const t_start = options.t_start ?? defaultStart;
+    const t_end = options.t_end ?? defaultEnd;
+    const t_steps = linspace(t_start, t_end, num_total_steps + 1);
     let x_t = initial_points;
     const all_step_data = [];
     for (let i = 0; i < num_total_steps; i++) {
@@ -61629,7 +61633,7 @@ var FlowModel = class extends Model {
   }
 };
 
-// src/lib/flow_matching/workers/flow_model.worker.ts
+// ../../packages/diffusion/src/workers/flow_model.worker.ts
 setWasmPaths("/tfjs-backend-wasm/");
 var backend2 = "webgl";
 var trainingObjectiveToModelClass = {
