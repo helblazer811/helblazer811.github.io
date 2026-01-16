@@ -385,8 +385,14 @@
           html += "</div>";
         }
 
-        // Venue and year
-        html += `<div><i>${pub.venue}${pub.year ? `, ${pub.year}` : ""}</i></div>`;
+        // Venue and year - handle both venues array and legacy venue string
+        if (pub.venues && Array.isArray(pub.venues)) {
+          pub.venues.forEach(v => {
+            html += `<div><i>${v.venue}, ${v.year}</i></div>`;
+          });
+        } else {
+          html += `<div><i>${pub.venue}${pub.year ? `, ${pub.year}` : ""}</i></div>`;
+        }
 
         html += '</div>'; // Close compact div
 

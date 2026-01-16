@@ -173,8 +173,11 @@
         "isHighlighted": false
       }
     ],
-    "venue": "IEEE VIS: Visualization & Visual Analytics",
-    "year": 2024,
+    "venues": [
+      {"venue": "CHI: Conference on Human Factors in Computing Systems", "year": 2026},
+      {"venue": "IEEE VIS: Visualization & Visual Analytics", "year": 2024}
+    ],
+    "year": 2026,
     "description": "We developed an interactive tool for explaining the transformer architecture.",
     "imageUrl": "data/images/TransformerExplainer.gif",
     "links": {

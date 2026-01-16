@@ -96,8 +96,14 @@
               })
               .join(", ") + "<br>";
 
-          // Venue and year
-          contentHTML += `<em>${pub.venue}</em>, ${pub.year}<br>`;
+          // Venue and year - handle both venues array and legacy venue string
+          if (pub.venues && Array.isArray(pub.venues)) {
+            pub.venues.forEach(v => {
+              contentHTML += `<em>${v.venue}</em>, ${v.year}<br>`;
+            });
+          } else {
+            contentHTML += `<em>${pub.venue}</em>, ${pub.year}<br>`;
+          }
 
           // Awards
           if (pub.awards && pub.awards.length > 0) {
