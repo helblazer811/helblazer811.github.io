@@ -5816,13 +5816,13 @@ function backpropagateGradients(tensorAccumulatedGradientMap, filteredTape, tidy
 var FORMAT_LIMIT_NUM_VALS = 20;
 var FORMAT_NUM_FIRST_LAST_VALS = 3;
 var FORMAT_NUM_SIG_DIGITS = 7;
-function tensorToString(vals, shape, dtype, verbose) {
+function tensorToString(vals, shape, dtype, verbose2) {
   const strides = computeStrides(shape);
   const padPerCol = computeMaxSizePerColumn(vals, shape, dtype, strides);
   const rank = shape.length;
   const valsLines = subTensorToString(vals, shape, dtype, strides, padPerCol);
   const lines = ["Tensor"];
-  if (verbose) {
+  if (verbose2) {
     lines.push(`  dtype: ${dtype}`);
     lines.push(`  rank: ${rank}`);
     lines.push(`  shape: [${shape}]`);
@@ -6235,8 +6235,8 @@ var Tensor = class {
    *
    * @doc {heading: 'Tensors', subheading: 'Classes'}
    */
-  print(verbose = false) {
-    return opHandler.print(this, verbose);
+  print(verbose2 = false) {
+    return opHandler.print(this, verbose2);
   }
   /**
    * Returns a copy of the tensor. See `tf.clone` for details.
@@ -6251,9 +6251,9 @@ var Tensor = class {
    *
    * @doc {heading: 'Tensors', subheading: 'Classes'}
    */
-  toString(verbose = false) {
+  toString(verbose2 = false) {
     const vals = this.dataSync();
-    return tensorToString(vals, this.shape, this.dtype, verbose);
+    return tensorToString(vals, this.shape, this.dtype, verbose2);
   }
   cast(dtype) {
     this.throwIfDisposed();
@@ -8839,8 +8839,8 @@ function clone_(x) {
 var clone = /* @__PURE__ */ op({ clone_ });
 
 // ../../node_modules/@tensorflow/tfjs-core/dist/ops/print.js
-function print(x, verbose = false) {
-  console.log(x.toString(verbose));
+function print(x, verbose2 = false) {
+  console.log(x.toString(verbose2));
 }
 
 // ../../node_modules/@tensorflow/tfjs-core/dist/base_side_effects.js
@@ -21599,8 +21599,8 @@ var BaseLogger = class extends BaseCallback {
           logs[key] = this.totals[key] / this.seen;
         } else {
           tidy(() => {
-            const log5 = mul(div(1, this.seen), this.totals[key]);
-            logs[key] = log5;
+            const log6 = mul(div(1, this.seen), this.totals[key]);
+            logs[key] = log6;
             this.totals[key].dispose();
             keep(logs[key]);
           });
@@ -21810,11 +21810,11 @@ var CallbackConstructorRegistry = class _CallbackConstructorRegistry {
   }
 };
 CallbackConstructorRegistry.constructors = {};
-function configureCallbacks(callbacks2, verbose, epochs, initialEpoch, numTrainSamples, stepsPerEpoch, batchSize, doValidation, callbackMetrics) {
+function configureCallbacks(callbacks2, verbose2, epochs, initialEpoch, numTrainSamples, stepsPerEpoch, batchSize, doValidation, callbackMetrics) {
   const history = new History();
   const actualCallbacks = [
     new BaseLogger(),
-    ...CallbackConstructorRegistry.createCallbacks(verbose)
+    ...CallbackConstructorRegistry.createCallbacks(verbose2)
   ];
   if (callbacks2 != null) {
     actualCallbacks.push(...callbacks2);
@@ -21827,7 +21827,7 @@ function configureCallbacks(callbacks2, verbose, epochs, initialEpoch, numTrainS
     samples: numTrainSamples,
     steps: stepsPerEpoch,
     batchSize,
-    verbose,
+    verbose: verbose2,
     doValidation,
     metrics: callbackMetrics
   });
@@ -23450,10 +23450,10 @@ async function fitDataset(model2, dataset, args) {
       callbackMetrics = outLabels.slice();
     }
     const callbacks2 = standardizeCallbacks(args.callbacks, args.yieldEvery);
-    const verbose = args.verbose == null ? 1 : args.verbose;
+    const verbose2 = args.verbose == null ? 1 : args.verbose;
     const { callbackList, history } = configureCallbacks(
       callbacks2,
-      verbose,
+      verbose2,
       args.epochs,
       null,
       null,
@@ -24294,10 +24294,10 @@ var LayersModel = class extends Container {
    * @returns: Predictions as `tf.Tensor` (if a single output) or an `Array` of
    *   `tf.Tensor` (if multipe outputs).
    */
-  predictLoop(ins, batchSize = 32, verbose = false) {
+  predictLoop(ins, batchSize = 32, verbose2 = false) {
     return tidy(() => {
       const numSamples = this.checkNumSamples(ins);
-      if (verbose) {
+      if (verbose2) {
         throw new NotImplementedError("Verbose predictLoop() is not implemented yet.");
       }
       const batches = makeBatches(numSamples, batchSize);
@@ -24432,11 +24432,11 @@ var LayersModel = class extends Container {
    * `undefined`.
    * @returns Array of Scalars.
    */
-  testLoop(f, ins, batchSize, verbose = 0, steps) {
+  testLoop(f, ins, batchSize, verbose2 = 0, steps) {
     return tidy(() => {
       const numSamples = this.checkNumSamples(ins, batchSize, steps, "steps");
       const outs = [];
-      if (verbose > 0) {
+      if (verbose2 > 0) {
         throw new NotImplementedError("Verbose mode is not implemented yet.");
       }
       if (steps != null) {
@@ -24736,7 +24736,7 @@ var LayersModel = class extends Container {
    *   doing validation from data tensors). Not applicable for tfjs-layers.
    * @returns A `History` object.
    */
-  async fitLoop(f, ins, outLabels, batchSize, epochs, verbose, callbacks2, valF, valIns, shuffle2, callbackMetrics, initialEpoch, stepsPerEpoch, validationSteps) {
+  async fitLoop(f, ins, outLabels, batchSize, epochs, verbose2, callbacks2, valF, valIns, shuffle2, callbackMetrics, initialEpoch, stepsPerEpoch, validationSteps) {
     if (batchSize == null) {
       batchSize = 32;
     }
@@ -24764,10 +24764,10 @@ var LayersModel = class extends Container {
     if (numTrainSamples != null) {
       indexArray = range2(0, numTrainSamples);
     }
-    if (verbose == null) {
-      verbose = 1;
+    if (verbose2 == null) {
+      verbose2 = 1;
     }
-    const { callbackList, history } = configureCallbacks(callbacks2, verbose, epochs, initialEpoch, numTrainSamples, stepsPerEpoch, batchSize, doValidation, callbackMetrics);
+    const { callbackList, history } = configureCallbacks(callbacks2, verbose2, epochs, initialEpoch, numTrainSamples, stepsPerEpoch, batchSize, doValidation, callbackMetrics);
     callbackList.setModel(this);
     this.history = history;
     await callbackList.onTrainBegin();
@@ -61640,6 +61640,12 @@ var trainingObjectiveToModelClass = {
   "Flow Matching": FlowModel
 };
 var activeRequests = /* @__PURE__ */ new Map();
+var verbose = false;
+function log5(...args) {
+  if (verbose) {
+    console.log("[FlowModel Worker]", ...args);
+  }
+}
 self.addEventListener("unhandledrejection", (event) => {
   console.error("[FlowModel Worker] Unhandled promise rejection:", event.reason);
   self.postMessage({
@@ -61758,7 +61764,7 @@ async function handleSamplingRequest(requestId, type, data) {
     return;
   }
   if (shouldStop() || allSamples === null) {
-    console.log("[FlowModel Worker] Request cancelled:", requestId);
+    log5("Request cancelled:", requestId);
     self.postMessage({ requestId, type: "cancelled" });
     return;
   }
@@ -61772,7 +61778,7 @@ async function handleSamplingRequest(requestId, type, data) {
   if (guidanceData) {
     resultMessage.guidance = guidanceData;
   }
-  console.log("[FlowModel Worker] Sending result:", { requestId, type: "result", timestamp: Date.now() });
+  log5("Sending result:", { requestId, type: "result", timestamp: Date.now() });
   self.postMessage(resultMessage);
 }
 async function handleTrainRequest(requestId, data) {
@@ -61822,7 +61828,7 @@ async function handleTrainRequest(requestId, data) {
     );
   }
   const modelSaveName = await saveModel(ourModel.model, trainingObjective);
-  console.log("[FlowModel Worker] Training complete:", { requestId, timestamp: Date.now() });
+  log5("Training complete:", { requestId, timestamp: Date.now() });
   self.postMessage({
     requestId,
     type: "result",
@@ -61884,7 +61890,7 @@ async function handleRectifiedTrainRequest(requestId, data) {
     testSourceDistribution.dispose();
   }
   const modelSaveName = await saveModel(ourModel.model, trainingObjective);
-  console.log("[FlowModel Worker] Rectified training complete:", { requestId, timestamp: Date.now() });
+  log5("Rectified training complete:", { requestId, timestamp: Date.now() });
   self.postMessage({
     requestId,
     type: "result",
@@ -61894,18 +61900,23 @@ async function handleRectifiedTrainRequest(requestId, data) {
 }
 self.onmessage = async (e) => {
   const { requestId, type, data } = e.data;
+  if (type === "set_verbose") {
+    verbose = !!data?.verbose;
+    log5("Verbose logging:", verbose ? "enabled" : "disabled");
+    return;
+  }
   if (type === "stop" || type === "stop_training") {
     const req = activeRequests.get(requestId);
     if (req) {
       req.cancelled = true;
     }
-    console.log("[FlowModel Worker] Cancel requested:", requestId || "all");
+    log5("Cancel requested:", requestId || "all");
     self.postMessage({ requestId, type: "cancelled" });
     return;
   }
   activeRequests.set(requestId, { cancelled: false });
   try {
-    console.log("[FlowModel Worker] Received message:", { requestId, type, timestamp: Date.now() });
+    log5("Received message:", { requestId, type, timestamp: Date.now() });
     switch (type) {
       case "sample":
       case "sample_from_initial_points":
