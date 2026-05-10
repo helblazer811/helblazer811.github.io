@@ -3,20 +3,39 @@
   if (!match) return;
   const slug = match[1];
 
+  const layouts = [
+    { parent: ".page-container", widthAnchor: ".section-heading" },
+    { parent: ".container", widthAnchor: ".text-container" },
+  ];
+
   function inject() {
     if (document.getElementById("giscus-section")) return;
 
-    const parent =
-      document.querySelector(".container") || document.body;
+    let parent = null;
+    let anchor = null;
+    for (const l of layouts) {
+      const p = document.querySelector(l.parent);
+      const a = document.querySelector(l.widthAnchor);
+      if (p && a) {
+        parent = p;
+        anchor = a;
+        break;
+      }
+    }
+    parent = parent || document.body;
 
-    const textContainer = document.querySelector(".text-container");
     let textWidth = 720;
     let leftOffset = 0;
-    if (textContainer && parent.getBoundingClientRect) {
-      const textRect = textContainer.getBoundingClientRect();
-      const parentRect = parent.getBoundingClientRect();
-      textWidth = Math.round(textRect.width);
-      leftOffset = Math.round(textRect.left - parentRect.left);
+    if (anchor && parent.getBoundingClientRect) {
+      const ar = anchor.getBoundingClientRect();
+      const pr = parent.getBoundingClientRect();
+      const ps = getComputedStyle(parent);
+      const parentContentLeft =
+        pr.left +
+        (parseFloat(ps.borderLeftWidth) || 0) +
+        (parseFloat(ps.paddingLeft) || 0);
+      textWidth = Math.round(ar.width);
+      leftOffset = Math.max(0, Math.round(ar.left - parentContentLeft));
     }
 
     const section = document.createElement("section");
