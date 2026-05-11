@@ -2,8 +2,8 @@
   {
     "id": "rectified-flow",
     "title": "Rectified Flow Explainer",
-    "date": "2025-12-24",
-    "year": 2025,
+    "date": "2026-01-13",
+    "year": 2026,
     "summary": "A visual introduction to rectified flows with interactive demonstrations.",
     "previewUrl": "data/images/RectifiedFlowIntro.gif",
     "link": "https://alechelbling.com/blog/rectified-flow"
@@ -11,8 +11,8 @@
   {
     "id": "isomap",
     "title": "A Visual Introduction to Dimensionality Reduction with Isomap",
-    "date": "2026-04-15",
-    "year": 2026,
+    "date": "2025-11-15",
+    "year": 2025,
     "summary": "A visual introduction to dimensionality reduction with Isomap.",
     "previewUrl": "data/images/IsomapArticleVideo.gif",
     "link": "https://alechelbling.com/blog/isomap"
