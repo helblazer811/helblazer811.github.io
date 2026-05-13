@@ -1,5 +1,42 @@
 [
   {
+    "id": "what-time-is-it",
+    "title": "What Time Is It? How Data Geometry Makes Time Conditioning Optional for Flow Matching",
+    "authors": [
+      {
+        "name": "Alec Helbling",
+        "isHighlighted": true
+      },
+      {
+        "name": "Sebastian Gutierrez Hernandez",
+        "isHighlighted": false
+      },
+      {
+        "name": "Benjamin Hoover",
+        "isHighlighted": false
+      },
+      {
+        "name": "Duen Horng (Polo) Chau",
+        "isHighlighted": false
+      },
+      {
+        "name": "Parikshit Ram",
+        "isHighlighted": false
+      }
+    ],
+    "venue": "arXiv preprint",
+    "year": 2026,
+    "description": "We show that flow matching models can be trained without explicit time conditioning: high-dimensional data geometry lets the model recover time from the noisy state, with a closed-form estimator converging at rate O(1/√(d−k)). Empirically on CIFAR-10, CelebA-HQ, and FFHQ, the choice of coupling matters more for sample quality than removing time conditioning.",
+    "imageUrl": "data/images/WhatTimeIsIt.png",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2605.08344"
+    },
+    "githubRepo": null,
+    "show_star_count": false,
+    "awards": [],
+    "selected": true
+  },
+  {
     "id": "concept-attention",
     "title": "ConceptAttention: Diffusion Transformers Learn Highly Interpretable Features",
     "authors": [
