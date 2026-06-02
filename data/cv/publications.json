@@ -161,8 +161,8 @@
         "isHighlighted": false
       }
     ],
-    "venue": "arXiv preprint",
-    "year": 2025,
+    "venue": "ICLR 2026, Workshop on Trustworthy AI",
+    "year": 2026,
     "description": "What exactly makes a particular image unsafe? We introduce SafetyPairs, a scalable framework for generating counterfactual pairs of images that differ only in the features relevant to a given safety policy. Using image editing models, we make targeted changes to images that alter their safety labels while leaving safety-irrelevant details unchanged. We release a benchmark containing over 3,020 SafetyPair images spanning 9 safety categories, providing the first systematic resource for studying fine-grained image safety distinctions.",
     "imageUrl": "data/images/SafetyPairs.png",
     "links": {
@@ -269,8 +269,8 @@
         "isHighlighted": false
       }
     ],
-    "venue": "arXiv preprint",
-    "year": 2025,
+    "venue": "PKDD: European Conference on Machine Learning and Principles and Practice of Knowledge Discovery in Databases",
+    "year": 2026,
     "description": "UNDREAM bridges differentiable rendering and photorealistic simulation to develop end-to-end adversarial attacks.",
     "imageUrl": "data/images/Undream.png",
     "links": {
