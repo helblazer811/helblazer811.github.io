@@ -593,8 +593,8 @@
         "isHighlighted": false
       }
     ],
-    "venue": "Preprint",
-    "year": 2023,
+    "venue": "TMLR: Transactions on Machine Learning Research",
+    "year": 2024,
     "description": "We developed a self-supervised learning approach derived from Lie algebra to apply automatic data augmentations to image data that stay on low-dimensional manifolds in high-dimensional latent representations.",
     "imageUrl": "data/images/ManifoldCLR Figure Single Narrow.png",
     "links": {

@@ -46,6 +46,14 @@
     "type": "academic"
   },
   {
+    "institution": "MIT-IBM Watson AI Lab",
+    "location": "Cambridge, MA",
+    "position": "Research Intern",
+    "year": "Summer 2026",
+    "institution-url": "https://mitibmwatsonailab.mit.edu",
+    "type": "industry"
+  },
+  {
     "institution": "Apple",
     "location": "Seattle, WA",
     "position": "AI Research Intern, Responsible AI Team",
