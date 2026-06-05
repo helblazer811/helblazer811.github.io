@@ -237,10 +237,6 @@
         "isHighlighted": false
       },
       {
-        "name": "Willian Lunardi",
-        "isHighlighted": false
-      },
-      {
         "name": "Matthew Hull",
         "isHighlighted": false
       },
@@ -249,19 +245,23 @@
         "isHighlighted": false
       },
       {
-        "name": "Martin Andreoni",
-        "isHighlighted": false
-      },
-      {
         "name": "Alec Helbling",
         "isHighlighted": true
       },
       {
-        "name": "Wenke Lee",
+        "name": "ShengYun Peng",
         "isHighlighted": false
       },
       {
-        "name": "ShengYun Peng",
+        "name": "Willian Lunardi",
+        "isHighlighted": false
+      },
+      {
+        "name": "Martin Andreoni",
+        "isHighlighted": false
+      },
+      {
+        "name": "Wenke Lee",
         "isHighlighted": false
       },
       {
@@ -269,7 +269,7 @@
         "isHighlighted": false
       }
     ],
-    "venue": "PKDD",
+    "venue": "PAKDD",
     "year": 2026,
     "description": "UNDREAM bridges differentiable rendering and photorealistic simulation to develop end-to-end adversarial attacks.",
     "imageUrl": "data/images/Undream.png",
