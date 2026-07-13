@@ -9,15 +9,6 @@
     "link": "https://alechelbling.com/blog/rectified-flow"
   },
   {
-    "id": "masked-diffusion",
-    "title": "Are Masked Diffusion Language Models Actually Faster?",
-    "date": "2026-07-09",
-    "year": 2026,
-    "summary": "A visual tour of efficient non-autoregressive generation with masked diffusion language models.",
-    "previewUrl": "data/images/MaskedDiffusion.png",
-    "link": "https://alechelbling.com/blog/masked-diffusion"
-  },
-  {
     "id": "isomap",
     "title": "A Visual Introduction to Dimensionality Reduction with Isomap",
     "date": "2025-11-15",
