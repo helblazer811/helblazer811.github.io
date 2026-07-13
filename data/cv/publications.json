@@ -78,6 +78,33 @@
     "selected": true
   },
   {
+    "id": "diffusion-explorer",
+    "title": "Diffusion Explorer: Interactive Exploration of Diffusion Models",
+    "authors": [
+      {
+        "name": "Alec Helbling",
+        "isHighlighted": true
+      },
+      {
+        "name": "Duen Horng (Polo) Chau",
+        "isHighlighted": false
+      }
+    ],
+    "venue": "IEEE VIS",
+    "year": 2025,
+    "description": "We developed an interactive tool for explaining the geometric properties of diffusion models.",
+    "imageUrl": "data/images/DiffusionExplorer.gif",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2507.01178",
+      "github": "https://github.com/helblazer811/Diffusion-Explorer",
+      "tool": "https://alechelbling.com/Diffusion-Explorer/"
+    },
+    "githubRepo": "helblazer811/Diffusion-Explorer",
+    "show_star_count": true,
+    "awards": [],
+    "selected": true
+  },
+  {
     "id": "manimml",
     "title": "ManimML: Communicating Machine Learning Architectures with Animation",
     "authors": [
@@ -103,33 +130,6 @@
     "awards": [
       "Best Poster Award"
     ],
-    "selected": true
-  },
-  {
-    "id": "diffusion-explorer",
-    "title": "Diffusion Explorer: Interactive Exploration of Diffusion Models",
-    "authors": [
-      {
-        "name": "Alec Helbling",
-        "isHighlighted": true
-      },
-      {
-        "name": "Duen Horng (Polo) Chau",
-        "isHighlighted": false
-      }
-    ],
-    "venue": "IEEE VIS",
-    "year": 2025,
-    "description": "We developed an interactive tool for explaining the geometric properties of diffusion models.",
-    "imageUrl": "data/images/DiffusionExplorer.gif",
-    "links": {
-      "arxiv": "https://arxiv.org/abs/2507.01178",
-      "github": "https://github.com/helblazer811/Diffusion-Explorer",
-      "tool": "https://alechelbling.com/Diffusion-Explorer/"
-    },
-    "githubRepo": "helblazer811/Diffusion-Explorer",
-    "show_star_count": true,
-    "awards": [],
     "selected": true
   },
   {
