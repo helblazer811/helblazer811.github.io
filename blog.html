@@ -90,11 +90,16 @@
             mediaFrame.appendChild(img);
           }
 
+          const badge = document.createElement('span');
+          badge.className = `post-type-badge type-${post.type || 'blog'}`;
+          badge.innerText = post.type === 'visualization' ? 'Visualization' : 'Blog';
+
           const title = document.createElement('div');
           title.className = 'post-title';
           title.innerText = post.title;
 
           link.appendChild(mediaFrame);
+          link.appendChild(badge);
           link.appendChild(title);
           article.appendChild(link);
 

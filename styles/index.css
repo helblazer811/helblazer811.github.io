@@ -251,6 +251,28 @@ span.highlight {
   opacity: 0.9;
 }
 
+.post-type-badge {
+  display: inline-block;
+  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-bottom: 6px;
+}
+
+.post-type-badge.type-blog {
+  color: #1772d0;
+  border: 1px solid #1772d0;
+}
+
+.post-type-badge.type-visualization {
+  color: #0d9488;
+  border: 1px solid #0d9488;
+}
+
 .post-title {
   font-family: 'Lato', Verdana, Helvetica, sans-serif;
   font-size: 14px;

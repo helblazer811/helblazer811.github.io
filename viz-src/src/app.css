@@ -1,0 +1,44 @@
+/* Hand-copied subset of the portfolio site's (helblazer811.github.io)
+   fonts/colors so pages here feel consistent with alechelbling.com
+   without importing anything from that build. */
+
+:root {
+	--link-color: #1772d0;
+	--link-hover-color: #f09228;
+	--text-color: #222;
+	--muted-color: #666;
+	--date-color: #777;
+	--border-color: #e0e0e0;
+	--page-max-width: 720px;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: 'Lato', Verdana, Helvetica, sans-serif;
+	font-size: 16px;
+	line-height: 1.6;
+	color: var(--text-color);
+	background: #ffffff;
+}
+
+a {
+	color: var(--link-color);
+	text-decoration: none;
+}
+
+a:hover {
+	color: var(--link-hover-color);
+}
+
+p {
+	margin: 1em 0;
+}
