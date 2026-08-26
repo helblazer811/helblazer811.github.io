@@ -17,12 +17,14 @@
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
 		"@types/node": "^20.10.0",
 		"fs-extra": "^11.2.0",
+		"playwright": "^1.62.1",
 		"svelte": "^5.45.6",
 		"svelte-check": "^4.3.4",
 		"typescript": "^5.9.3",
 		"vite": "^7.2.6"
 	},
 	"dependencies": {
-		"@helblazer811/tempus": "github:helblazer811/tempus"
+		"@helblazer811/tempus": "github:helblazer811/tempus",
+		"@helblazer811/tempus-ui": "github:helblazer811/tempus#ui"
 	}
 }

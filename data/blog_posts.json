@@ -1,11 +1,100 @@
 [
   {
+    "id": "divergence-and-curl",
+    "title": "Divergence and Curl",
+    "date": "2026-08-25",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "Streamline visualizations of pure divergence, pure curl, and their combination.",
+    "previewUrl": "data/images/divergence-and-curl-preview.gif",
+    "link": "https://alechelbling.com/visualizations/divergence-and-curl/"
+  },
+  {
+    "id": "helmholtz-decomposition",
+    "title": "Helmholtz Decomposition",
+    "date": "2026-08-25",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "Decomposing a vector field into its divergence and curl components.",
+    "link": "https://alechelbling.com/visualizations/helmholtz-decomposition/"
+  },
+  {
+    "id": "helmholtz-decomposition-dlic",
+    "title": "Helmholtz Decomposition (DLIC)",
+    "date": "2026-08-25",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "Helmholtz decomposition rendered via dynamic line integral convolution.",
+    "link": "https://alechelbling.com/visualizations/helmholtz-decomposition-dlic/"
+  },
+  {
+    "id": "svgd",
+    "title": "Stein Variational Gradient Descent",
+    "date": "2026-08-25",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "Particle-based sampling that iteratively pushes particles toward a target distribution.",
+    "previewUrl": "data/images/svgd-preview.gif",
+    "link": "https://alechelbling.com/visualizations/svgd/"
+  },
+  {
+    "id": "lorenz-attractor",
+    "title": "The Lorenz Attractor",
+    "date": "2026-08-25",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "The classic chaotic dynamical system, traced in a rotating 3D view.",
+    "previewUrl": "data/images/lorenz-attractor-preview.gif",
+    "link": "https://alechelbling.com/visualizations/lorenz-attractor/"
+  },
+  {
+    "id": "van-der-pol",
+    "title": "Van der Pol Limit Cycle",
+    "date": "2026-08-25",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "A trajectory spiraling onto the stable limit cycle of the Van der Pol oscillator.",
+    "previewUrl": "data/images/van-der-pol-preview.gif",
+    "link": "https://alechelbling.com/visualizations/van-der-pol/"
+  },
+  {
+    "id": "marching-squares",
+    "title": "Marching Squares",
+    "date": "2026-08-25",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "Contour generation on real volcano elevation data, with the full 16-case reference table.",
+    "previewUrl": "data/images/marching-squares-preview.gif",
+    "link": "https://alechelbling.com/visualizations/marching-squares/"
+  },
+  {
+    "id": "stokes-theorem",
+    "title": "Stokes' Theorem",
+    "date": "2026-08-25",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "Line integral around a curve versus the curl integral over the enclosed surface.",
+    "previewUrl": "data/images/stokes-theorem-preview.gif",
+    "link": "https://alechelbling.com/visualizations/stokes-theorem/"
+  },
+  {
+    "id": "diffusion-horizontal",
+    "title": "Diffusion Probability Path",
+    "date": "2026-08-25",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "A DDPM reverse-diffusion process animated from a noise grid to a smiley-face distribution.",
+    "previewUrl": "data/images/diffusion-horizontal-preview.gif",
+    "link": "https://alechelbling.com/visualizations/diffusion-horizontal/"
+  },
+  {
     "id": "block-diffusion",
     "title": "Block Diffusion",
     "date": "2026-08-25",
     "year": 2026,
     "type": "visualization",
     "summary": "A shared-clock comparison of autoregressive and block-diffusion decoding.",
+    "previewUrl": "data/images/block-diffusion-preview.gif",
     "link": "https://alechelbling.com/visualizations/block-diffusion/"
   },
   {
