@@ -6,7 +6,7 @@
     "year": 2026,
     "type": "visualization",
     "summary": "Streamline visualizations of pure divergence, pure curl, and their combination.",
-    "previewUrl": "data/images/divergence-and-curl-preview.gif",
+    "previewUrl": "data/images/divergence-and-curl-preview.mp4",
     "link": "https://alechelbling.com/visualizations/divergence-and-curl/"
   },
   {
@@ -25,6 +25,7 @@
     "year": 2026,
     "type": "visualization",
     "summary": "Helmholtz decomposition rendered via dynamic line integral convolution.",
+    "previewUrl": "data/images/helmholtz-decomposition-dlic-preview.jpg",
     "link": "https://alechelbling.com/visualizations/helmholtz-decomposition-dlic/"
   },
   {
@@ -34,7 +35,7 @@
     "year": 2026,
     "type": "visualization",
     "summary": "Particle-based sampling that iteratively pushes particles toward a target distribution.",
-    "previewUrl": "data/images/svgd-preview.gif",
+    "previewUrl": "data/images/svgd-preview.mp4",
     "link": "https://alechelbling.com/visualizations/svgd/"
   },
   {
@@ -44,7 +45,7 @@
     "year": 2026,
     "type": "visualization",
     "summary": "The classic chaotic dynamical system, traced in a rotating 3D view.",
-    "previewUrl": "data/images/lorenz-attractor-preview.gif",
+    "previewUrl": "data/images/lorenz-attractor-preview.mp4",
     "link": "https://alechelbling.com/visualizations/lorenz-attractor/"
   },
   {
@@ -54,7 +55,7 @@
     "year": 2026,
     "type": "visualization",
     "summary": "A trajectory spiraling onto the stable limit cycle of the Van der Pol oscillator.",
-    "previewUrl": "data/images/van-der-pol-preview.gif",
+    "previewUrl": "data/images/van-der-pol-preview.mp4",
     "link": "https://alechelbling.com/visualizations/van-der-pol/"
   },
   {
@@ -64,7 +65,7 @@
     "year": 2026,
     "type": "visualization",
     "summary": "Contour generation on real volcano elevation data, with the full 16-case reference table.",
-    "previewUrl": "data/images/marching-squares-preview.gif",
+    "previewUrl": "data/images/marching-squares-preview.mp4",
     "link": "https://alechelbling.com/visualizations/marching-squares/"
   },
   {
@@ -74,7 +75,7 @@
     "year": 2026,
     "type": "visualization",
     "summary": "Line integral around a curve versus the curl integral over the enclosed surface.",
-    "previewUrl": "data/images/stokes-theorem-preview.gif",
+    "previewUrl": "data/images/stokes-theorem-preview.mp4",
     "link": "https://alechelbling.com/visualizations/stokes-theorem/"
   },
   {
@@ -84,7 +85,7 @@
     "year": 2026,
     "type": "visualization",
     "summary": "A DDPM reverse-diffusion process animated from a noise grid to a smiley-face distribution.",
-    "previewUrl": "data/images/diffusion-horizontal-preview.gif",
+    "previewUrl": "data/images/diffusion-horizontal-preview.mp4",
     "link": "https://alechelbling.com/visualizations/diffusion-horizontal/"
   },
   {
@@ -94,7 +95,7 @@
     "year": 2026,
     "type": "visualization",
     "summary": "A shared-clock comparison of autoregressive and block-diffusion decoding.",
-    "previewUrl": "data/images/block-diffusion-preview.gif",
+    "previewUrl": "data/images/block-diffusion-preview.mp4",
     "link": "https://alechelbling.com/visualizations/block-diffusion/"
   },
   {

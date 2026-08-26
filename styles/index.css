@@ -182,6 +182,17 @@ span.highlight {
   margin: 0;
 }
 
+.subsection-header {
+  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+  padding: 0 20px;
+  margin: 4px 0 12px;
+}
+
 /* Footer styling */
 .footer {
   padding: 20px;
@@ -404,6 +415,10 @@ span.highlight {
 
   /* Recent blog posts: match section header padding on mobile */
   .recent-posts-grid {
+    padding: 0 15px;
+  }
+
+  .subsection-header {
     padding: 0 15px;
   }
 

@@ -3,6 +3,17 @@
   margin: 0 auto;
 }
 
+.type-section-heading {
+  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+  font-size: 28px;
+  font-weight: normal;
+  margin: 50px 0 20px;
+}
+
+.type-section-heading:first-of-type {
+  margin-top: 30px;
+}
+
 .year-section {
   margin-bottom: 60px;
 }

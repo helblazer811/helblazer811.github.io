@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-  <title>Blog - Alec Helbling</title>
+  <title>Blogs and Visualizations - Alec Helbling</title>
 
   <meta name="author" content="Alec Helbling">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,26 +23,89 @@
       .catch(error => console.error('Error loading blog posts:', error));
 
     /**
-     * Render blog posts grouped by year
+     * Build a single post-card <article> for the given post entry. Videos
+     * are lazy: they don't fetch/decode until their card is about to
+     * scroll into view, which is what actually keeps this page (every
+     * post, not just the homepage's top few) from stalling on load when
+     * there are many video previews.
      */
-    function renderBlogPostsByYear() {
-      const container = document.getElementById('blog-posts-container');
-      if (!container) return;
+    function createPostCard(post, lazyVideos) {
+      const article = document.createElement('article');
+      article.className = 'post-card';
 
-      // Group posts by year in descending order
+      const link = document.createElement('a');
+      link.href = post.link;
+
+      const mediaFrame = document.createElement('div');
+      mediaFrame.className = 'media-frame';
+
+      if (post.previewUrl) {
+        if (post.previewUrl.endsWith('.mp4')) {
+          const video = document.createElement('video');
+          video.setAttribute('muted', '');
+          video.setAttribute('loop', '');
+          video.setAttribute('playsinline', '');
+          video.setAttribute('preload', 'none');
+          const source = document.createElement('source');
+          source.dataset.src = post.previewUrl;
+          source.type = 'video/mp4';
+          video.appendChild(source);
+          mediaFrame.appendChild(video);
+          lazyVideos.push(video);
+        } else {
+          const img = document.createElement('img');
+          img.loading = 'lazy';
+          img.src = post.previewUrl;
+          img.alt = post.title;
+          mediaFrame.appendChild(img);
+        }
+      } else if (post.imageUrl) {
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.src = post.imageUrl;
+        img.alt = post.title;
+        mediaFrame.appendChild(img);
+      }
+
+      const badge = document.createElement('span');
+      badge.className = `post-type-badge type-${post.type || 'blog'}`;
+      badge.innerText = post.type === 'visualization' ? 'Visualization' : 'Blog';
+
+      const title = document.createElement('div');
+      title.className = 'post-title';
+      title.innerText = post.title;
+
+      link.appendChild(mediaFrame);
+      link.appendChild(badge);
+      link.appendChild(title);
+      article.appendChild(link);
+
+      const meta = document.createElement('div');
+      meta.className = 'post-meta';
+      const date = new Date(post.date);
+      meta.innerText = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      article.appendChild(meta);
+
+      return article;
+    }
+
+    /**
+     * Render a list of posts grouped by year into the given container.
+     * Any lazy <video> elements created along the way are pushed onto
+     * lazyVideos for the caller to hand off to an IntersectionObserver.
+     */
+    function renderPostsByYear(posts, container, lazyVideos) {
       const postsByYear = {};
-      blogPosts.forEach(post => {
+      posts.forEach(post => {
         if (!postsByYear[post.year]) {
           postsByYear[post.year] = [];
         }
         postsByYear[post.year].push(post);
       });
 
-      // Sort years in descending order
       const sortedYears = Object.keys(postsByYear).sort((a, b) => b - a);
 
       sortedYears.forEach(year => {
-        // Create year section
         const yearSection = document.createElement('section');
         yearSection.className = 'year-section';
 
@@ -50,71 +113,57 @@
         heading.innerText = year;
         yearSection.appendChild(heading);
 
-        // Create posts grid for this year
         const grid = document.createElement('div');
         grid.className = 'posts-grid';
 
         postsByYear[year].forEach(post => {
-          const article = document.createElement('article');
-          article.className = 'post-card';
-
-          const link = document.createElement('a');
-          link.href = post.link;
-
-          const mediaFrame = document.createElement('div');
-          mediaFrame.className = 'media-frame';
-
-          if (post.previewUrl) {
-            if (post.previewUrl.endsWith('.mp4')) {
-              const video = document.createElement('video');
-              video.setAttribute('autoplay', '');
-              video.setAttribute('muted', '');
-              video.setAttribute('loop', '');
-              video.setAttribute('playsinline', '');
-              video.setAttribute('preload', 'metadata');
-              const source = document.createElement('source');
-              source.src = post.previewUrl;
-              source.type = 'video/mp4';
-              video.appendChild(source);
-              mediaFrame.appendChild(video);
-            } else {
-              const img = document.createElement('img');
-              img.src = post.previewUrl;
-              img.alt = post.title;
-              mediaFrame.appendChild(img);
-            }
-          } else if (post.imageUrl) {
-            const img = document.createElement('img');
-            img.src = post.imageUrl;
-            img.alt = post.title;
-            mediaFrame.appendChild(img);
-          }
-
-          const badge = document.createElement('span');
-          badge.className = `post-type-badge type-${post.type || 'blog'}`;
-          badge.innerText = post.type === 'visualization' ? 'Visualization' : 'Blog';
-
-          const title = document.createElement('div');
-          title.className = 'post-title';
-          title.innerText = post.title;
-
-          link.appendChild(mediaFrame);
-          link.appendChild(badge);
-          link.appendChild(title);
-          article.appendChild(link);
-
-          const meta = document.createElement('div');
-          meta.className = 'post-meta';
-          const date = new Date(post.date);
-          meta.innerText = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-          article.appendChild(meta);
-
-          grid.appendChild(article);
+          grid.appendChild(createPostCard(post, lazyVideos));
         });
 
         yearSection.appendChild(grid);
         container.appendChild(yearSection);
       });
+    }
+
+    /**
+     * Render blog posts and visualizations into their own top-level
+     * sections (blogs first, to keep full write-ups more prominent than
+     * the smaller quick visualizations), each grouped by year.
+     */
+    function renderBlogPostsByYear() {
+      const blogContainer = document.getElementById('blog-posts-container');
+      const vizContainer = document.getElementById('viz-posts-container');
+      if (!blogContainer || !vizContainer) return;
+
+      const lazyVideos = [];
+      const blogs = blogPosts.filter(post => (post.type || 'blog') === 'blog');
+      const visualizations = blogPosts.filter(post => post.type === 'visualization');
+
+      renderPostsByYear(blogs, blogContainer, lazyVideos);
+      renderPostsByYear(visualizations, vizContainer, lazyVideos);
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries, obs) => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const video = entry.target;
+            video.querySelectorAll('source[data-src]').forEach(s => {
+              s.src = s.dataset.src;
+              delete s.dataset.src;
+            });
+            video.load();
+            video.play().catch(() => {});
+            obs.unobserve(video);
+          });
+        }, { rootMargin: '200px' });
+        lazyVideos.forEach(v => observer.observe(v));
+      } else {
+        lazyVideos.forEach(v => {
+          v.querySelectorAll('source[data-src]').forEach(s => { s.src = s.dataset.src; });
+          v.load();
+          v.play().catch(() => {});
+        });
+      }
     }
   </script>
 </head>
@@ -129,11 +178,15 @@
           </div>
 
           <p style="text-align:center">
-            <name>Blog</name>
+            <name>Blogs and Visualizations</name>
           </p>
           <p style="text-align:center">Thoughts, videos, and updates.</p>
 
+          <h2 class="type-section-heading">Blogs</h2>
           <div id="blog-posts-container"></div>
+
+          <h2 class="type-section-heading">Visualizations</h2>
+          <div id="viz-posts-container"></div>
 
         </div>
       </td>

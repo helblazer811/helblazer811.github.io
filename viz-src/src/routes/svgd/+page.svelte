@@ -15,3 +15,12 @@
 />
 
 <SVGD />
+
+<style>
+	/* SVGD's internal title duplicates this page's own PageHeader title, and
+	   is styled white-on-transparent (meant for a dark backdrop this page
+	   doesn't have), so it renders invisible and just eats vertical space. */
+	:global(.svgd-title) {
+		display: none;
+	}
+</style>

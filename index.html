@@ -183,77 +183,142 @@
         .catch((error) => console.error("Error loading blog posts:", error));
 
       /**
-       * Render recent blog posts (top 3)
+       * Build a single post-card <article> for the given post entry.
+       * Videos load lazily (no eager autoplay) until scrolled near view.
        */
-      function renderRecentBlogPosts() {
-        const container = document.getElementById(
-          "recent-blog-posts-container"
-        );
-        if (!container) return;
+      function createPostCard(post) {
+        const article = document.createElement("article");
+        article.className = "post-card";
 
-        const recentPosts = blogPosts.slice(0, 3);
+        const link = document.createElement("a");
+        link.href = post.link;
 
-        recentPosts.forEach((post) => {
-          const article = document.createElement("article");
-          article.className = "post-card";
+        const mediaFrame = document.createElement("div");
+        mediaFrame.className = "media-frame";
 
-          const link = document.createElement("a");
-          link.href = post.link;
-
-          const mediaFrame = document.createElement("div");
-          mediaFrame.className = "media-frame";
-
-          if (post.previewUrl) {
-            if (post.previewUrl.endsWith(".mp4")) {
-              const video = document.createElement("video");
-              video.setAttribute("autoplay", "");
-              video.setAttribute("muted", "");
-              video.setAttribute("loop", "");
-              video.setAttribute("playsinline", "");
-              video.setAttribute("preload", "metadata");
-              const source = document.createElement("source");
-              source.src = post.previewUrl;
-              source.type = "video/mp4";
-              video.appendChild(source);
-              mediaFrame.appendChild(video);
-            } else {
-              const img = document.createElement("img");
-              img.src = post.previewUrl;
-              img.alt = post.title;
-              mediaFrame.appendChild(img);
-            }
-          } else if (post.imageUrl) {
+        if (post.previewUrl) {
+          if (post.previewUrl.endsWith(".mp4")) {
+            const video = document.createElement("video");
+            video.setAttribute("muted", "");
+            video.setAttribute("loop", "");
+            video.setAttribute("playsinline", "");
+            video.setAttribute("preload", "none");
+            video.dataset.src = post.previewUrl;
+            const source = document.createElement("source");
+            source.dataset.src = post.previewUrl;
+            source.type = "video/mp4";
+            video.appendChild(source);
+            mediaFrame.appendChild(video);
+            lazyVideos.push(video);
+          } else {
             const img = document.createElement("img");
-            img.src = post.imageUrl;
+            img.loading = "lazy";
+            img.src = post.previewUrl;
             img.alt = post.title;
             mediaFrame.appendChild(img);
           }
+        } else if (post.imageUrl) {
+          const img = document.createElement("img");
+          img.loading = "lazy";
+          img.src = post.imageUrl;
+          img.alt = post.title;
+          mediaFrame.appendChild(img);
+        }
 
-          const badge = document.createElement("span");
-          badge.className = `post-type-badge type-${post.type || "blog"}`;
-          badge.innerText = post.type === "visualization" ? "Visualization" : "Blog";
+        const badge = document.createElement("span");
+        badge.className = `post-type-badge type-${post.type || "blog"}`;
+        badge.innerText = post.type === "visualization" ? "Visualization" : "Blog";
 
-          const title = document.createElement("div");
-          title.className = "post-title";
-          title.innerText = post.title;
+        const title = document.createElement("div");
+        title.className = "post-title";
+        title.innerText = post.title;
 
-          link.appendChild(mediaFrame);
-          link.appendChild(badge);
-          link.appendChild(title);
-          article.appendChild(link);
+        link.appendChild(mediaFrame);
+        link.appendChild(badge);
+        link.appendChild(title);
+        article.appendChild(link);
 
-          const meta = document.createElement("div");
-          meta.className = "post-meta";
-          const date = new Date(post.date);
-          meta.innerText = date.toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          });
-          article.appendChild(meta);
-
-          container.appendChild(article);
+        const meta = document.createElement("div");
+        meta.className = "post-meta";
+        const date = new Date(post.date);
+        meta.innerText = date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
         });
+        article.appendChild(meta);
+
+        return article;
+      }
+
+      // Videos start loading only once their card is about to scroll into
+      // view, instead of every card on the page fetching+decoding video at
+      // once — that's the main source of page-load lag on blog.html, which
+      // lists every post (not just the homepage's top 3 of each type).
+      const lazyVideos = [];
+      const lazyVideoObserver =
+        "IntersectionObserver" in window
+          ? new IntersectionObserver(
+              (entries, observer) => {
+                entries.forEach((entry) => {
+                  if (!entry.isIntersecting) return;
+                  const video = entry.target;
+                  video
+                    .querySelectorAll("source[data-src]")
+                    .forEach((s) => {
+                      s.src = s.dataset.src;
+                      delete s.dataset.src;
+                    });
+                  video.load();
+                  video.play().catch(() => {});
+                  observer.unobserve(video);
+                });
+              },
+              { rootMargin: "200px" }
+            )
+          : null;
+
+      function observeLazyVideos() {
+        if (lazyVideoObserver) {
+          lazyVideos.forEach((v) => lazyVideoObserver.observe(v));
+        } else {
+          // No IntersectionObserver support: just load everything eagerly.
+          lazyVideos.forEach((v) => {
+            v.querySelectorAll("source[data-src]").forEach((s) => {
+              s.src = s.dataset.src;
+            });
+            v.load();
+            v.play().catch(() => {});
+          });
+        }
+        lazyVideos.length = 0;
+      }
+
+      /**
+       * Render recent posts (top 3 blogs, top 3 visualizations), each in
+       * its own section — blogs first, to keep full write-ups more
+       * prominent than the smaller quick visualizations.
+       */
+      function renderRecentBlogPosts() {
+        const blogContainer = document.getElementById(
+          "recent-blog-posts-container"
+        );
+        const vizContainer = document.getElementById(
+          "recent-viz-posts-container"
+        );
+        if (!blogContainer || !vizContainer) return;
+
+        const recentBlogs = blogPosts
+          .filter((post) => (post.type || "blog") === "blog")
+          .slice(0, 3);
+        const recentViz = blogPosts
+          .filter((post) => post.type === "visualization")
+          .slice(0, 3);
+
+        recentBlogs.forEach((post) => blogContainer.appendChild(createPostCard(post)));
+        recentViz.forEach((post) => vizContainer.appendChild(createPostCard(post)));
+
+        observeLazyVideos();
       }
     </script>
 
@@ -332,9 +397,12 @@
       </div>
 
       <div class="section-header">
-        <heading>Recent Blog Posts and System Demos</heading>
+        <heading>Blogs and Visualizations</heading>
       </div>
+      <h3 class="subsection-header">Blogs</h3>
       <div class="recent-posts-grid" id="recent-blog-posts-container"></div>
+      <h3 class="subsection-header">Visualizations</h3>
+      <div class="recent-posts-grid" id="recent-viz-posts-container"></div>
       <div class="view-all-link">
         <a href="blog.html">View all posts →</a>
       </div>
