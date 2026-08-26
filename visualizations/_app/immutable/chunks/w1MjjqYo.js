@@ -1,0 +1,1 @@
+function c(u,a){let n=null,t=null;function r(e=u,s=a){if(!n)return;const i=window.devicePixelRatio||1;n.width=e*i,n.height=s*i,t=n.getContext("2d"),t&&t.setTransform(i,0,0,i,0,0)}function l(e){return n=e,r(),{destroy(){n=null,t=null}}}function o(e){n=e,r()}return{bindCanvas:l,init:o,resize:r,get canvas(){return n},get ctx(){return t}}}export{c as u};

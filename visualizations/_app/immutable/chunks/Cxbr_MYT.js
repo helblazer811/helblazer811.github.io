@@ -1,0 +1,1 @@
+function l(a){const e={wasPlayingBeforeHidden:!1};function s(n){const i=a();i&&(!n&&i.isPlaying?(e.wasPlayingBeforeHidden=!0,i.pause()):n&&e.wasPlayingBeforeHidden&&(e.wasPlayingBeforeHidden=!1,i.play()))}return{state:e,handleVisibilityChange:s}}export{l as u};
