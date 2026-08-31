@@ -12,6 +12,7 @@
     type VectorFieldFn,
     type StreamlineAnimationState,
   } from "@helblazer811/tempus-ui";
+  import { downloadBlob, streamingVideoExport } from "@helblazer811/tempus";
 
   // ----------------------------------------------------------------
   // Props
@@ -60,6 +61,14 @@
   const canvasWidth = Math.floor((width - 2 * gap) / 3);
   const canvasHeight = height;
   const dpr = typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1;
+  // Tempus captures deterministically from a 2D canvas. The interactive page
+  // keeps its faster WebGPU renderer, while `?capture=1` uses the equivalent
+  // CPU renderer so every exported frame has a reliable Canvas2D readback.
+  const captureBackend = typeof window !== 'undefined'
+    ? new URLSearchParams(window.location.search).get('capture')
+    : null;
+  const captureMode = captureBackend === 'cpu';
+  const gpuCaptureMode = captureBackend === 'gpu';
 
   let canvas1: HTMLCanvasElement | null = null;
   let canvas2: HTMLCanvasElement | null = null;
@@ -181,7 +190,8 @@
   async function runInitialComputation() {
     if (!canvas1 || !canvas2 || !canvas3) return;
 
-    const toPixel = createToPixel(canvasWidth, canvasHeight);
+    const renderScale = captureMode ? dpr : 1;
+    const toPixel = createToPixel(canvasWidth * renderScale, canvasHeight * renderScale);
 
     // Integrate streamlines over a domain larger than the view so they
     // can flow off-screen at their natural endpoints. toPixel still
@@ -195,18 +205,17 @@
     };
 
     const commonOptions = {
-      backend: 'gpu' as const,
-      dpr,
+      backend: captureMode ? 'cpu' as const : 'gpu' as const,
       domain: integrationDomain,
       toPixel,
       density,
       minPathLength,
-      segmentLength,
+      segmentLength: captureMode ? 0.05 : segmentLength,
       integrationDirection: 'both' as const,
       color: streamlineColor,
-      strokeWidth: streamlineWidth,
-      pulseWidthPixels,
-      pulsePauseWidthPixels,
+      strokeWidth: streamlineWidth * renderScale,
+      pulseWidthPixels: pulseWidthPixels * renderScale,
+      pulsePauseWidthPixels: pulsePauseWidthPixels * renderScale,
       pulseGamma,
       offsets: 'random' as const,
       duration: 24,
@@ -214,7 +223,7 @@
     };
 
     // Seed points still cover only the visible view domain.
-    const uniformStartPoints = generateUniformStartPoints(domainRange, 80);
+    const uniformStartPoints = generateUniformStartPoints(domainRange, captureMode ? 10 : 80);
 
     animFull = StreamlineAnimation.create({
       vectorFieldFn: fullField(),
@@ -239,6 +248,19 @@
       animCurl.init(canvas2),
       animDiv.init(canvas3),
     ]);
+
+    if (gpuCaptureMode) {
+      for (const animation of [animFull, animCurl, animDiv]) {
+        const renderer = animation.getRenderer();
+        if (!renderer) continue;
+        renderer.getContext().configure({
+          device: renderer.getDevice(),
+          format: renderer.getFormat(),
+          alphaMode: "premultiplied",
+          usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
+        });
+      }
+    }
   }
 
   function setupTimeline() {
@@ -358,6 +380,117 @@
     if (player) player.pause();
   }
 
+  async function readGpuCanvas(
+    animation: StreamlineAnimation<StreamlineAnimationState>,
+    target: HTMLCanvasElement
+  ): Promise<void> {
+    const renderer = animation.getRenderer();
+    if (!renderer) throw new Error("WebGPU renderer is unavailable for capture");
+
+    const device = renderer.getDevice();
+    const { width, height } = renderer.getCanvasSize();
+    const unpaddedBytesPerRow = width * 4;
+    const bytesPerRow = Math.ceil(unpaddedBytesPerRow / 256) * 256;
+    const buffer = device.createBuffer({
+      size: bytesPerRow * height,
+      usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
+    });
+    const encoder = device.createCommandEncoder();
+    encoder.copyTextureToBuffer(
+      { texture: renderer.getContext().getCurrentTexture() },
+      { buffer, bytesPerRow, rowsPerImage: height },
+      { width, height, depthOrArrayLayers: 1 }
+    );
+    device.queue.submit([encoder.finish()]);
+    await buffer.mapAsync(GPUMapMode.READ);
+
+    const mapped = new Uint8Array(buffer.getMappedRange());
+    const pixels = new Uint8ClampedArray(unpaddedBytesPerRow * height);
+    for (let row = 0; row < height; row++) {
+      const start = row * bytesPerRow;
+      pixels.set(mapped.subarray(start, start + unpaddedBytesPerRow), row * unpaddedBytesPerRow);
+    }
+    if (renderer.getFormat().startsWith("bgra")) {
+      for (let index = 0; index < pixels.length; index += 4) {
+        const blue = pixels[index];
+        pixels[index] = pixels[index + 2];
+        pixels[index + 2] = blue;
+      }
+    }
+    const context = target.getContext("2d");
+    if (!context) throw new Error("Failed to create 2D capture canvas");
+    context.putImageData(new ImageData(pixels, width, height), 0, 0);
+    buffer.unmap();
+    buffer.destroy();
+  }
+
+  async function exportHelmholtzPreview(): Promise<void> {
+    const deadline = Date.now() + 30_000;
+    while ((!player || !canvas1 || !canvas2 || !canvas3 || !isInitialized) && Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    if (!player || !canvas1 || !canvas2 || !canvas3) {
+      throw new Error("Helmholtz visualization did not finish initializing");
+    }
+
+    const exportPlayer = player;
+    const frameCount = 96;
+    const fps = 24;
+    const wasPlaying = exportPlayer.isPlaying;
+    const savedT = exportPlayer.t;
+    exportPlayer.pause();
+
+    try {
+      const gpuCaptureCanvases = gpuCaptureMode
+        ? [canvas1, canvas2, canvas3].map((canvas) => {
+            const captureCanvas = document.createElement("canvas");
+            captureCanvas.width = canvas.width;
+            captureCanvas.height = canvas.height;
+            return captureCanvas;
+          })
+        : null;
+      const exportCanvases = gpuCaptureCanvases ?? [canvas1, canvas2, canvas3];
+      let pendingReadback: Promise<void> | null = null;
+      let readbackFrame = -1;
+      const videos = await streamingVideoExport(
+        exportCanvases,
+        frameCount,
+        fps,
+        "webm",
+        (frameIndex) => {
+          const t = frameCount === 1 ? 0 : frameIndex / (frameCount - 1);
+          exportPlayer.seek(t);
+          draw(exportPlayer.state);
+          if (
+            gpuCaptureCanvases && animFull && animCurl && animDiv
+            && readbackFrame !== frameIndex
+          ) {
+            readbackFrame = frameIndex;
+            pendingReadback = Promise.all([
+              readGpuCanvas(animFull, gpuCaptureCanvases[0]),
+              readGpuCanvas(animCurl, gpuCaptureCanvases[1]),
+              readGpuCanvas(animDiv, gpuCaptureCanvases[2]),
+            ]).then(() => undefined);
+          }
+        },
+        {
+          bitrate: 5_000_000,
+          backgroundColor: "#ffffff",
+          waitUntilSettled: gpuCaptureCanvases
+            ? () => pendingReadback
+            : undefined,
+        }
+      );
+
+      ["combined", "curl", "div"].forEach((name, index) => {
+        downloadBlob(videos[index], `helmholtz-${name}.webm`);
+      });
+    } finally {
+      exportPlayer.seek(savedT);
+      if (wasPlaying) exportPlayer.play();
+    }
+  }
+
   // ----------------------------------------------------------------
   // Drawing
   // ----------------------------------------------------------------
@@ -366,9 +499,12 @@
     if (!isInitialized) return;
     if (!animFull || !animCurl || !animDiv) return;
 
-    animFull.draw(state);
-    animCurl.draw(state);
-    animDiv.draw(state);
+    const clearColor: [number, number, number, number] | undefined = gpuCaptureMode
+      ? [0, 0, 0, 0]
+      : undefined;
+    animFull.draw(state, clearColor);
+    animCurl.draw(state, clearColor);
+    animDiv.draw(state, clearColor);
   }
 
   // ----------------------------------------------------------------
@@ -391,6 +527,7 @@
   // ----------------------------------------------------------------
 
   onMount(() => {
+    (window as any).__exportHelmholtzPreview = exportHelmholtzPreview;
     observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -414,6 +551,9 @@
   });
 
   onDestroy(() => {
+    if (typeof window !== "undefined") {
+      delete (window as any).__exportHelmholtzPreview;
+    }
     if (player) player?.dispose();
     if (observer) observer.disconnect();
   });

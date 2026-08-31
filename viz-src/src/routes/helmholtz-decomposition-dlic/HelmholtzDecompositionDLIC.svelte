@@ -13,6 +13,7 @@
     type VectorFieldFn,
     type WebGPUContext,
   } from "@helblazer811/tempus-ui";
+  import { downloadBlob, streamingVideoExport } from "@helblazer811/tempus";
 
   // ----------------------------------------------------------------
   // Props
@@ -352,11 +353,70 @@
     }
   }
 
+  async function exportHelmholtzDlicPreview(): Promise<void> {
+    const deadline = Date.now() + 300_000;
+    while (
+      (!player || !canvas1 || !canvas2 || !canvas3
+        || cachedFramesFull.length < frameCount
+        || cachedFramesCurl.length < frameCount
+        || cachedFramesDiv.length < frameCount)
+      && Date.now() < deadline
+    ) {
+      await new Promise(resolve => setTimeout(resolve, 250));
+    }
+    if (!player || !canvas1 || !canvas2 || !canvas3) {
+      throw new Error('Helmholtz DLIC visualization did not finish initializing');
+    }
+
+    const captureCanvas = document.createElement('canvas');
+    captureCanvas.width = 1600;
+    captureCanvas.height = 900;
+    const captureCtx = captureCanvas.getContext('2d');
+    if (!captureCtx) throw new Error('Could not create Helmholtz DLIC capture canvas');
+
+    const wasPlaying = player.isPlaying;
+    const savedT = player.t;
+    player.pause();
+    try {
+      const [video] = await streamingVideoExport(
+        [captureCanvas], frameCount, 24, 'webm',
+        frameIndex => {
+          const t = frameIndex / (frameCount - 1);
+          player!.seek(t);
+          draw(player!.state);
+
+          captureCtx.fillStyle = '#ffffff';
+          captureCtx.fillRect(0, 0, captureCanvas.width, captureCanvas.height);
+          captureCtx.fillStyle = '#444444';
+          captureCtx.textAlign = 'center';
+          captureCtx.font = '600 56px serif';
+          captureCtx.fillText('Helmholtz Decomposition', 800, 70);
+          captureCtx.font = '32px sans-serif';
+          captureCtx.fillText('Combined field', 270, 150);
+          captureCtx.fillText('Curl component', 800, 150);
+          captureCtx.fillText('Divergence component', 1330, 150);
+          captureCtx.drawImage(canvas1!, 25, 190, 490, 490);
+          captureCtx.drawImage(canvas2!, 555, 190, 490, 490);
+          captureCtx.drawImage(canvas3!, 1085, 190, 490, 490);
+          captureCtx.font = '48px serif';
+          captureCtx.fillText('=', 535, 455);
+          captureCtx.fillText('+', 1065, 455);
+        },
+        { bitrate: 10_000_000, backgroundColor: '#ffffff' }
+      );
+      downloadBlob(video, 'helmholtz-decomposition-dlic.webm');
+    } finally {
+      player.seek(savedT);
+      if (wasPlaying) player.play();
+    }
+  }
+
   // ----------------------------------------------------------------
   // Lifecycle
   // ----------------------------------------------------------------
 
   onMount(() => {
+    (window as any).__exportHelmholtzDlicPreview = exportHelmholtzDlicPreview;
     observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -380,6 +440,7 @@
   });
 
   onDestroy(() => {
+    if (typeof window !== 'undefined') delete (window as any).__exportHelmholtzDlicPreview;
     if (player) player?.dispose();
     if (observer) observer.disconnect();
     if (webgpuContext) {

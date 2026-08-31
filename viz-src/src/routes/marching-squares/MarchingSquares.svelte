@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { Player, DoubleFigure, useCanvas2D, Timeline, type Clip } from '@helblazer811/tempus-ui';
+  import { downloadBlob, streamingVideoExport } from '@helblazer811/tempus';
   import * as d3 from 'd3';
   import {
     getAllCasePolygons,
@@ -711,11 +712,61 @@
     }
   }
 
+  async function exportMarchingSquaresPreview(): Promise<void> {
+    const deadline = Date.now() + 30_000;
+    while ((!isInitialized || !player || !leftCanvas || !rightCanvas) && Date.now() < deadline) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    if (!player || !leftCanvas || !rightCanvas) {
+      throw new Error('Marching Squares visualization did not finish initializing');
+    }
+    const leftCaptureSource = leftCanvas;
+    const rightCaptureSource = rightCanvas;
+
+    const captureCanvas = document.createElement('canvas');
+    captureCanvas.width = 1600;
+    captureCanvas.height = 900;
+    const captureCtx = captureCanvas.getContext('2d');
+    if (!captureCtx) throw new Error('Could not create Marching Squares capture canvas');
+
+    const frameCount = 192;
+    const fps = 24;
+    const savedT = player.t;
+    const wasPlaying = player.isPlaying;
+    player.pause();
+    try {
+      const [video] = await streamingVideoExport(
+        [captureCanvas], frameCount, fps, 'webm',
+        frameIndex => {
+          const t = frameIndex / (frameCount - 1);
+          player.seek(t);
+          draw(player.state);
+
+          captureCtx.fillStyle = '#1a1a1a';
+          captureCtx.fillRect(0, 0, captureCanvas.width, captureCanvas.height);
+          captureCtx.fillStyle = '#f5f5f5';
+          captureCtx.textAlign = 'center';
+          captureCtx.font = '600 32px sans-serif';
+          captureCtx.fillText('Maunga Whau Volcano Topography', 400, 70);
+          captureCtx.fillText('Marching Squares Case Table', 1200, 70);
+          captureCtx.drawImage(leftCaptureSource, 20, 120, 760, 760);
+          captureCtx.drawImage(rightCaptureSource, 820, 120, 760, 760);
+        },
+        { bitrate: 9_000_000, backgroundColor: '#1a1a1a' }
+      );
+      downloadBlob(video, 'marching-squares.webm');
+    } finally {
+      player.seek(savedT);
+      if (wasPlaying) player.play();
+    }
+  }
+
   // ================================================================
   // Lifecycle
   // ================================================================
 
   onMount(async () => {
+    (window as any).__exportMarchingSquaresPreview = exportMarchingSquaresPreview;
     if (leftCanvas) {
       leftCanvas2d.init(leftCanvas);
     }
@@ -739,6 +790,7 @@
   });
 
   onDestroy(() => {
+    if (typeof window !== 'undefined') delete (window as any).__exportMarchingSquaresPreview;
     if (player) {
       player?.dispose();
     }

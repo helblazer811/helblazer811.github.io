@@ -1,5 +1,49 @@
 [
   {
+    "id": "flow-reasoning-models",
+    "title": "Flow Reasoning Models: Turning Discrete Flows Into Efficient Recurrent Reasoners",
+    "authors": [
+      {
+        "name": "Alec Helbling",
+        "isHighlighted": true
+      },
+      {
+        "name": "Andrey Bryutkin",
+        "isHighlighted": false
+      },
+      {
+        "name": "Mauro Martino",
+        "isHighlighted": false
+      },
+      {
+        "name": "Duen Horng Chau",
+        "isHighlighted": false
+      },
+      {
+        "name": "Nima Dehmamy",
+        "isHighlighted": false
+      },
+      {
+        "name": "Hendrik Strobelt",
+        "isHighlighted": false
+      }
+    ],
+    "venue": "arXiv preprint",
+    "year": 2026,
+    "description": "We introduce Flow Reasoning Models, which adapt discrete flows into recurrent reasoners that revise interdependent decisions in parallel. Fixed-Point Forcing trains FRMs on states produced by their own inference dynamics, reaching 99.5% on Sudoku-Extreme and matching the next-best method's 98.7% solve rate with 44× fewer inference FLOPs.",
+    "imageUrl": "data/images/flow-reasoning-models.png",
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2606.29150"
+    },
+    "githubRepo": null,
+    "show_star_count": false,
+    "awards": [],
+    "selected": true,
+    "homepageSelected": true,
+    "homepageOrder": 1,
+    "isNew": true
+  },
+  {
     "id": "what-time-is-it",
     "title": "What Time Is It? How Data Geometry Makes Time Conditioning Optional for Flow Matching",
     "authors": [
@@ -34,7 +78,9 @@
     "githubRepo": null,
     "show_star_count": false,
     "awards": [],
-    "selected": true
+    "selected": true,
+    "homepageSelected": true,
+    "homepageOrder": 3
   },
   {
     "id": "concept-attention",
@@ -75,7 +121,9 @@
       "Oral Presentation (top 1% of 12,000 submissions)",
       "Best Paper Award CVPR 2025 Workshop on Visual Concepts"
     ],
-    "selected": true
+    "selected": true,
+    "homepageSelected": true,
+    "homepageOrder": 2
   },
   {
     "id": "diffusion-explorer",
@@ -102,7 +150,9 @@
     "githubRepo": "helblazer811/Diffusion-Explorer",
     "show_star_count": true,
     "awards": [],
-    "selected": true
+    "selected": true,
+    "homepageSelected": true,
+    "homepageOrder": 4
   },
   {
     "id": "manimml",
@@ -130,7 +180,9 @@
     "awards": [
       "Best Poster Award"
     ],
-    "selected": true
+    "selected": true,
+    "homepageSelected": true,
+    "homepageOrder": 5
   },
   {
     "id": "safetypairs",

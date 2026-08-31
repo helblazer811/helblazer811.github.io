@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import type { Writable } from "svelte/store";
   import * as d3 from "d3";
   import {
@@ -11,6 +11,7 @@
     useCanvas2D,
     useVisibilityHandler,
   } from "@helblazer811/tempus-ui";
+  import { downloadBlob, streamingVideoExport } from "@helblazer811/tempus";
   import {
     computeRectKDE,
     gmmLogProbGrad,
@@ -350,7 +351,45 @@
   // Lifecycle
   // ----------------------------------------------------------------
 
+  async function exportSvgdPreview(): Promise<void> {
+    const deadline = Date.now() + 30_000;
+    while ((!player || !canvas || !isInitialized) && Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    if (!player || !canvas) throw new Error("SVGD visualization did not finish initializing");
+
+    const exportPlayer = player;
+    const frameCount = 144;
+    const fps = 24;
+    const wasPlaying = exportPlayer.isPlaying;
+    const savedT = exportPlayer.t;
+    exportPlayer.pause();
+    try {
+      const [video] = await streamingVideoExport(
+        [canvas],
+        frameCount,
+        fps,
+        "webm",
+        (frameIndex) => {
+          const t = frameCount === 1 ? 0 : frameIndex / (frameCount - 1);
+          exportPlayer.seek(t);
+          draw(exportPlayer.state);
+        },
+        { bitrate: 7_000_000, backgroundColor: "#000000" }
+      );
+      downloadBlob(video, "svgd.webm");
+    } finally {
+      exportPlayer.seek(savedT);
+      if (wasPlaying) exportPlayer.play();
+    }
+  }
+
+  onMount(() => {
+    (window as any).__exportSvgdPreview = exportSvgdPreview;
+  });
+
   onDestroy(() => {
+    if (typeof window !== "undefined") delete (window as any).__exportSvgdPreview;
     player?.dispose();
   });
 

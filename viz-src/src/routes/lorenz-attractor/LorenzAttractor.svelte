@@ -14,13 +14,14 @@
 -->
 
 <script lang="ts">
-  import { onDestroy } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import type { Writable } from "svelte/store";
   import { Player,
     Figure,
     Timeline,
     useVisibilityHandler,
   } from "@helblazer811/tempus-ui";
+  import { downloadBlob, streamingVideoExport } from "@helblazer811/tempus";
 
   // ----------------------------------------------------------------
   // Props
@@ -525,7 +526,46 @@
   // Lifecycle
   // ----------------------------------------------------------------
 
+  async function exportLorenzPreview(): Promise<void> {
+    const deadline = Date.now() + 30_000;
+    while ((!player || !canvas || !isInitialized) && Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    if (!player || !canvas) throw new Error("Lorenz visualization did not finish initializing");
+
+    const exportPlayer = player;
+    const frameCount = 192;
+    const fps = 24;
+    const wasPlaying = exportPlayer.isPlaying;
+    const savedT = exportPlayer.t;
+    exportPlayer.pause();
+    try {
+      const [video] = await streamingVideoExport(
+        [canvas],
+        frameCount,
+        fps,
+        "webm",
+        (frameIndex) => {
+          const t = frameCount === 1 ? 0 : frameIndex / (frameCount - 1);
+          exportPlayer.seek(t);
+          draw(t);
+        },
+        { bitrate: 12_000_000, backgroundColor: "#ffffff" }
+      );
+      downloadBlob(video, "lorenz-attractor.webm");
+    } finally {
+      exportPlayer.seek(savedT);
+      draw(savedT);
+      if (wasPlaying) exportPlayer.play();
+    }
+  }
+
+  onMount(() => {
+    (window as any).__exportLorenzPreview = exportLorenzPreview;
+  });
+
   onDestroy(() => {
+    if (typeof window !== "undefined") delete (window as any).__exportLorenzPreview;
     if (player) player?.dispose();
   });
 

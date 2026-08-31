@@ -16,6 +16,7 @@
     "year": 2026,
     "type": "visualization",
     "summary": "Decomposing a vector field into its divergence and curl components.",
+    "previewUrl": "data/images/helmholtz-decomposition-preview.mp4",
     "link": "https://alechelbling.com/visualizations/helmholtz-decomposition/"
   },
   {
@@ -25,7 +26,7 @@
     "year": 2026,
     "type": "visualization",
     "summary": "Helmholtz decomposition rendered via dynamic line integral convolution.",
-    "previewUrl": "data/images/helmholtz-decomposition-dlic-preview.jpg",
+    "previewUrl": "data/images/helmholtz-decomposition-dlic-preview.mp4",
     "link": "https://alechelbling.com/visualizations/helmholtz-decomposition-dlic/"
   },
   {
@@ -77,16 +78,6 @@
     "summary": "Line integral around a curve versus the curl integral over the enclosed surface.",
     "previewUrl": "data/images/stokes-theorem-preview.mp4",
     "link": "https://alechelbling.com/visualizations/stokes-theorem/"
-  },
-  {
-    "id": "diffusion-horizontal",
-    "title": "Diffusion Probability Path",
-    "date": "2026-08-25",
-    "year": 2026,
-    "type": "visualization",
-    "summary": "A DDPM reverse-diffusion process animated from a noise grid to a smiley-face distribution.",
-    "previewUrl": "data/images/diffusion-horizontal-preview.mp4",
-    "link": "https://alechelbling.com/visualizations/diffusion-horizontal/"
   },
   {
     "id": "block-diffusion",

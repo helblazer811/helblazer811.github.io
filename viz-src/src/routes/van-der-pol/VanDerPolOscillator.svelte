@@ -9,7 +9,7 @@
 -->
 
 <script lang="ts">
-  import { onDestroy } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import type { Writable } from "svelte/store";
   import { Player,
     Figure,
@@ -22,6 +22,7 @@
     type VectorFieldStyleOptions,
     type VelocityGridDomain,
   } from "@helblazer811/tempus-ui";
+  import { downloadBlob, streamingVideoExport } from "@helblazer811/tempus";
 
   // ----------------------------------------------------------------
   // Props
@@ -525,11 +526,61 @@
     }
   }
 
+  async function exportVanDerPolPreview(): Promise<void> {
+    const deadline = Date.now() + 30_000;
+    while ((!player || !canvas || !isInitialized) && Date.now() < deadline) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    if (!player || !canvas) {
+      throw new Error('Van der Pol visualization did not finish initializing');
+    }
+
+    const sourceCanvas = canvas;
+    const captureCanvas = document.createElement('canvas');
+    captureCanvas.width = 2880;
+    captureCanvas.height = 1620;
+    const captureCtx = captureCanvas.getContext('2d');
+    if (!captureCtx) throw new Error('Could not create Van der Pol capture canvas');
+
+    const frameCount = 192;
+    const fps = 24;
+    const savedT = player.t;
+    const wasPlaying = player.isPlaying;
+    player.pause();
+    try {
+      const [video] = await streamingVideoExport(
+        [captureCanvas], frameCount, fps, 'webm',
+        frameIndex => {
+          const t = frameIndex / (frameCount - 1);
+          player!.seek(t);
+          draw(t);
+          captureCtx.fillStyle = '#ffffff';
+          captureCtx.fillRect(0, 0, captureCanvas.width, captureCanvas.height);
+          captureCtx.fillStyle = '#334155';
+          captureCtx.textAlign = 'center';
+          captureCtx.font = '600 92px serif';
+          captureCtx.fillText('Van der Pol Limit Cycle', 1440, 125);
+          captureCtx.drawImage(sourceCanvas, 0, 210, 2880, 1200);
+        },
+        { bitrate: 14_000_000, backgroundColor: '#ffffff' }
+      );
+      downloadBlob(video, 'van-der-pol.webm');
+    } finally {
+      player.seek(savedT);
+      if (wasPlaying) player.play();
+    }
+  }
+
   // ----------------------------------------------------------------
   // Lifecycle
   // ----------------------------------------------------------------
 
+  onMount(() => {
+    (window as any).__exportVanDerPolPreview = exportVanDerPolPreview;
+  });
+
   onDestroy(() => {
+    if (typeof window !== 'undefined') delete (window as any).__exportVanDerPolPreview;
     if (player) player?.dispose();
     for (const anim of pathlineAnimations) anim.destroy();
   });

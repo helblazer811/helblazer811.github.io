@@ -39,9 +39,10 @@
 
       /**
        * Load publications from JSON and render them
-       */
+      */
       let publications = [];
-      fetch("data/cv/publications.json")
+      let showAllPublications = false;
+      fetch("data/cv/publications.json?v=selected-publications-4")
         .then((response) => response.json())
         .then((data) => {
           publications = data;
@@ -57,9 +58,18 @@
         const container = document.getElementById("publications-container");
         if (!container) return;
 
-        publications.forEach((pub) => {
+        container.replaceChildren();
+        const selectedPublications = publications
+          .filter((pub) => pub.homepageSelected)
+          .sort((a, b) => a.homepageOrder - b.homepageOrder);
+        const visiblePublications = showAllPublications
+          ? publications
+          : selectedPublications;
+
+        visiblePublications.forEach((pub) => {
           const pubItem = document.createElement("div");
           pubItem.className = "publication-item";
+          pubItem.classList.add(`publication-item--${pub.id}`);
 
           // Determine primary link once
           const primaryLink =
@@ -71,11 +81,15 @@
           const imageLink = document.createElement("a");
           imageLink.href = primaryLink;
 
-          const img = document.createElement("img");
-          img.src = pub.imageUrl;
-          img.alt = pub.title;
-
-          imageLink.appendChild(img);
+          if (pub.imageUrl) {
+            const img = document.createElement("img");
+            img.src = pub.imageUrl;
+            img.alt = pub.title;
+            imageLink.appendChild(img);
+          } else {
+            imageDiv.classList.add("publication-image--placeholder");
+            imageLink.innerHTML = "<span>Figure coming soon</span>";
+          }
           imageDiv.appendChild(imageLink);
 
           const contentDiv = document.createElement("div");
@@ -84,17 +98,19 @@
           let contentHTML = "";
 
           // Title link
-          contentHTML += `<a href="${primaryLink}"><papertitle>${pub.title}</papertitle></a><br>`;
+          contentHTML += `<div class="publication-title"><a href="${primaryLink}"><papertitle>${pub.title}</papertitle></a></div>`;
 
           // Authors
           contentHTML +=
+            '<div class="publication-authors">' +
             pub.authors
               .map((author) => {
                 return author.isHighlighted
                   ? `<strong>${author.name}</strong>`
                   : author.name;
               })
-              .join(", ") + "<br>";
+              .join(", ") +
+            "</div>";
 
           // Venue and year - handle both venues array and legacy venue string
           if (pub.venues && Array.isArray(pub.venues)) {
@@ -128,15 +144,43 @@
             contentHTML += `<a href="${pub.links.tool}">Tool</a><br>`;
           }
 
-          // Description
-          contentHTML += `<p>${pub.description}</p>`;
-
           contentDiv.innerHTML = contentHTML;
+
+          const summaryDiv = document.createElement("div");
+          summaryDiv.className = "publication-summary";
+          summaryDiv.innerHTML = `<p>${pub.description}</p>`;
+
           pubItem.appendChild(imageDiv);
           pubItem.appendChild(contentDiv);
+          pubItem.appendChild(summaryDiv);
           container.appendChild(pubItem);
         });
+
+        const toggle = document.getElementById("publications-toggle");
+        if (toggle) {
+          const hiddenCount = publications.length - selectedPublications.length;
+          toggle.setAttribute("aria-expanded", String(showAllPublications));
+          toggle.textContent = showAllPublications
+            ? "Show selected publications ↑"
+            : `Show all publications (${hiddenCount} more) ↓`;
+        }
+        const label = document.getElementById("publications-label");
+        if (label) {
+          label.textContent = showAllPublications
+            ? "All publications"
+            : "Selected publications";
+        }
       }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        document
+          .getElementById("publications-toggle")
+          ?.addEventListener("click", () => {
+            showAllPublications = !showAllPublications;
+            renderPublications();
+            fetchGitHubStars();
+          });
+      });
 
       /**
        * Fetch GitHub star counts for publications
@@ -200,9 +244,13 @@
           if (post.previewUrl.endsWith(".mp4")) {
             const video = document.createElement("video");
             video.setAttribute("muted", "");
+            video.setAttribute("autoplay", "");
             video.setAttribute("loop", "");
             video.setAttribute("playsinline", "");
             video.setAttribute("preload", "none");
+            video.muted = true;
+            video.defaultMuted = true;
+            video.autoplay = true;
             video.dataset.src = post.previewUrl;
             const source = document.createElement("source");
             source.dataset.src = post.previewUrl;
@@ -225,16 +273,11 @@
           mediaFrame.appendChild(img);
         }
 
-        const badge = document.createElement("span");
-        badge.className = `post-type-badge type-${post.type || "blog"}`;
-        badge.innerText = post.type === "visualization" ? "Visualization" : "Blog";
-
         const title = document.createElement("div");
         title.className = "post-title";
         title.innerText = post.title;
 
         link.appendChild(mediaFrame);
-        link.appendChild(badge);
         link.appendChild(title);
         article.appendChild(link);
 
@@ -322,7 +365,7 @@
       }
     </script>
 
-    <link rel="stylesheet" type="text/css" href="styles/index.css" />
+    <link rel="stylesheet" type="text/css" href="styles/index.css?v=publication-type-1" />
     <link rel="icon" type="image/svg+xml" href="data/images/logo.svg" />
   </head>
 
@@ -341,37 +384,35 @@
           </p>
 
           <p>
-            I work on diffusion and flow-based generative models &mdash;
-            both their theoretical foundations (e.g., how
-            <a href="https://arxiv.org/abs/2605.08344">data geometry lets flow matching models drop time conditioning</a>)
-            and their architectural and mechanistic properties (e.g.,
-            <a href="https://arxiv.org/abs/2502.04320">ConceptAttention</a>,
-            which shows diffusion transformers learn highly interpretable
-            features). Most of my work to date has been on models for
-            images, video, and multimodal understanding, and I am
-            increasingly interested in their applications to language
-            and reasoning. I enjoy combining theoretical insight with
-            architectural design, and I also develop open-source software
-            libraries and
-            <a href="https://arxiv.org/abs/2507.01178">interactive tools</a>
-            and
-            <a href="https://arxiv.org/abs/2306.17108">animations</a>
-            that make these models legible to a wider audience.
+            I work on generative models, combining theory, interpretability,
+            and software engineering to better understand them and make them
+            more capable and controllable. I have a particular interest in
+            diffusion and flow-based generative models, including their
+            theoretical foundations (e.g.,
+            <a href="https://arxiv.org/abs/2605.08344">What Time Is It?</a>),
+            internal representations (e.g.,
+            <a href="https://arxiv.org/abs/2502.04320">ConceptAttention</a>),
+            and applications to language and reasoning (e.g.,
+            <a href="https://arxiv.org/abs/2606.29150">Flow Reasoning Models</a>).
           </p>
           <p>
-            I have had the opportunity to work with many great people on a
-            variety of topics in both academic and industry research labs: at
-            <a href="https://research.ibm.com/">IBM Research</a> on natural
-            language summarization, this coming summer at the
+            I also use data visualization to make complex models easier to
+            understand and explore. I build interactive tools, open-source
+            software, and animations for researchers and broader audiences
+            (e.g.,
+            <a href="https://arxiv.org/abs/2507.01178">Diffusion Explorer</a>,
+            <a href="https://arxiv.org/abs/2306.17108">ManimML</a>).
+          </p>
+          <p>
+            I have worked across academic and industry research at
+            <a href="https://research.ibm.com/">IBM Research</a>, the
             <a href="https://mitibmwatsonailab.mit.edu">MIT-IBM Watson AI Lab</a>,
-            at <a href="https://machinelearning.apple.com/">Apple</a> on the
-            Responsible AI team on improving vision-language models, at
-            <a href="https://www.adobe.com/products/firefly.html">Adobe Firefly</a>
-            on improving the safety of text-to-image models, at
-            <a href="https://www.jpl.nasa.gov/">NASA JPL</a> on interactive
-            visual tools for space science, and at the
-            <a href="https://bits.csb.pitt.edu/">University of Pittsburgh</a>
-            on computational biology.
+            <a href="https://machinelearning.apple.com/">Apple</a>,
+            <a href="https://www.adobe.com/products/firefly.html">Adobe Firefly</a>,
+            <a href="https://www.jpl.nasa.gov/">NASA JPL</a>, and the
+            <a href="https://bits.csb.pitt.edu/">University of Pittsburgh</a>,
+            spanning language, multimodal safety, scientific visualization,
+            and computational biology.
           </p>
           <p class="bio-links">
             <a href="mailto:alechelbling1@gmail.com">Email</a> &nbsp/&nbsp
@@ -417,7 +458,13 @@
           libraries and tools that make these models more accessible.
         </p>
       </div>
+      <h3 id="publications-label" class="selected-publications-label">Selected publications</h3>
       <div id="publications-container" class="publications-container"></div>
+      <div class="publication-controls">
+        <button id="publications-toggle" class="publications-toggle" type="button" aria-expanded="false">
+          Show all publications ↓
+        </button>
+      </div>
     </div>
   </body>
 </html>

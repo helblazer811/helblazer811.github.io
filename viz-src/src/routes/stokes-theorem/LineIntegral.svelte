@@ -372,6 +372,27 @@
     }
   }
 
+  export function isCaptureReady(): boolean {
+    return Boolean(player && canvas && isInitialized && streamlineAnim);
+  }
+
+  export function pauseForCapture(): boolean {
+    const wasPlaying = Boolean(player?.isPlaying);
+    player?.pause();
+    return wasPlaying;
+  }
+
+  export function renderCaptureFrame(t: number): HTMLCanvasElement | null {
+    if (!player || !canvas) return null;
+    player.seek(t);
+    draw(player.state);
+    return canvas;
+  }
+
+  export function resumeAfterCapture(shouldPlay: boolean): void {
+    if (shouldPlay) player?.play();
+  }
+
   // ----------------------------------------------------------------
   // Lifecycle
   // ----------------------------------------------------------------

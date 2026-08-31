@@ -1,7 +1,9 @@
 <!-- Visualizes Stokes' Theorem with line integral (left) and curl integral (right) side by side. -->
 
 <script lang="ts">
+  import { onMount, onDestroy } from "svelte";
   import { DoubleFigure, Katex } from "@helblazer811/tempus-ui";
+  import { downloadBlob, streamingVideoExport } from "@helblazer811/tempus";
   import LineIntegral from "./LineIntegral.svelte";
   import CurlIntegral from "./CurlIntegral.svelte";
   import { createClosedCurve, createWavyVectorField } from "./stokes_theorem";
@@ -44,6 +46,8 @@
 
   // Visibility state passed to DoubleFigure
   let figureIsActive;
+  let lineIntegral: any;
+  let curlIntegral: any;
 
   // Compute canvas dimensions
   $: canvasWidth = Math.floor((width - gap) / 2);
@@ -61,6 +65,66 @@
     amplitude: wavyAmplitude,
     frequency: wavyFrequency,
   });
+
+  async function exportStokesPreview(): Promise<void> {
+    const deadline = Date.now() + 30_000;
+    while (
+      (!lineIntegral?.isCaptureReady?.() || !curlIntegral?.isCaptureReady?.())
+      && Date.now() < deadline
+    ) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    if (!lineIntegral?.isCaptureReady?.() || !curlIntegral?.isCaptureReady?.()) {
+      throw new Error("Stokes' Theorem visualization did not finish initializing");
+    }
+
+    const captureCanvas = document.createElement('canvas');
+    captureCanvas.width = 1600;
+    captureCanvas.height = 900;
+    const ctx = captureCanvas.getContext('2d');
+    if (!ctx) throw new Error("Could not create Stokes' Theorem capture canvas");
+
+    const lineWasPlaying = lineIntegral.pauseForCapture();
+    const curlWasPlaying = curlIntegral.pauseForCapture();
+    const frameCount = 192;
+    const fps = 24;
+    try {
+      const [video] = await streamingVideoExport(
+        [captureCanvas], frameCount, fps, 'webm',
+        frameIndex => {
+          const t = frameIndex / (frameCount - 1);
+          const lineCanvas = lineIntegral.renderCaptureFrame(t);
+          const curlCanvas = curlIntegral.renderCaptureFrame(t);
+          if (!lineCanvas || !curlCanvas) return;
+
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, captureCanvas.width, captureCanvas.height);
+          ctx.fillStyle = '#4b5563';
+          ctx.textAlign = 'center';
+          ctx.font = '600 56px serif';
+          ctx.fillText("Stokes' Theorem", 800, 70);
+          ctx.font = '32px sans-serif';
+          ctx.fillText('Line integral around C', 400, 135);
+          ctx.fillText('Curl integral over S', 1200, 135);
+          ctx.drawImage(lineCanvas, 25, 165, 750, 675);
+          ctx.drawImage(curlCanvas, 825, 165, 750, 675);
+        },
+        { bitrate: 9_000_000, backgroundColor: '#ffffff' }
+      );
+      downloadBlob(video, 'stokes-theorem.webm');
+    } finally {
+      lineIntegral.resumeAfterCapture(lineWasPlaying);
+      curlIntegral.resumeAfterCapture(curlWasPlaying);
+    }
+  }
+
+  onMount(() => {
+    (window as any).__exportStokesPreview = exportStokesPreview;
+  });
+
+  onDestroy(() => {
+    if (typeof window !== 'undefined') delete (window as any).__exportStokesPreview;
+  });
 </script>
 
 <h2 class="stokes-theorem-title">A Visualization of Stokes' Theorem</h2>
@@ -75,6 +139,7 @@
 <DoubleFigure {gap} {backgroundVisible} bind:isActive={figureIsActive}>
   {#snippet left()}
     <LineIntegral
+      bind:this={lineIntegral}
       {curveFn}
       {vectorFieldFn}
       width={canvasWidth}
@@ -91,6 +156,7 @@
 
   {#snippet right()}
     <CurlIntegral
+      bind:this={curlIntegral}
       {curveFn}
       {vectorFieldFn}
       width={canvasWidth}
