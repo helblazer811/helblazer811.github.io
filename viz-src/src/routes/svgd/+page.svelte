@@ -11,7 +11,7 @@
 	title="Stein Variational Gradient Descent"
 	author="Alec Helbling"
 	authorLink="https://alechelbling.com"
-	date="August 25, 2026"
+	date="May 28, 2026"
 />
 
 <SVGD />

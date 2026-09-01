@@ -17,7 +17,7 @@
 	subtitle="Two ways to generate text, on one shared clock"
 	author="Alec Helbling"
 	authorLink="https://alechelbling.com"
-	date="August 25, 2026"
+	date="July 13, 2026"
 />
 
 <p>

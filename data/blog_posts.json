@@ -1,8 +1,18 @@
 [
   {
+    "id": "kv-cache",
+    "title": "KV Caching in Autoregressive Transformers",
+    "date": "2026-07-11",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "How autoregressive transformers prefill and reuse per-layer key-value caches during token-by-token decoding.",
+    "previewUrl": "data/images/kv-cache-preview.mp4",
+    "link": "https://alechelbling.com/visualizations/kv-cache/"
+  },
+  {
     "id": "divergence-and-curl",
     "title": "Divergence and Curl",
-    "date": "2026-08-25",
+    "date": "2026-01-08",
     "year": 2026,
     "type": "visualization",
     "summary": "Streamline visualizations of pure divergence, pure curl, and their combination.",
@@ -12,7 +22,7 @@
   {
     "id": "helmholtz-decomposition",
     "title": "Helmholtz Decomposition",
-    "date": "2026-08-25",
+    "date": "2026-05-12",
     "year": 2026,
     "type": "visualization",
     "summary": "Decomposing a vector field into its divergence and curl components.",
@@ -22,7 +32,7 @@
   {
     "id": "helmholtz-decomposition-dlic",
     "title": "Helmholtz Decomposition (DLIC)",
-    "date": "2026-08-25",
+    "date": "2026-05-12",
     "year": 2026,
     "type": "visualization",
     "summary": "Helmholtz decomposition rendered via dynamic line integral convolution.",
@@ -32,7 +42,7 @@
   {
     "id": "svgd",
     "title": "Stein Variational Gradient Descent",
-    "date": "2026-08-25",
+    "date": "2026-05-28",
     "year": 2026,
     "type": "visualization",
     "summary": "Particle-based sampling that iteratively pushes particles toward a target distribution.",
@@ -42,7 +52,7 @@
   {
     "id": "lorenz-attractor",
     "title": "The Lorenz Attractor",
-    "date": "2026-08-25",
+    "date": "2026-05-19",
     "year": 2026,
     "type": "visualization",
     "summary": "The classic chaotic dynamical system, traced in a rotating 3D view.",
@@ -52,7 +62,7 @@
   {
     "id": "van-der-pol",
     "title": "Van der Pol Limit Cycle",
-    "date": "2026-08-25",
+    "date": "2026-05-18",
     "year": 2026,
     "type": "visualization",
     "summary": "A trajectory spiraling onto the stable limit cycle of the Van der Pol oscillator.",
@@ -62,7 +72,7 @@
   {
     "id": "marching-squares",
     "title": "Marching Squares",
-    "date": "2026-08-25",
+    "date": "2026-01-27",
     "year": 2026,
     "type": "visualization",
     "summary": "Contour generation on real volcano elevation data, with the full 16-case reference table.",
@@ -72,7 +82,7 @@
   {
     "id": "stokes-theorem",
     "title": "Stokes' Theorem",
-    "date": "2026-08-25",
+    "date": "2026-01-08",
     "year": 2026,
     "type": "visualization",
     "summary": "Line integral around a curve versus the curl integral over the enclosed surface.",
@@ -82,7 +92,7 @@
   {
     "id": "block-diffusion",
     "title": "Block Diffusion",
-    "date": "2026-08-25",
+    "date": "2026-07-13",
     "year": 2026,
     "type": "visualization",
     "summary": "A shared-clock comparison of autoregressive and block-diffusion decoding.",

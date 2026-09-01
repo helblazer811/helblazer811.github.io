@@ -11,7 +11,7 @@
 	title="Divergence and Curl"
 	author="Alec Helbling"
 	authorLink="https://alechelbling.com"
-	date="August 25, 2026"
+	date="January 8, 2026"
 />
 
 <DivergenceAndCurl />

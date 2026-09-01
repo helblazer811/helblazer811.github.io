@@ -12,7 +12,7 @@
 	title="Marching Squares"
 	author="Alec Helbling"
 	authorLink="https://alechelbling.com"
-	date="August 25, 2026"
+	date="January 27, 2026"
 />
 
 <!-- MarchingSquares/TopographicMap draw their canvases and title text in

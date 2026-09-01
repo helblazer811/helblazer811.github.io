@@ -43,7 +43,7 @@
 	title="Diffusion Probability Path"
 	author="Alec Helbling"
 	authorLink="https://alechelbling.com"
-	date="August 25, 2026"
+	date="December 17, 2025"
 />
 
 {#if isLoading}

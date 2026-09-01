@@ -11,7 +11,7 @@
 	title="Van der Pol Limit Cycle"
 	author="Alec Helbling"
 	authorLink="https://alechelbling.com"
-	date="August 25, 2026"
+	date="May 18, 2026"
 />
 
 <VanDerPolOscillator />

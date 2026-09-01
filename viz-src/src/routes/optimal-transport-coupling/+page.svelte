@@ -42,7 +42,7 @@
 	title="Optimal Transport Coupling"
 	author="Alec Helbling"
 	authorLink="https://alechelbling.com"
-	date="August 25, 2026"
+	date="May 12, 2026"
 />
 
 {#if isLoading}
