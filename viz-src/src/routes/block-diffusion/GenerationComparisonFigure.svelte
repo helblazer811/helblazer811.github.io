@@ -329,7 +329,8 @@
 	</svg>
 {/snippet}
 
-<div class="wrap" style="--mask-color: {maskColor}; --paragraph-font-size: {fontSize};">
+<div class="capture-composition">
+	<div class="wrap" style="--mask-color: {maskColor}; --paragraph-font-size: {fontSize};">
 	<div class="row">
 		<div class="row-header">
 			<div class="label"><strong>Autoregressive</strong> &mdash; One Token at a Time</div>
@@ -383,9 +384,18 @@
 			{/each}
 		</div>
 	</div>
+	</div>
 </div>
 
 <style>
+	.capture-composition {
+		width: min(940px, calc(100vw - 32px));
+		flex-shrink: 0;
+		padding: 1.25rem 1rem 0.75rem;
+		margin: 0 auto;
+		background: #ffffff;
+	}
+
 	.wrap {
 		display: flex;
 		flex-direction: column;
@@ -479,7 +489,7 @@
 		width: 100%;
 		display: grid;
 		grid-template-columns: repeat(12, 1fr);
-		gap: 0.5rem 4px;
+		gap: 0.5rem 8px;
 	}
 
 	/* Wrapper around one decoding unit — a single AR token, or a whole block

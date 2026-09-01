@@ -88,6 +88,30 @@
     const curlWasPlaying = curlIntegral.pauseForCapture();
     const frameCount = 192;
     const fps = 24;
+
+	function drawEquation(): void {
+		const pieces = [
+			{ text: '∮', font: '64px Georgia, serif', dy: 0 },
+			{ text: 'C', font: 'italic 28px Georgia, serif', dy: 17 },
+			{ text: '  F · dr   =   ∬', font: '52px Georgia, serif', dy: 0 },
+			{ text: 'S', font: 'italic 28px Georgia, serif', dy: 17 },
+			{ text: '  (∇ × F) · dS', font: '52px Georgia, serif', dy: 0 }
+		];
+		const widths = pieces.map((piece) => {
+			ctx.font = piece.font;
+			return ctx.measureText(piece.text).width;
+		});
+		let x = (captureCanvas.width - widths.reduce((sum, width) => sum + width, 0)) / 2;
+		ctx.fillStyle = '#4b5563';
+		ctx.textAlign = 'left';
+		ctx.textBaseline = 'middle';
+		for (let i = 0; i < pieces.length; i += 1) {
+			ctx.font = pieces[i].font;
+			ctx.fillText(pieces[i].text, x, 80 + pieces[i].dy);
+			x += widths[i];
+		}
+	}
+
     try {
       const [video] = await streamingVideoExport(
         [captureCanvas], frameCount, fps, 'webm',
@@ -99,15 +123,9 @@
 
           ctx.fillStyle = '#ffffff';
           ctx.fillRect(0, 0, captureCanvas.width, captureCanvas.height);
-          ctx.fillStyle = '#4b5563';
-          ctx.textAlign = 'center';
-          ctx.font = '600 56px serif';
-          ctx.fillText("Stokes' Theorem", 800, 70);
-          ctx.font = '32px sans-serif';
-          ctx.fillText('Line integral around C', 400, 135);
-          ctx.fillText('Curl integral over S', 1200, 135);
-          ctx.drawImage(lineCanvas, 25, 165, 750, 675);
-          ctx.drawImage(curlCanvas, 825, 165, 750, 675);
+          drawEquation();
+          ctx.drawImage(lineCanvas, 25, 135, 750, 675);
+          ctx.drawImage(curlCanvas, 825, 135, 750, 675);
         },
         { bitrate: 9_000_000, backgroundColor: '#ffffff' }
       );

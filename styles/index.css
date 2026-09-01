@@ -510,9 +510,17 @@ papertitle {
 }
 
 .post-type-badge,
-.post-meta,
-.subsection-header {
+.post-meta {
   font-family: var(--editorial-sans);
+}
+
+.subsection-header {
+  color: var(--editorial-ink);
+  font-family: var(--editorial-serif);
+  font-size: 20px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 .publication-controls {

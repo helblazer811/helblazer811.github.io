@@ -1,13 +1,24 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 	import PageHeader from '$lib/PageHeader.svelte';
 	import KVCacheFigure from './KVCacheFigure.svelte';
 
 	const isActive = writable(true);
+
+	onMount(() => {
+		document.documentElement.classList.add('kv-dark-page');
+		document.body.classList.add('kv-dark-page');
+		return () => {
+			document.documentElement.classList.remove('kv-dark-page');
+			document.body.classList.remove('kv-dark-page');
+		};
+	});
 </script>
 
 <svelte:head>
 	<title>KV Caching in Autoregressive Transformers — Alec Helbling</title>
+	<meta name="theme-color" content="#151a23" />
 </svelte:head>
 
 <PageHeader
@@ -35,6 +46,19 @@
 </p>
 
 <style>
+	:global(html.kv-dark-page),
+	:global(body.kv-dark-page) {
+		--text-color: #dce3ed;
+		--muted-color: #9da8b8;
+		--date-color: #9da8b8;
+		--border-color: #354052;
+		--link-color: #80b3ff;
+		--link-hover-color: #ffad66;
+		background: #151a23;
+		color: #dce3ed;
+		color-scheme: dark;
+	}
+
 	.lede,
 	.caption {
 		max-width: 760px;
@@ -48,7 +72,7 @@
 
 	.caption {
 		margin: 1rem auto 3rem;
-		color: var(--muted-color);
+		color: #9da8b8;
 		font-size: 0.95rem;
 	}
 

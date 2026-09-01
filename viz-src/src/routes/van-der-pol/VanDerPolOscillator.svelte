@@ -556,11 +556,7 @@
           draw(t);
           captureCtx.fillStyle = '#ffffff';
           captureCtx.fillRect(0, 0, captureCanvas.width, captureCanvas.height);
-          captureCtx.fillStyle = '#334155';
-          captureCtx.textAlign = 'center';
-          captureCtx.font = '600 92px serif';
-          captureCtx.fillText('Van der Pol Limit Cycle', 1440, 125);
-          captureCtx.drawImage(sourceCanvas, 0, 210, 2880, 1200);
+          captureCtx.drawImage(sourceCanvas, -216, 120, 3312, 1380);
         },
         { bitrate: 14_000_000, backgroundColor: '#ffffff' }
       );
