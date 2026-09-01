@@ -1,5 +1,15 @@
 [
   {
+    "id": "independent-sampling",
+    "title": "Limitations of Conditionally Independent Sampling",
+    "date": "2026-09-01",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "Why sensible token marginals can still produce an incoherent joint sample in masked diffusion.",
+    "previewUrl": "visualizations/independent-sampling.mp4",
+    "link": "https://alechelbling.com/visualizations/independent-sampling/"
+  },
+  {
     "id": "kv-cache",
     "title": "KV Caching in Autoregressive Transformers",
     "date": "2026-07-11",
