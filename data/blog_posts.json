@@ -1,5 +1,15 @@
 [
   {
+    "id": "pull-toward-mean",
+    "title": "Why Diffusion Samples Move Toward the Mean",
+    "date": "2026-09-05",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "At high noise, a diffusion model's best prediction can be the dataset mean, even when there is no density there.",
+    "previewUrl": "visualizations/pull-toward-mean.mp4",
+    "link": "https://alechelbling.com/visualizations/pull-toward-mean/"
+  },
+  {
     "id": "independent-sampling",
     "title": "Limitations of Conditionally Independent Sampling",
     "date": "2026-09-01",
