@@ -120,6 +120,16 @@
     "link": "https://alechelbling.com/visualizations/block-diffusion/"
   },
   {
+    "id": "manimml-cnn",
+    "title": "Convolutional Neural Network",
+    "date": "2022-12-30",
+    "year": 2022,
+    "type": "visualization",
+    "summary": "A layer-by-layer animation of a convolutional neural network, rendered with ManimML.",
+    "previewUrl": "data/videos/manimml-cnn.mp4",
+    "link": "https://alechelbling.com/visualizations/manimml-cnn/"
+  },
+  {
     "id": "rectified-flow",
     "title": "Rectified Flow Explainer",
     "date": "2026-01-13",
@@ -150,5 +160,3 @@
     "link": "https://alechelbling.com/Diffusion-Explorer/"
   }
 ]
-
- 
