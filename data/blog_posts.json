@@ -120,6 +120,36 @@
     "link": "https://alechelbling.com/visualizations/block-diffusion/"
   },
   {
+    "id": "manimml-neocognitron",
+    "title": "Neocognitron",
+    "date": "2023-04-24",
+    "year": 2023,
+    "type": "visualization",
+    "summary": "A forward pass through the layered S-cell and C-cell architecture that anticipated modern convolutional neural networks.",
+    "previewUrl": "data/videos/manimml-neocognitron.mp4",
+    "link": "https://alechelbling.com/visualizations/neocognitron/"
+  },
+  {
+    "id": "manimml-decision-tree",
+    "title": "Decision Tree Splitting",
+    "date": "2023-01-25",
+    "year": 2023,
+    "type": "visualization",
+    "summary": "An animated decision tree learning successive splits of the Iris dataset and revealing its decision regions.",
+    "previewUrl": "data/videos/manimml-decision-tree.mp4",
+    "link": "https://alechelbling.com/visualizations/manimml-decision-tree/"
+  },
+  {
+    "id": "manimml-activation-functions",
+    "title": "Activation Functions",
+    "date": "2023-01-24",
+    "year": 2023,
+    "type": "visualization",
+    "summary": "A convolutional neural network forward pass highlighting ReLU activation functions.",
+    "previewUrl": "data/videos/manimml-activation-functions.mp4",
+    "link": "https://alechelbling.com/visualizations/manimml-activation-functions/"
+  },
+  {
     "id": "manimml-cnn",
     "title": "Convolutional Neural Network",
     "date": "2022-12-30",
