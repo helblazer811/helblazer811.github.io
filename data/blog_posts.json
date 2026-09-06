@@ -187,6 +187,28 @@
     "link": "https://alechelbling.com/visualizations/manimml-activation-functions/"
   },
   {
+    "id": "manimml-decision-tree-surface",
+    "title": "Iris Decision Surface",
+    "date": "2023-01-05",
+    "year": 2023,
+    "type": "visualization",
+    "summary": "Iris samples plotted by sepal length and width as a fitted decision tree reveals its piecewise classification regions.",
+    "previewUrl": "data/videos/manimml-decision-tree-surface.mp4",
+    "posterUrl": "data/images/video-posters/manimml-decision-tree-surface.jpg",
+    "link": "https://alechelbling.com/visualizations/manimml-decision-tree-surface/"
+  },
+  {
+    "id": "manimml-decision-tree-diagram",
+    "title": "Iris Decision Tree Diagram",
+    "date": "2023-01-04",
+    "year": 2023,
+    "type": "visualization",
+    "summary": "A breadth-first construction of an Iris classifier, from threshold decisions to flower-image leaf predictions.",
+    "previewUrl": "data/videos/manimml-decision-tree-diagram.mp4",
+    "posterUrl": "data/images/video-posters/manimml-decision-tree-diagram.jpg",
+    "link": "https://alechelbling.com/visualizations/manimml-decision-tree-diagram/"
+  },
+  {
     "id": "manimml-cnn",
     "title": "Convolutional Neural Network",
     "date": "2022-12-30",
