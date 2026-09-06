@@ -220,6 +220,17 @@
     "link": "https://alechelbling.com/visualizations/manimml-cnn/"
   },
   {
+    "id": "manimml-epsilon-nearest-neighbor",
+    "title": "Epsilon-Nearest-Neighbor Graph",
+    "date": "2022-07-26",
+    "year": 2022,
+    "type": "visualization",
+    "summary": "Growing epsilon neighborhoods connect two interlocking moons before spectral clustering separates the resulting graph.",
+    "previewUrl": "data/videos/manimml-epsilon-nearest-neighbor.mp4",
+    "posterUrl": "data/images/video-posters/manimml-epsilon-nearest-neighbor.jpg",
+    "link": "https://alechelbling.com/visualizations/manimml-epsilon-nearest-neighbor/"
+  },
+  {
     "id": "rectified-flow",
     "title": "Rectified Flow Explainer",
     "date": "2026-01-13",
