@@ -143,6 +143,28 @@
     "link": "https://alechelbling.com/visualizations/mcmc-burn-in/"
   },
   {
+    "id": "mcmc-fidget-spinner",
+    "title": "MCMC on a Three-Ring Distribution",
+    "date": "2025-03-24",
+    "year": 2025,
+    "type": "visualization",
+    "summary": "A Metropolis–Hastings chain explores a fidget-spinner density formed from three overlapping ring distributions.",
+    "previewUrl": "data/videos/mcmc-fidget-spinner.mp4",
+    "posterUrl": "data/images/video-posters/mcmc-fidget-spinner.jpg",
+    "link": "https://alechelbling.com/visualizations/mcmc-fidget-spinner/"
+  },
+  {
+    "id": "diffusion-model-spiral",
+    "title": "Training a Diffusion Model on a 2D Spiral",
+    "date": "2024-04-18",
+    "year": 2024,
+    "type": "visualization",
+    "summary": "Generated samples evolve during training as an early diffusion model learns a two-dimensional spiral distribution.",
+    "previewUrl": "data/videos/diffusion-model-spiral.mp4",
+    "posterUrl": "data/images/video-posters/diffusion-model-spiral.jpg",
+    "link": "https://alechelbling.com/visualizations/diffusion-model-spiral/"
+  },
+  {
     "id": "langevin-monte-carlo",
     "title": "Langevin Monte Carlo",
     "date": "2024-04-12",
