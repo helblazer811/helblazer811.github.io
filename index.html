@@ -251,6 +251,8 @@
             video.muted = true;
             video.defaultMuted = true;
             video.autoplay = true;
+            if (post.posterUrl) video.poster = post.posterUrl;
+            video.setAttribute("aria-label", `${post.title} preview`);
             video.dataset.src = post.previewUrl;
             const source = document.createElement("source");
             source.dataset.src = post.previewUrl;
