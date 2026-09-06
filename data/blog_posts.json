@@ -132,6 +132,28 @@
     "link": "https://alechelbling.com/visualizations/block-diffusion/"
   },
   {
+    "id": "mcmc-burn-in",
+    "title": "MCMC Burn-In",
+    "date": "2025-04-08",
+    "year": 2025,
+    "type": "visualization",
+    "summary": "Why the early states of a Markov chain are discarded while it converges toward a multimodal target distribution.",
+    "previewUrl": "data/videos/mcmc-burn-in.mp4",
+    "posterUrl": "data/images/video-posters/mcmc-burn-in.jpg",
+    "link": "https://alechelbling.com/visualizations/mcmc-burn-in/"
+  },
+  {
+    "id": "langevin-monte-carlo",
+    "title": "Langevin Monte Carlo",
+    "date": "2024-04-12",
+    "year": 2024,
+    "type": "visualization",
+    "summary": "Score-gradient ascent and noise combine to sample a multimodal smiley-face density.",
+    "previewUrl": "data/videos/langevin-monte-carlo.mp4",
+    "posterUrl": "data/images/video-posters/langevin-monte-carlo.jpg",
+    "link": "https://alechelbling.com/visualizations/langevin-monte-carlo/"
+  },
+  {
     "id": "manimml-neocognitron",
     "title": "Neocognitron",
     "date": "2023-04-24",
