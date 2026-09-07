@@ -1,7 +1,7 @@
 [
   {
     "id": "flow-reasoning-models",
-    "title": "Flow Reasoning Models: Turning Discrete Flows Into Efficient Recurrent Reasoners",
+    "title": "Flow Reasoning Models: Turning Flows Into Efficient Recurrent Reasoners",
     "authors": [
       {
         "name": "Alec Helbling",
@@ -16,7 +16,7 @@
         "isHighlighted": false
       },
       {
-        "name": "Duen Horng (Polo) Chau",
+        "name": "Duen Horng Chau",
         "isHighlighted": false
       },
       {
