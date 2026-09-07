@@ -3,31 +3,27 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link href="../_app/immutable/entry/start.DNJDhNih.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/Bz7iBU79.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/CQJ5bk0L.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/2x15c09a.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/BJyu0aUF.js" rel="modulepreload">
-		<link href="../_app/immutable/entry/app.BOdlVgGs.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/BOPYkB56.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/D4g7qUL9.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/BAwctqrb.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/B4id2EA2.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/CC1h7I9A.js" rel="modulepreload">
-		<link href="../_app/immutable/nodes/0.BvuAG5_M.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/8Js243rO.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/DoRKQYFc.js" rel="modulepreload">
-		<link href="../_app/immutable/nodes/9.CtpSsxNR.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/DHqrXTwU.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/huHxnAxP.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/C9pfToXq.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/q2HuPq9E.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/DEuwLjd_.js" rel="modulepreload">
-		<link href="../_app/immutable/chunks/B1E_u5V8.js" rel="modulepreload">
+		<link href="../_app/immutable/entry/start.89hqg3Bl.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/DXahCpHG.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/2ToZ1RPI.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/Dm-s_fyq.js" rel="modulepreload">
+		<link href="../_app/immutable/entry/app.CZjSdGNO.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/yvbe1GQh.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/B1hlD0Kl.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/CHy34oMS.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/B1cXGG60.js" rel="modulepreload">
+		<link href="../_app/immutable/nodes/0.CCCs-ysT.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/DHLhyrBZ.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/CGrY-SvO.js" rel="modulepreload">
+		<link href="../_app/immutable/nodes/7.88QliyU4.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/4N5cvU8G.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/DUJvQHsQ.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/Br5WbG1m.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/wmwtdzQk.js" rel="modulepreload">
 		<!--12qhfyh--><!----><!--16fdzvn--><meta name="theme-color" content="#151a23"/><!----><title>KV Caching in Autoregressive Transformers — Alec Helbling</title>
 		<link href="../_app/immutable/assets/0.2wgOXBlQ.css" rel="stylesheet">
-		<link href="../_app/immutable/assets/PageHeader.DNi9H6lP.css" rel="stylesheet">
-		<link href="../_app/immutable/assets/9.BtDEb1yo.css" rel="stylesheet">
+		<link href="../_app/immutable/assets/mp4-muxer.DNi9H6lP.css" rel="stylesheet">
+		<link href="../_app/immutable/assets/7.BtDEb1yo.css" rel="stylesheet">
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents"><!--[--><!--[0--><!--[--><nav class="top-nav svelte-cuqho2"><a href="https://alechelbling.com/blog.html" class="nav-link svelte-cuqho2">← Back to Blog</a></nav> <div class="page-container svelte-cuqho2"><!--[--><header class="page-header"><h1 class="title svelte-m5zr3d">KV Caching in Autoregressive Transformers</h1> <!--[0--><p class="subtitle svelte-m5zr3d">Prefill once, then reuse keys and values during decoding</p><!--]--> <!--[0--><div class="byline-dateline svelte-m5zr3d"><!--[0--><p class="byline svelte-m5zr3d">By <!--[0--><a href="https://alechelbling.com">Alec Helbling</a><!--]--></p><!--]--> <!--[0--><p class="dateline svelte-m5zr3d">July 11, 2026</p><!--]--></div><!--]--></header><!----> <p class="lede svelte-16fdzvn">Autoregressive transformers generate one token at a time. A key-value cache
@@ -38,7 +34,7 @@
 			
 			<script>
 				{
-					__sveltekit_1gztaom = {
+					__sveltekit_ffssvp = {
 						base: new URL("..", location).pathname.slice(0, -1),
 						assets: "/visualizations"
 					};
@@ -46,11 +42,11 @@
 					const element = document.currentScript.parentElement;
 
 					Promise.all([
-						import("../_app/immutable/entry/start.DNJDhNih.js"),
-						import("../_app/immutable/entry/app.BOdlVgGs.js")
+						import("../_app/immutable/entry/start.89hqg3Bl.js"),
+						import("../_app/immutable/entry/app.CZjSdGNO.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
-							node_ids: [0, 9],
+							node_ids: [0, 7],
 							data: [null,null],
 							form: null,
 							error: null
