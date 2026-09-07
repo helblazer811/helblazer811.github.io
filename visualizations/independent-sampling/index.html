@@ -3,59 +3,58 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta
-			name="description"
-			content="A visual explanation of how conditionally independent token sampling can turn sensible marginals into an incoherent generated sequence."
-		/>
-		<title>Independent Sampling in Masked Diffusion — Alec Helbling</title>
-		<style>
-			:root { --link: #1772d0; --hover: #f09228; --text: #222; --muted: #666; }
-			* { box-sizing: border-box; }
-			html, body { margin: 0; padding: 0; }
-			body { font-family: Lato, Verdana, Helvetica, sans-serif; font-size: 16px; line-height: 1.6; color: var(--text); background: #fff; }
-			a { color: var(--link); text-decoration: none; }
-			a:hover { color: var(--hover); }
-			nav, main { width: min(100% - 3rem, 720px); margin-inline: auto; }
-			nav { padding-top: 1.5rem; }
-			nav a { color: var(--muted); font-size: .9rem; }
-			main { padding: 1.5rem 0 4rem; }
-			h1 { margin: 0; font-size: 2.2em; line-height: 1.2; }
-			.subtitle { margin: .3em 0 0; color: var(--muted); font-size: 1.3em; font-style: italic; }
-			.meta { display: flex; justify-content: space-between; margin: 1rem 0 2rem; }
-			.meta p { margin: 0; }
-			.date, figcaption { color: var(--muted); }
-			figure { margin: .5rem 0 2rem; }
-			video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; background: #fff; }
-			figcaption { margin-top: .75rem; font-size: 1.05rem; line-height: 1.5; }
-			@media (max-width: 520px) { .meta { display: block; } .date { margin-top: .25rem !important; } }
-		</style>
+		<link href="../_app/immutable/entry/start.DNJDhNih.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/Bz7iBU79.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/CQJ5bk0L.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/2x15c09a.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/BJyu0aUF.js" rel="modulepreload">
+		<link href="../_app/immutable/entry/app.BOdlVgGs.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/BOPYkB56.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/D4g7qUL9.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/BAwctqrb.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/B4id2EA2.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/CC1h7I9A.js" rel="modulepreload">
+		<link href="../_app/immutable/nodes/0.BvuAG5_M.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/8Js243rO.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/DoRKQYFc.js" rel="modulepreload">
+		<link href="../_app/immutable/nodes/8.Dt_xK2bl.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/DHqrXTwU.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/BaHWV6Av.js" rel="modulepreload">
+		<!--12qhfyh--><!----><!--3ri0jh--><meta name="description" content="A visual explanation of how conditionally independent token sampling can turn sensible marginals into an incoherent generated sequence."/><!----><title>Independent Sampling in Masked Diffusion — Alec Helbling</title>
+		<link href="../_app/immutable/assets/0.2wgOXBlQ.css" rel="stylesheet">
+		<link href="../_app/immutable/assets/PageHeader.DNi9H6lP.css" rel="stylesheet">
+		<link href="../_app/immutable/assets/FigureBlock.Ka-Bp2Ow.css" rel="stylesheet">
+		<link href="../_app/immutable/assets/8.DMVoagRr.css" rel="stylesheet">
 	</head>
-	<body>
-		<nav><a href="https://alechelbling.com/blog.html">← Back to Blog</a></nav>
-		<main>
-			<header>
-				<h1>Independent Sampling in Masked Diffusion</h1>
-				<p class="subtitle">When sensible token marginals produce an incoherent joint sample</p>
-				<div class="meta">
-					<p>By <a href="https://alechelbling.com">Alec Helbling</a></p>
-					<p class="date">September 1, 2026</p>
-				</div>
-			</header>
-			<p>
-				Masked diffusion models predict multiple masked tokens in parallel. Each position can have a sensible
-				marginal distribution while the combined sample breaks a dependency between positions. Here both
-				distributions independently select <em>Alice</em>, producing a sequence that makes no sense.
-			</p>
-			<figure>
-				<video autoplay muted loop playsinline preload="auto">
-					<source src="../independent-sampling.mp4" type="video/mp4" />
-					A diagram showing conditionally independent sampling in masked diffusion.
-				</video>
-				<figcaption>
-					Individually plausible token marginals do not guarantee a coherent joint sample when masked positions
-					are decoded conditionally independently.
-				</figcaption>
-			</figure>
-		</main>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents"><!--[--><!--[0--><!--[--><nav class="top-nav svelte-cuqho2"><a href="https://alechelbling.com/blog.html" class="nav-link svelte-cuqho2">← Back to Blog</a></nav> <div class="page-container svelte-cuqho2"><!--[--><header class="page-header"><h1 class="title svelte-m5zr3d">Independent Sampling in Masked Diffusion</h1> <!--[0--><p class="subtitle svelte-m5zr3d">When sensible token marginals produce an incoherent joint sample</p><!--]--> <!--[0--><div class="byline-dateline svelte-m5zr3d"><!--[0--><p class="byline svelte-m5zr3d">By <!--[0--><a href="https://alechelbling.com">Alec Helbling</a><!--]--></p><!--]--> <!--[0--><p class="dateline svelte-m5zr3d">September 1, 2026</p><!--]--></div><!--]--></header><!----> <p>Masked diffusion models predict multiple masked tokens in parallel. Each
+	position can have a sensible marginal distribution while the combined sample
+	breaks a dependency between positions. Here both distributions independently
+	select <em>Alice</em>, producing a sequence that makes no sense.</p> <figure class="figure svelte-o1y34s no-background-figure"><div class="figure-content svelte-o1y34s no-background"><video class="animation svelte-3ri0jh" autoplay="" muted="" loop="" playsinline="" preload="auto"><source src="../independent-sampling.mp4" type="video/mp4"/> A diagram showing conditionally independent sampling in masked diffusion.</video><!----></div> <figcaption class="figure-caption svelte-o1y34s"><!---->Individually plausible token marginals do not guarantee a coherent joint
+		sample when masked positions are decoded conditionally independently.<!----></figcaption></figure><!----><!--]--><!----><!----></div><!--]--><!--]--> <!--[-1--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_1gztaom = {
+						base: new URL("..", location).pathname.slice(0, -1),
+						assets: "/visualizations"
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("../_app/immutable/entry/start.DNJDhNih.js"),
+						import("../_app/immutable/entry/app.BOdlVgGs.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 8],
+							data: [null,null],
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
 	</body>
 </html>
