@@ -1,112 +1,56 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hamiltonian Monte Carlo — Alec Helbling</title>
-    <meta name="description" content="A visual introduction to Hamiltonian Monte Carlo and its movement through a target density.">
-    <link rel="icon" type="image/svg+xml" href="../../data/images/logo.svg">
-    <style>
-      :root {
-        color-scheme: light;
-        font-family: Georgia, "Times New Roman", serif;
-        color: #1c1b19;
-        background: #f7f6f2;
-      }
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link href="../_app/immutable/entry/start.yCt_n8A4.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/B_Jqbvsn.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/BKxBLwq_.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/C3SxFsd5.js" rel="modulepreload">
+		<link href="../_app/immutable/entry/app.CnwkugkN.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/Daq7ATWU.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/B6fbTUVs.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/BaHDSjh3.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/C3x21iew.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/CdJzTjg6.js" rel="modulepreload">
+		<link href="../_app/immutable/nodes/0.Cg_6PNya.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/CE5sMy54.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/BajQfp28.js" rel="modulepreload">
+		<link href="../_app/immutable/nodes/5.Z4dbmnGy.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/BdMwncqY.js" rel="modulepreload">
+		<link href="../_app/immutable/chunks/UWAK5mhk.js" rel="modulepreload">
+		<!--12qhfyh--><!----><!--9xokt9--><meta name="description" content="A visual introduction to Hamiltonian Monte Carlo and its movement through a target density."/><!----><title>Hamiltonian Monte Carlo — Alec Helbling</title>
+		<link href="../_app/immutable/assets/0.2wgOXBlQ.css" rel="stylesheet">
+		<link href="../_app/immutable/assets/PageHeader.DNi9H6lP.css" rel="stylesheet">
+		<link href="../_app/immutable/assets/5.BHgN9AJH.css" rel="stylesheet">
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents"><!--[--><!--[0--><!--[--><nav class="top-nav svelte-cuqho2"><a href="https://alechelbling.com/blog.html" class="nav-link svelte-cuqho2">← Back to Blog</a></nav> <div class="page-container svelte-cuqho2"><!--[--><header class="page-header"><h1 class="title svelte-m5zr3d">Hamiltonian Monte Carlo</h1> <!--[-1--><!--]--> <!--[0--><div class="byline-dateline svelte-m5zr3d"><!--[0--><p class="byline svelte-m5zr3d">By <!--[0--><a href="https://alechelbling.com">Alec Helbling</a><!--]--></p><!--]--> <!--[0--><p class="dateline svelte-m5zr3d">March 25, 2025</p><!--]--></div><!--]--></header><!----> <p>Hamiltonian Monte Carlo augments a sample with momentum and follows the resulting Hamiltonian
+	dynamics. These structured trajectories can travel much farther through a distribution than a
+	random-walk proposal.</p> <figure class="svelte-1mr62bm"><video autoplay="" muted="" loop="" playsinline="" controls="" preload="metadata" poster="../hamiltonian-monte-carlo-16x9-poster.jpg" class="svelte-1mr62bm" style="aspect-ratio: 16 / 9;"><source src="../hamiltonian-monte-carlo-16x9.mp4" type="video/mp4"/> An animation of Hamiltonian Monte Carlo moving through a target density.</video> <figcaption class="svelte-1mr62bm">Position and momentum evolve together along an approximately constant-energy trajectory.</figcaption></figure><!----><!--]--><!----><!----></div><!--]--><!--]--> <!--[-1--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_140jiu7 = {
+						base: new URL("..", location).pathname.slice(0, -1),
+						assets: "/visualizations"
+					};
 
-      * { box-sizing: border-box; }
+					const element = document.currentScript.parentElement;
 
-      body {
-        margin: 0;
-        min-height: 100vh;
-      }
-
-      nav,
-      main {
-        width: min(960px, calc(100% - 40px));
-        margin-inline: auto;
-      }
-
-      nav { padding-top: 28px; }
-
-      a {
-        color: inherit;
-        text-underline-offset: 0.18em;
-      }
-
-      main { padding: 68px 0 80px; }
-
-      h1 {
-        max-width: 850px;
-        margin: 0;
-        font-size: clamp(2.7rem, 7vw, 5.8rem);
-        font-weight: 400;
-        letter-spacing: -0.045em;
-        line-height: 0.96;
-      }
-
-      .byline {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.55rem 1.2rem;
-        margin: 28px 0 48px;
-        color: #66625b;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 0.92rem;
-      }
-
-      .intro {
-        max-width: 760px;
-        margin-bottom: 28px;
-        font-size: clamp(1.12rem, 2vw, 1.35rem);
-        line-height: 1.55;
-      }
-
-      figure { margin: 0; }
-
-      video {
-        display: block;
-        width: 100%;
-        height: auto;
-        aspect-ratio: 16 / 9;
-        border: 1px solid #d8d5ce;
-        background: #fff;
-      }
-
-      figcaption {
-        margin-top: 12px;
-        color: #66625b;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 0.92rem;
-        line-height: 1.5;
-        text-align: center;
-      }
-
-      @media (max-width: 600px) {
-        nav,
-        main { width: min(100% - 24px, 960px); }
-        main { padding-top: 44px; }
-        .byline { margin-bottom: 34px; }
-      }
-    </style>
-  </head>
-  <body>
-    <nav><a href="../../blog.html">← Back to Blogs and Visualizations</a></nav>
-    <main>
-      <h1>Hamiltonian Monte Carlo</h1>
-      <p class="byline"><span>By <a href="../../">Alec Helbling</a></span><span>March 25, 2025</span></p>
-      <p class="intro">
-        Hamiltonian Monte Carlo augments a sample with momentum and follows the resulting Hamiltonian
-        dynamics. These structured trajectories can travel much farther through a distribution than a
-        random-walk proposal.
-      </p>
-      <figure>
-        <video autoplay muted loop playsinline controls preload="metadata" poster="../hamiltonian-monte-carlo-16x9-poster.jpg">
-          <source src="../hamiltonian-monte-carlo-16x9.mp4" type="video/mp4">
-          An animation of Hamiltonian Monte Carlo moving through a target density.
-        </video>
-        <figcaption>Position and momentum evolve together along an approximately constant-energy trajectory.</figcaption>
-      </figure>
-    </main>
-  </body>
+					Promise.all([
+						import("../_app/immutable/entry/start.yCt_n8A4.js"),
+						import("../_app/immutable/entry/app.CnwkugkN.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 5],
+							data: [null,null],
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
 </html>
