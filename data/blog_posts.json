@@ -1,16 +1,5 @@
 [
   {
-    "id": "hamiltonian-monte-carlo",
-    "title": "Hamiltonian Monte Carlo",
-    "date": "2025-03-25",
-    "year": 2025,
-    "type": "visualization",
-    "summary": "Position and momentum evolving together along a Hamiltonian trajectory through a target density.",
-    "previewUrl": "data/images/hamiltonian-monte-carlo-preview-16x9.mp4",
-    "posterUrl": "data/images/hamiltonian-monte-carlo-preview-16x9-poster.jpg",
-    "link": "https://alechelbling.com/visualizations/hamiltonian-monte-carlo/"
-  },
-  {
     "id": "pull-toward-mean",
     "title": "Why Diffusion Samples Move Toward the Mean",
     "date": "2026-09-05",
@@ -31,6 +20,17 @@
     "previewUrl": "visualizations/independent-sampling.mp4",
     "posterUrl": "data/images/video-posters/independent-sampling.jpg",
     "link": "https://alechelbling.com/visualizations/independent-sampling/"
+  },
+  {
+    "id": "continuous-vs-masked-diffusion",
+    "title": "Continuous vs. Masked Diffusion",
+    "date": "2026-08-29",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "Continuous and masked diffusion shown as parallel information-destroying forward processes and their generative reversals.",
+    "previewUrl": "data/images/continuous-vs-masked-diffusion-preview.mp4",
+    "posterUrl": "data/images/continuous-vs-masked-diffusion-preview-poster.jpg",
+    "link": "https://alechelbling.com/visualizations/continuous-vs-masked-diffusion/"
   },
   {
     "id": "kv-cache",
@@ -77,6 +77,17 @@
     "link": "https://alechelbling.com/visualizations/helmholtz-decomposition-dlic/"
   },
   {
+    "id": "optimal-transport-coupling",
+    "title": "Optimal Transport Coupling",
+    "date": "2026-05-12",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "How optimal-transport pairings create shorter, straighter paths for flow matching than independent coupling.",
+    "previewUrl": "data/images/optimal-transport-coupling-preview.mp4",
+    "posterUrl": "data/images/optimal-transport-coupling-preview-poster.jpg",
+    "link": "https://alechelbling.com/visualizations/optimal-transport-coupling/"
+  },
+  {
     "id": "svgd",
     "title": "Stein Variational Gradient Descent",
     "date": "2026-05-28",
@@ -97,6 +108,17 @@
     "previewUrl": "data/images/lorenz-attractor-preview.mp4",
     "posterUrl": "data/images/video-posters/lorenz-attractor.jpg",
     "link": "https://alechelbling.com/visualizations/lorenz-attractor/"
+  },
+  {
+    "id": "class-conditioned-flow-matching",
+    "title": "Class-Conditioned Flow Matching",
+    "date": "2026-05-19",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "How class labels resolve ambiguous regression targets and simplify the velocity field learned by a flow model.",
+    "previewUrl": "data/images/class-conditioned-flow-matching-preview.mp4",
+    "posterUrl": "data/images/class-conditioned-flow-matching-preview-poster.jpg",
+    "link": "https://alechelbling.com/visualizations/class-conditioned-flow-matching/"
   },
   {
     "id": "van-der-pol",
@@ -143,6 +165,28 @@
     "link": "https://alechelbling.com/visualizations/block-diffusion/"
   },
   {
+    "id": "transformer-explainer",
+    "title": "Transformer Explainer",
+    "date": "2025-11-09",
+    "year": 2025,
+    "type": "visualization",
+    "summary": "An interactive, step-by-step explanation of how a GPT-2-style transformer turns text into next-token predictions.",
+    "previewUrl": "data/images/transformer-explainer-preview.mp4",
+    "posterUrl": "data/images/transformer-explainer-preview-poster.jpg",
+    "link": "https://poloclub.github.io/transformer-explainer/"
+  },
+  {
+    "id": "seam-carving",
+    "title": "Seam Carving",
+    "date": "2025-10-11",
+    "year": 2025,
+    "type": "visualization",
+    "summary": "Content-aware image resizing removes low-energy seams while preserving visually important regions.",
+    "previewUrl": "data/images/seam-carving-preview.mp4",
+    "posterUrl": "data/images/seam-carving-preview-poster.jpg",
+    "link": "https://alechelbling.com/visualizations/seam-carving/"
+  },
+  {
     "id": "mcmc-burn-in",
     "title": "MCMC Burn-In",
     "date": "2025-04-08",
@@ -154,6 +198,17 @@
     "link": "https://alechelbling.com/visualizations/mcmc-burn-in/"
   },
   {
+    "id": "hamiltonian-monte-carlo",
+    "title": "Hamiltonian Monte Carlo",
+    "date": "2025-03-25",
+    "year": 2025,
+    "type": "visualization",
+    "summary": "Position and momentum evolving together along a Hamiltonian trajectory through a target density.",
+    "previewUrl": "data/images/hamiltonian-monte-carlo-preview-16x9.mp4",
+    "posterUrl": "data/images/hamiltonian-monte-carlo-preview-16x9-poster.jpg",
+    "link": "https://alechelbling.com/visualizations/hamiltonian-monte-carlo/"
+  },
+  {
     "id": "mcmc-fidget-spinner",
     "title": "MCMC on a Three-Ring Distribution",
     "date": "2025-03-24",
@@ -163,6 +218,17 @@
     "previewUrl": "data/videos/mcmc-fidget-spinner.mp4",
     "posterUrl": "data/images/video-posters/mcmc-fidget-spinner.jpg",
     "link": "https://alechelbling.com/visualizations/mcmc-fidget-spinner/"
+  },
+  {
+    "id": "momentum",
+    "title": "Momentum in Gradient Descent",
+    "date": "2025-02-24",
+    "year": 2025,
+    "type": "visualization",
+    "summary": "Momentum carries optimization through shallow local minima and toward a better basin.",
+    "previewUrl": "data/images/momentum-preview.mp4",
+    "posterUrl": "data/images/momentum-preview-poster.jpg",
+    "link": "https://alechelbling.com/visualizations/momentum/"
   },
   {
     "id": "diffusion-model-spiral",
