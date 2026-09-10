@@ -136,7 +136,7 @@
     "title": "Arboretum: Visual Decision Trees",
     "date": "2026-03-10",
     "year": 2026,
-    "type": "visualization",
+    "type": "blog",
     "summary": "An interactive interface for writing, visualizing, and testing interpretable decision-tree classifiers powered by vision-language models.",
     "previewUrl": "data/images/arboretum-preview.png",
     "link": "https://alechelbling.com/arboretum/"
