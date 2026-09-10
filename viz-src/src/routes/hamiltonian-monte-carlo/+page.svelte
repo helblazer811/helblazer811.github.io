@@ -9,7 +9,7 @@
 	<meta name="description" content="A visual introduction to Hamiltonian Monte Carlo and its movement through a target density." />
 </svelte:head>
 
-<PageHeader title="Hamiltonian Monte Carlo" author="Alec Helbling" authorLink="https://alechelbling.com" date="September 7, 2026" />
+<PageHeader title="Hamiltonian Monte Carlo" author="Alec Helbling" authorLink="https://alechelbling.com" date="March 25, 2025" />
 
 <p>
 	Hamiltonian Monte Carlo augments a sample with momentum and follows the resulting Hamiltonian
@@ -22,5 +22,5 @@
 	poster={`${base}/hamiltonian-monte-carlo-poster.jpg`}
 	fallback="An animation of Hamiltonian Monte Carlo moving through a target density."
 	caption="Position and momentum evolve together along an approximately constant-energy trajectory."
-	aspectRatio="19 / 12"
+	aspectRatio="16 / 9"
 />
