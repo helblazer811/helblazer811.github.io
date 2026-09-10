@@ -132,6 +132,16 @@
     "link": "https://alechelbling.com/visualizations/van-der-pol/"
   },
   {
+    "id": "arboretum-visual-decision-trees",
+    "title": "Arboretum: Visual Decision Trees",
+    "date": "2026-03-10",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "An interactive interface for writing, visualizing, and testing interpretable decision-tree classifiers powered by vision-language models.",
+    "previewUrl": "data/images/arboretum-preview.png",
+    "link": "https://alechelbling.com/arboretum/"
+  },
+  {
     "id": "marching-squares",
     "title": "Marching Squares",
     "date": "2026-01-27",
