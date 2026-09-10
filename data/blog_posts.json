@@ -6,8 +6,8 @@
     "year": 2025,
     "type": "visualization",
     "summary": "Position and momentum evolving together along a Hamiltonian trajectory through a target density.",
-    "previewUrl": "data/images/hamiltonian-monte-carlo-preview.mp4",
-    "posterUrl": "data/images/hamiltonian-monte-carlo-preview-poster.jpg",
+    "previewUrl": "data/images/hamiltonian-monte-carlo-preview-16x9.mp4",
+    "posterUrl": "data/images/hamiltonian-monte-carlo-preview-16x9-poster.jpg",
     "link": "https://alechelbling.com/visualizations/hamiltonian-monte-carlo/"
   },
   {

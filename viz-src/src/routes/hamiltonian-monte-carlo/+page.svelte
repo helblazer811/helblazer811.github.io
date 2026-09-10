@@ -18,8 +18,8 @@
 </p>
 
 <VideoExplainer
-	src={`${base}/hamiltonian-monte-carlo.mp4`}
-	poster={`${base}/hamiltonian-monte-carlo-poster.jpg`}
+	src={`${base}/hamiltonian-monte-carlo-16x9.mp4`}
+	poster={`${base}/hamiltonian-monte-carlo-16x9-poster.jpg`}
 	fallback="An animation of Hamiltonian Monte Carlo moving through a target density."
 	caption="Position and momentum evolve together along an approximately constant-energy trajectory."
 	aspectRatio="16 / 9"
