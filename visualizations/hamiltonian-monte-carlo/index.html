@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hamiltonian Monte Carlo — Alec Helbling</title>
+    <meta name="description" content="A visual introduction to Hamiltonian Monte Carlo and its movement through a target density.">
+    <link rel="icon" type="image/svg+xml" href="../../data/images/logo.svg">
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Georgia, "Times New Roman", serif;
+        color: #1c1b19;
+        background: #f7f6f2;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+      }
+
+      nav,
+      main {
+        width: min(960px, calc(100% - 40px));
+        margin-inline: auto;
+      }
+
+      nav { padding-top: 28px; }
+
+      a {
+        color: inherit;
+        text-underline-offset: 0.18em;
+      }
+
+      main { padding: 68px 0 80px; }
+
+      h1 {
+        max-width: 850px;
+        margin: 0;
+        font-size: clamp(2.7rem, 7vw, 5.8rem);
+        font-weight: 400;
+        letter-spacing: -0.045em;
+        line-height: 0.96;
+      }
+
+      .byline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem 1.2rem;
+        margin: 28px 0 48px;
+        color: #66625b;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.92rem;
+      }
+
+      .intro {
+        max-width: 760px;
+        margin-bottom: 28px;
+        font-size: clamp(1.12rem, 2vw, 1.35rem);
+        line-height: 1.55;
+      }
+
+      figure { margin: 0; }
+
+      video {
+        display: block;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 19 / 12;
+        border: 1px solid #d8d5ce;
+        background: #fff;
+      }
+
+      figcaption {
+        margin-top: 12px;
+        color: #66625b;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.92rem;
+        line-height: 1.5;
+        text-align: center;
+      }
+
+      @media (max-width: 600px) {
+        nav,
+        main { width: min(100% - 24px, 960px); }
+        main { padding-top: 44px; }
+        .byline { margin-bottom: 34px; }
+      }
+    </style>
+  </head>
+  <body>
+    <nav><a href="../../blog.html">← Back to Blogs and Visualizations</a></nav>
+    <main>
+      <h1>Hamiltonian Monte Carlo</h1>
+      <p class="byline"><span>By <a href="../../">Alec Helbling</a></span><span>September 7, 2026</span></p>
+      <p class="intro">
+        Hamiltonian Monte Carlo augments a sample with momentum and follows the resulting Hamiltonian
+        dynamics. These structured trajectories can travel much farther through a distribution than a
+        random-walk proposal.
+      </p>
+      <figure>
+        <video autoplay muted loop playsinline controls preload="metadata" poster="../hamiltonian-monte-carlo-poster.jpg">
+          <source src="../hamiltonian-monte-carlo.mp4" type="video/mp4">
+          An animation of Hamiltonian Monte Carlo moving through a target density.
+        </video>
+        <figcaption>Position and momentum evolve together along an approximately constant-energy trajectory.</figcaption>
+      </figure>
+    </main>
+  </body>
+</html>
