@@ -218,7 +218,7 @@
        * Load and render recent blog posts
        */
       let blogPosts = [];
-      fetch("data/blog_posts.json")
+      fetch("data/blog_posts.json", { cache: "no-store" })
         .then((response) => response.json())
         .then((data) => {
           blogPosts = data;
