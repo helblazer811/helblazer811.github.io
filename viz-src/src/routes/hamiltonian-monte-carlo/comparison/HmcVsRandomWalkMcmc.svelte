@@ -6,7 +6,7 @@
   const WIDTH = 1920;
   const HEIGHT = 1200;
   const FPS = 30;
-  const FRAME_COUNT = 360;
+  const FRAME_COUNT = 720;
   const DURATION_SECONDS = FRAME_COUNT / FPS;
   const CHAIN_LENGTH = 140;
   const ORANGE = "#f17720";
@@ -176,7 +176,7 @@
           Y_DOMAIN - ((y + 0.5) / map.height) * 2 * Y_DOMAIN,
         ];
         const normalized = Math.min(1, Math.exp(logDensity(point)) / maximumDensity);
-        const alpha = Math.round(255 * 0.44 * normalized ** 0.58);
+        const alpha = Math.round(255 * 0.62 * normalized ** 0.58);
         const offset = 4 * (y * map.width + x);
         image.data[offset] = 59;
         image.data[offset + 1] = 130;
@@ -236,17 +236,17 @@
       if (visit.pathIndex > completeIndex) break;
       const [x, y] = toPixel(visit.point);
       context.beginPath();
-      context.arc(x, y, 7.5, 0, 2 * Math.PI);
+      context.arc(x, y, 10, 0, 2 * Math.PI);
       context.fill();
     }
     context.restore();
 
     const recentChain = pixelChain.slice(Math.max(0, pixelChain.length - trailLength));
     drawTrajectories(context, [recentChain], recentChain.length - 1, {
-      strokeWidth: 6,
+      strokeWidth: 10,
       color: ORANGE,
       opacity: 0.9,
-      pointRadius: 12,
+      pointRadius: 16,
       showPreview: false,
       showHeadMarker: true,
       outline: { color: "#ffffff", strokeWidth: 3, opacity: 0.9 },
