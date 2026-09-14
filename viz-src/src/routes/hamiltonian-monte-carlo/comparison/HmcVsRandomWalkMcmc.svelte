@@ -9,7 +9,7 @@
   const FRAME_COUNT = 720;
   const DURATION_SECONDS = FRAME_COUNT / FPS;
   const CHAIN_LENGTH = 140;
-  const RED = "#ff3b30";
+  const ORANGE = "#f17720";
   const INK = "#e5e7eb";
   const BACKGROUND = "#000000";
   const PANEL_SIZE = 940;
@@ -262,7 +262,7 @@
     const pixelChain = visibleChain.map(toPixel);
 
     context.save();
-    context.fillStyle = RED;
+    context.fillStyle = ORANGE;
     context.strokeStyle = "rgba(255, 255, 255, 0.24)";
     context.lineWidth = 4;
     for (const visit of run.acceptedVisits) {
@@ -280,7 +280,7 @@
     const recentChain = pixelChain.slice(Math.max(0, pixelChain.length - trailLength));
     drawTrajectories(context, [recentChain], recentChain.length - 1, {
       strokeWidth: 10,
-      color: RED,
+      color: ORANGE,
       opacity: 0.9,
       pointRadius: 16,
       showPreview: false,
@@ -292,7 +292,7 @@
       context.save();
       context.beginPath();
       context.arc(head[0], head[1], 16, 0, 2 * Math.PI);
-      context.fillStyle = RED;
+      context.fillStyle = ORANGE;
       context.fill();
       context.strokeStyle = "rgba(255, 255, 255, 0.28)";
       context.lineWidth = 5;
@@ -375,7 +375,7 @@
   ></canvas>
   <div class="controls">
     <div class="timeline">
-      <TimeSlider timeline={player} color={RED} />
+      <TimeSlider timeline={player} color={ORANGE} />
     </div>
     <button type="button" onclick={exportVideo} disabled={exporting}>
       {exporting ? "Exporting…" : "Export 1920 × 1080 video"}
@@ -385,8 +385,8 @@
 
 <style>
   :global(body) {
-    --link-color: #ff6b61;
-    --link-hover-color: #ff9a93;
+    --link-color: #f59e42;
+    --link-hover-color: #fdba74;
     --muted-color: #a1a1aa;
     color: #e5e7eb;
     background: #000000;
@@ -430,8 +430,8 @@
   }
 
   button:hover:not(:disabled) {
-    border-color: #ff3b30;
-    color: #ff9a93;
+    border-color: #f17720;
+    color: #fdba74;
   }
 
   button:disabled {
