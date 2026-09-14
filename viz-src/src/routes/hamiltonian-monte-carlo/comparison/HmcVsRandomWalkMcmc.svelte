@@ -230,14 +230,18 @@
     const pixelChain = visibleChain.map(toPixel);
 
     context.save();
-    context.globalAlpha = 0.55;
     context.fillStyle = ORANGE;
+    context.strokeStyle = "rgba(255, 255, 255, 0.72)";
+    context.lineWidth = 4;
     for (const visit of run.acceptedVisits) {
       if (visit.pathIndex > completeIndex) break;
       const [x, y] = toPixel(visit.point);
       context.beginPath();
       context.arc(x, y, 10, 0, 2 * Math.PI);
+      context.globalAlpha = 0.55;
       context.fill();
+      context.globalAlpha = 1;
+      context.stroke();
     }
     context.restore();
 
@@ -248,8 +252,21 @@
       opacity: 0.9,
       pointRadius: 16,
       showPreview: false,
-      showHeadMarker: true,
+      showHeadMarker: false,
     });
+
+    const head = recentChain[recentChain.length - 1];
+    if (head) {
+      context.save();
+      context.beginPath();
+      context.arc(head[0], head[1], 16, 0, 2 * Math.PI);
+      context.fillStyle = ORANGE;
+      context.fill();
+      context.strokeStyle = "rgba(255, 255, 255, 0.8)";
+      context.lineWidth = 5;
+      context.stroke();
+      context.restore();
+    }
     context.restore();
   }
 
