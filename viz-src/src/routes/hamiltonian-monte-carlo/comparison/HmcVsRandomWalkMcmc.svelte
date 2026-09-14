@@ -6,7 +6,7 @@
   const WIDTH = 1920;
   const HEIGHT = 1200;
   const FPS = 30;
-  const FRAME_COUNT = 240;
+  const FRAME_COUNT = 360;
   const DURATION_SECONDS = FRAME_COUNT / FPS;
   const CHAIN_LENGTH = 140;
   const ORANGE = "#f17720";
