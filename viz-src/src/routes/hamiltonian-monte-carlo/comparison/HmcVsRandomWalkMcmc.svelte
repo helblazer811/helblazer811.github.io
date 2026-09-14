@@ -9,8 +9,9 @@
   const FRAME_COUNT = 720;
   const DURATION_SECONDS = FRAME_COUNT / FPS;
   const CHAIN_LENGTH = 140;
-  const ORANGE = "#f17720";
-  const INK = "#3c3c3c";
+  const CYAN = "#22d3ee";
+  const INK = "#e5e7eb";
+  const BACKGROUND = "#09090b";
   const PANEL_SIZE = 940;
   const PLOT_INSET = 50;
   const PLOT_WIDTH = PANEL_SIZE - 2 * PLOT_INSET;
@@ -162,6 +163,32 @@
     hmcRun = hamiltonianMonteCarlo(mulberry32(811));
   }
 
+  function infernoColor(value: number): [number, number, number] {
+    const stops: Array<[number, number, number, number]> = [
+      [0, 0, 0, 4],
+      [0.13, 27, 12, 65],
+      [0.25, 74, 12, 107],
+      [0.38, 120, 28, 109],
+      [0.5, 165, 44, 96],
+      [0.63, 207, 68, 70],
+      [0.75, 237, 105, 37],
+      [0.88, 251, 155, 6],
+      [1, 252, 255, 164],
+    ];
+    const upperIndex = Math.min(
+      stops.length - 1,
+      Math.max(1, stops.findIndex((stop) => value <= stop[0])),
+    );
+    const lower = stops[upperIndex - 1];
+    const upper = stops[upperIndex];
+    const mix = (value - lower[0]) / (upper[0] - lower[0]);
+    return [
+      Math.round(lower[1] + mix * (upper[1] - lower[1])),
+      Math.round(lower[2] + mix * (upper[2] - lower[2])),
+      Math.round(lower[3] + mix * (upper[3] - lower[3])),
+    ];
+  }
+
   function makeHeatmap() {
     const map = document.createElement("canvas");
     map.width = 320;
@@ -176,12 +203,12 @@
           Y_DOMAIN - ((y + 0.5) / map.height) * 2 * Y_DOMAIN,
         ];
         const normalized = Math.min(1, Math.exp(logDensity(point)) / maximumDensity);
-        const alpha = Math.round(255 * 0.62 * normalized ** 0.58);
+        const [red, green, blue] = infernoColor(0.88 * normalized ** 0.48);
         const offset = 4 * (y * map.width + x);
-        image.data[offset] = 59;
-        image.data[offset + 1] = 130;
-        image.data[offset + 2] = 246;
-        image.data[offset + 3] = alpha;
+        image.data[offset] = red;
+        image.data[offset + 1] = green;
+        image.data[offset + 2] = blue;
+        image.data[offset + 3] = 255;
       }
     }
     mapContext.putImageData(image, 0, 0);
@@ -230,7 +257,7 @@
     const pixelChain = visibleChain.map(toPixel);
 
     context.save();
-    context.fillStyle = ORANGE;
+    context.fillStyle = CYAN;
     context.strokeStyle = "rgba(255, 255, 255, 0.24)";
     context.lineWidth = 4;
     for (const visit of run.acceptedVisits) {
@@ -248,7 +275,7 @@
     const recentChain = pixelChain.slice(Math.max(0, pixelChain.length - trailLength));
     drawTrajectories(context, [recentChain], recentChain.length - 1, {
       strokeWidth: 10,
-      color: ORANGE,
+      color: CYAN,
       opacity: 0.9,
       pointRadius: 16,
       showPreview: false,
@@ -260,7 +287,7 @@
       context.save();
       context.beginPath();
       context.arc(head[0], head[1], 16, 0, 2 * Math.PI);
-      context.fillStyle = ORANGE;
+      context.fillStyle = CYAN;
       context.fill();
       context.strokeStyle = "rgba(255, 255, 255, 0.28)";
       context.lineWidth = 5;
@@ -273,7 +300,7 @@
   function draw(t: number) {
     if (!ctx) return;
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = BACKGROUND;
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
     drawPanel(ctx, 10, "Random-Walk MCMC", randomWalkRun, t, 24);
     drawPanel(ctx, 970, "Hamiltonian Monte Carlo", hmcRun, t, 84);
@@ -308,7 +335,7 @@
           player!.seek(t);
           draw(t);
         },
-        { bitrate: 16_000_000, backgroundColor: "#ffffff" },
+        { bitrate: 16_000_000, backgroundColor: BACKGROUND },
       );
       downloadBlob(video, "hmc-vs-random-walk-mcmc-1920x1200.webm");
     } finally {
@@ -343,7 +370,7 @@
   ></canvas>
   <div class="controls">
     <div class="timeline">
-      <TimeSlider timeline={player} color={ORANGE} />
+      <TimeSlider timeline={player} color={CYAN} />
     </div>
     <button type="button" onclick={exportVideo} disabled={exporting}>
       {exporting ? "Exporting…" : "Export 1920 × 1200 video"}
@@ -352,6 +379,14 @@
 </div>
 
 <style>
+  :global(body) {
+    --link-color: #67e8f9;
+    --link-hover-color: #a5f3fc;
+    --muted-color: #a1a1aa;
+    color: #e5e7eb;
+    background: #09090b;
+  }
+
   .mcmc-comparison-figure {
     width: min(96vw, 1600px);
     margin: 1.5rem 50% 0;
@@ -363,7 +398,7 @@
     width: 100%;
     height: auto;
     aspect-ratio: 8 / 5;
-    background: white;
+    background: #09090b;
   }
 
   .controls {
@@ -379,10 +414,10 @@
   }
 
   button {
-    border: 1px solid #d9d4ce;
+    border: 1px solid #313136;
     border-radius: 5px;
-    background: #fff;
-    color: #444;
+    background: #151519;
+    color: #e5e7eb;
     padding: 0.58rem 0.85rem;
     font: 600 0.82rem Inter, Arial, sans-serif;
     cursor: pointer;
@@ -390,8 +425,8 @@
   }
 
   button:hover:not(:disabled) {
-    border-color: #f17720;
-    color: #d75f0d;
+    border-color: #22d3ee;
+    color: #67e8f9;
   }
 
   button:disabled {
