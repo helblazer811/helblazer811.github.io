@@ -14,7 +14,13 @@
   const ORANGE = "#f17720";
   const BLUE = "#3b82f6";
   const MOVING_GRAY = "#8f8b86";
-  const INK = "#252525";
+  const INK = "#3c3c3c";
+  const PANEL_SIZE = 940;
+  const PLOT_INSET = 50;
+  const PLOT_WIDTH = PANEL_SIZE - 2 * PLOT_INSET;
+  const PLOT_TOP = 85;
+  const PLOT_HEIGHT = 880;
+  const COORDINATE_DOMAIN = 2.75;
 
   type Point = [number, number];
   type AnimationState = { time: number };
@@ -48,7 +54,7 @@
 
   function sampleTarget(random: () => number): Point {
     const componentSigma = 0.18;
-    const componentRadius = 1.8;
+    const componentRadius = 2.2;
     const component = Math.floor(random() * 5);
     const angle = -Math.PI / 2 + (component * 2 * Math.PI) / 5;
     const noise = gaussian(random);
@@ -132,29 +138,24 @@
     t: number,
     variancePreserving: boolean,
   ) {
-    const panelY = -30;
-    const panelSize = 940;
-    const plotInset = 50;
-    const plotSize = panelSize - 2 * plotInset;
-    const domain = 2.75;
     const toPixel = (point: Point): Point => [
-      panelX + panelSize / 2 + (point[0] / (2 * domain)) * plotSize,
-      panelY + panelSize / 2 - (point[1] / (2 * domain)) * plotSize,
+      panelX + PANEL_SIZE / 2 + (point[0] / (2 * COORDINATE_DOMAIN)) * PLOT_WIDTH,
+      PLOT_TOP + PLOT_HEIGHT / 2 - (point[1] / (2 * COORDINATE_DOMAIN)) * PLOT_HEIGHT,
     ];
 
     context.textAlign = "center";
     context.fillStyle = INK;
-    context.font = "600 68px Inter, Arial, sans-serif";
-    context.fillText(title, panelX + panelSize / 2, 78);
+    context.font = "600 62px Inter, Arial, sans-serif";
+    context.fillText(title, panelX + PANEL_SIZE / 2, 98);
     context.save();
     context.filter = "brightness(0.65)";
-    const equationScale = 1.4;
-    const equationWidth = panelSize * equationScale;
-    const equationHeight = 100 * equationScale;
+    const equationWidth = Math.min(equationImage.width, PANEL_SIZE * 0.9);
+    const equationHeight = equationImage.height * (equationWidth / equationImage.width);
+    const equationBottomMargin = 32;
     context.drawImage(
       equationImage,
-      panelX + (panelSize - equationWidth) / 2,
-      995,
+      panelX + (PANEL_SIZE - equationWidth) / 2,
+      HEIGHT - equationBottomMargin - equationHeight,
       equationWidth,
       equationHeight,
     );
@@ -163,10 +164,10 @@
     context.save();
     roundedRect(
       context,
-      panelX + plotInset,
-      panelY + plotInset,
-      plotSize,
-      plotSize,
+      panelX + PLOT_INSET,
+      PLOT_TOP,
+      PLOT_WIDTH,
+      PLOT_HEIGHT,
       16,
     );
     context.clip();
@@ -174,7 +175,7 @@
     const [sourceWeight, targetWeight] = pathWeights(t, variancePreserving);
 
     context.fillStyle = MOVING_GRAY;
-    context.globalAlpha = 0.72;
+    context.globalAlpha = 0.55;
     for (let index = 0; index < source.length; index++) {
       if (index === selectedIndex) continue;
       const point: Point = [
@@ -188,7 +189,7 @@
     }
 
     context.fillStyle = BLUE;
-    context.globalAlpha = 0.35;
+    context.globalAlpha = 0.25;
     for (let index = 0; index < targetBackdrop.length; index++) {
       if (index === selectedIndex) continue;
       const point = targetBackdrop[index];
