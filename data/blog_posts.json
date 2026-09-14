@@ -6,7 +6,7 @@
     "year": 2026,
     "type": "visualization",
     "summary": "How linear and variance-preserving interpolants move paired samples along straight and curved probability paths.",
-    "previewUrl": "data/videos/linear-vs-variance-preserving-path-1920x1080.webm",
+    "previewUrl": "data/images/probability-path-comparison-preview.mp4",
     "link": "https://alechelbling.com/visualizations/probability-path-comparison/"
   },
   {

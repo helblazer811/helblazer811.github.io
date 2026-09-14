@@ -247,19 +247,22 @@
             video.setAttribute("autoplay", "");
             video.setAttribute("loop", "");
             video.setAttribute("playsinline", "");
-            video.setAttribute("preload", "none");
+            video.setAttribute("preload", "auto");
             video.muted = true;
             video.defaultMuted = true;
             video.autoplay = true;
+            video.loop = true;
+            video.playsInline = true;
             if (post.posterUrl) video.poster = post.posterUrl;
             video.setAttribute("aria-label", `${post.title} preview`);
-            video.dataset.src = post.previewUrl;
             const source = document.createElement("source");
-            source.dataset.src = post.previewUrl;
+            source.src = post.previewUrl;
             source.type = post.previewUrl.endsWith(".webm") ? "video/webm" : "video/mp4";
             video.appendChild(source);
+            video.addEventListener("canplay", () => video.play().catch(() => {}), {
+              once: true,
+            });
             mediaFrame.appendChild(video);
-            lazyVideos.push(video);
           } else {
             const img = document.createElement("img");
             img.loading = "lazy";
