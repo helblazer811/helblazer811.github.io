@@ -146,12 +146,12 @@
     context.textAlign = "center";
     context.fillStyle = INK;
     context.font = "600 62px Inter, Arial, sans-serif";
-    context.fillText(title, panelX + PANEL_SIZE / 2, 98);
+    context.fillText(title, panelX + PANEL_SIZE / 2, 108);
     context.save();
     context.filter = "brightness(0.65)";
     const equationWidth = Math.min(equationImage.width, PANEL_SIZE * 0.9);
     const equationHeight = equationImage.height * (equationWidth / equationImage.width);
-    const equationBottomMargin = 32;
+    const equationBottomMargin = 30;
     context.drawImage(
       equationImage,
       panelX + (PANEL_SIZE - equationWidth) / 2,
