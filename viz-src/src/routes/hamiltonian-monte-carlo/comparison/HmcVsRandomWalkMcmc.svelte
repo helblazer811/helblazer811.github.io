@@ -9,9 +9,9 @@
   const FRAME_COUNT = 720;
   const DURATION_SECONDS = FRAME_COUNT / FPS;
   const CHAIN_LENGTH = 140;
-  const MINT = "#72f1b8";
+  const RED = "#ff3b30";
   const INK = "#e5e7eb";
-  const BACKGROUND = "#09090b";
+  const BACKGROUND = "#000000";
   const PANEL_SIZE = 940;
   const PLOT_INSET = 50;
   const PLOT_WIDTH = PANEL_SIZE - 2 * PLOT_INSET;
@@ -163,15 +163,14 @@
     hmcRun = hamiltonianMonteCarlo(mulberry32(811));
   }
 
-  function plasmaColor(value: number): [number, number, number] {
+  function blueColor(value: number): [number, number, number] {
     const stops: Array<[number, number, number, number]> = [
-      [0, 13, 8, 135],
-      [0.17, 84, 2, 163],
-      [0.33, 139, 10, 165],
-      [0.5, 188, 55, 134],
-      [0.67, 225, 100, 98],
-      [0.83, 249, 158, 58],
-      [1, 240, 249, 33],
+      [0, 0, 0, 0],
+      [0.2, 3, 12, 36],
+      [0.4, 7, 36, 86],
+      [0.6, 15, 71, 153],
+      [0.8, 45, 116, 224],
+      [1, 147, 197, 253],
     ];
     const upperIndex = Math.min(
       stops.length - 1,
@@ -201,11 +200,11 @@
           Y_DOMAIN - ((y + 0.5) / map.height) * 2 * Y_DOMAIN,
         ];
         const normalized = Math.min(1, Math.exp(logDensity(point)) / maximumDensity);
-        const [plasmaRed, plasmaGreen, plasmaBlue] = plasmaColor(0.8 * normalized ** 0.52);
+        const [mapRed, mapGreen, mapBlue] = blueColor(0.9 * normalized ** 0.5);
         const intensity = 0.68;
-        const red = Math.round(9 + intensity * (plasmaRed - 9));
-        const green = Math.round(9 + intensity * (plasmaGreen - 9));
-        const blue = Math.round(11 + intensity * (plasmaBlue - 11));
+        const red = Math.round(intensity * mapRed);
+        const green = Math.round(intensity * mapGreen);
+        const blue = Math.round(intensity * mapBlue);
         const offset = 4 * (y * map.width + x);
         image.data[offset] = red;
         image.data[offset + 1] = green;
@@ -259,7 +258,7 @@
     const pixelChain = visibleChain.map(toPixel);
 
     context.save();
-    context.fillStyle = MINT;
+    context.fillStyle = RED;
     context.strokeStyle = "rgba(255, 255, 255, 0.24)";
     context.lineWidth = 4;
     for (const visit of run.acceptedVisits) {
@@ -277,7 +276,7 @@
     const recentChain = pixelChain.slice(Math.max(0, pixelChain.length - trailLength));
     drawTrajectories(context, [recentChain], recentChain.length - 1, {
       strokeWidth: 10,
-      color: MINT,
+      color: RED,
       opacity: 0.9,
       pointRadius: 16,
       showPreview: false,
@@ -289,7 +288,7 @@
       context.save();
       context.beginPath();
       context.arc(head[0], head[1], 16, 0, 2 * Math.PI);
-      context.fillStyle = MINT;
+      context.fillStyle = RED;
       context.fill();
       context.strokeStyle = "rgba(255, 255, 255, 0.28)";
       context.lineWidth = 5;
@@ -372,7 +371,7 @@
   ></canvas>
   <div class="controls">
     <div class="timeline">
-      <TimeSlider timeline={player} color={MINT} />
+      <TimeSlider timeline={player} color={RED} />
     </div>
     <button type="button" onclick={exportVideo} disabled={exporting}>
       {exporting ? "Exporting…" : "Export 1920 × 1200 video"}
@@ -382,11 +381,11 @@
 
 <style>
   :global(body) {
-    --link-color: #72f1b8;
-    --link-hover-color: #b0f8d8;
+    --link-color: #ff6b61;
+    --link-hover-color: #ff9a93;
     --muted-color: #a1a1aa;
     color: #e5e7eb;
-    background: #09090b;
+    background: #000000;
   }
 
   .mcmc-comparison-figure {
@@ -400,7 +399,7 @@
     width: 100%;
     height: auto;
     aspect-ratio: 8 / 5;
-    background: #09090b;
+    background: #000000;
   }
 
   .controls {
@@ -427,8 +426,8 @@
   }
 
   button:hover:not(:disabled) {
-    border-color: #72f1b8;
-    color: #b0f8d8;
+    border-color: #ff3b30;
+    color: #ff9a93;
   }
 
   button:disabled {
