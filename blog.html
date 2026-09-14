@@ -40,7 +40,7 @@
       mediaFrame.className = 'media-frame';
 
       if (post.previewUrl) {
-        if (post.previewUrl.endsWith('.mp4')) {
+        if (post.previewUrl.endsWith('.mp4') || post.previewUrl.endsWith('.webm')) {
           const video = document.createElement('video');
           video.setAttribute('muted', '');
           video.setAttribute('autoplay', '');
@@ -55,7 +55,7 @@
           video.dataset.src = post.previewUrl;
           const source = document.createElement('source');
           source.dataset.src = post.previewUrl;
-          source.type = 'video/mp4';
+          source.type = post.previewUrl.endsWith('.webm') ? 'video/webm' : 'video/mp4';
           video.appendChild(source);
           mediaFrame.appendChild(video);
           lazyVideos.push(video);
