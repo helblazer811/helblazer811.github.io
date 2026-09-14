@@ -20,7 +20,7 @@
   const Y_DOMAIN = 1.85;
   const TARGET_SIGMA = 0.16;
   const CURVE_SAMPLE_COUNT = 160;
-  const INITIAL_POINT: Point = [0, -1.55];
+  const INITIAL_POINT: Point = [0, -1.35];
 
   type Point = [number, number];
   type AcceptedVisit = { pathIndex: number; point: Point };
@@ -39,7 +39,7 @@
     const sine = Math.sin(angle);
     const cosine = Math.cos(angle);
     const denominator = 1 + sine * sine;
-    return [1.55 * sine * cosine / denominator, 1.55 * cosine / denominator];
+    return [1.55 * sine * cosine / denominator, 1.35 * cosine / denominator];
   });
 
   function mulberry32(seed: number) {
