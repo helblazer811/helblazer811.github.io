@@ -13,6 +13,7 @@
   const POINT_RADIUS = 7.5;
   const ORANGE = "#f17720";
   const BLUE = "#3b82f6";
+  const MOVING_GRAY = "#8f8b86";
   const INK = "#252525";
 
   type Point = [number, number];
@@ -131,7 +132,7 @@
     t: number,
     variancePreserving: boolean,
   ) {
-    const panelY = 80;
+    const panelY = -30;
     const panelSize = 940;
     const plotInset = 50;
     const plotSize = panelSize - 2 * plotInset;
@@ -172,7 +173,7 @@
 
     const [sourceWeight, targetWeight] = pathWeights(t, variancePreserving);
 
-    context.fillStyle = BLUE;
+    context.fillStyle = MOVING_GRAY;
     context.globalAlpha = 0.72;
     for (let index = 0; index < source.length; index++) {
       if (index === selectedIndex) continue;
@@ -246,7 +247,7 @@
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
     if (equationImages.length !== 2) return;
-    drawPanel(ctx, 10, "Linear Interpolant", equationImages[0], t, false);
+    drawPanel(ctx, 10, "Linear Path", equationImages[0], t, false);
     drawPanel(ctx, 970, "Variance-Preserving Path", equationImages[1], t, true);
   }
 
@@ -287,10 +288,10 @@
       );
       downloadBlob(video, "linear-vs-variance-preserving-path-1920x1200.webm");
     } finally {
+      exporting = false;
       player.seek(savedT);
       draw(savedT);
       if (wasPlaying) player.play();
-      exporting = false;
     }
   }
 
