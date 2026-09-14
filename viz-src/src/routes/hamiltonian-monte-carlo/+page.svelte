@@ -2,6 +2,7 @@
 	import { base } from '$app/paths';
 	import PageHeader from '$lib/PageHeader.svelte';
 	import VideoExplainer from '$lib/VideoExplainer.svelte';
+	import HmcVsRandomWalkMcmc from './comparison/HmcVsRandomWalkMcmc.svelte';
 </script>
 
 <svelte:head>
@@ -16,6 +17,8 @@
 	dynamics. These structured trajectories can travel much farther through a distribution than a
 	random-walk proposal.
 </p>
+
+<HmcVsRandomWalkMcmc />
 
 <VideoExplainer
 	src={`${base}/hamiltonian-monte-carlo-16x9.mp4`}
