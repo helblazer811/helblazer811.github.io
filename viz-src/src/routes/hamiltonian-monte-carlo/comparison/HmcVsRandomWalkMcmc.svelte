@@ -229,6 +229,8 @@
     }
     const pixelChain = visibleChain.map(toPixel);
 
+    context.save();
+    context.globalAlpha = 0.55;
     context.fillStyle = ORANGE;
     for (const visit of run.acceptedVisits) {
       if (visit.pathIndex > completeIndex) break;
@@ -237,6 +239,7 @@
       context.arc(x, y, 7.5, 0, 2 * Math.PI);
       context.fill();
     }
+    context.restore();
 
     const recentChain = pixelChain.slice(Math.max(0, pixelChain.length - trailLength));
     drawTrajectories(context, [recentChain], recentChain.length - 1, {
