@@ -20,7 +20,7 @@
   const Y_DOMAIN = 1.85;
   const TARGET_SIGMA = 0.16;
   const CURVE_SAMPLE_COUNT = 160;
-  const INITIAL_POINT: Point = [0, -1.35];
+  const INITIAL_POINT: Point = [0, -1.2];
 
   type Point = [number, number];
   type AcceptedVisit = { pathIndex: number; point: Point };
@@ -39,7 +39,7 @@
     const sine = Math.sin(angle);
     const cosine = Math.cos(angle);
     const denominator = 1 + sine * sine;
-    return [1.55 * sine * cosine / denominator, 1.35 * cosine / denominator];
+    return [1.55 * sine * cosine / denominator, 1.2 * cosine / denominator];
   });
 
   function mulberry32(seed: number) {
@@ -176,7 +176,7 @@
           Y_DOMAIN - ((y + 0.5) / map.height) * 2 * Y_DOMAIN,
         ];
         const normalized = Math.min(1, Math.exp(logDensity(point)) / maximumDensity);
-        const alpha = Math.round(255 * 0.34 * normalized ** 0.58);
+        const alpha = Math.round(255 * 0.44 * normalized ** 0.58);
         const offset = 4 * (y * map.width + x);
         image.data[offset] = 59;
         image.data[offset + 1] = 130;
