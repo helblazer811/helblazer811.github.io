@@ -249,7 +249,6 @@
       pointRadius: 16,
       showPreview: false,
       showHeadMarker: true,
-      outline: { color: "#ffffff", strokeWidth: 3, opacity: 0.9 },
     });
     context.restore();
   }
