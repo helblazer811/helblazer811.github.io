@@ -9,7 +9,7 @@
   const FRAME_COUNT = 720;
   const DURATION_SECONDS = FRAME_COUNT / FPS;
   const CHAIN_LENGTH = 140;
-  const CYAN = "#22d3ee";
+  const MINT = "#72f1b8";
   const INK = "#e5e7eb";
   const BACKGROUND = "#09090b";
   const PANEL_SIZE = 940;
@@ -163,17 +163,15 @@
     hmcRun = hamiltonianMonteCarlo(mulberry32(811));
   }
 
-  function infernoColor(value: number): [number, number, number] {
+  function plasmaColor(value: number): [number, number, number] {
     const stops: Array<[number, number, number, number]> = [
-      [0, 0, 0, 4],
-      [0.13, 27, 12, 65],
-      [0.25, 74, 12, 107],
-      [0.38, 120, 28, 109],
-      [0.5, 165, 44, 96],
-      [0.63, 207, 68, 70],
-      [0.75, 237, 105, 37],
-      [0.88, 251, 155, 6],
-      [1, 252, 255, 164],
+      [0, 13, 8, 135],
+      [0.17, 84, 2, 163],
+      [0.33, 139, 10, 165],
+      [0.5, 188, 55, 134],
+      [0.67, 225, 100, 98],
+      [0.83, 249, 158, 58],
+      [1, 240, 249, 33],
     ];
     const upperIndex = Math.min(
       stops.length - 1,
@@ -203,7 +201,11 @@
           Y_DOMAIN - ((y + 0.5) / map.height) * 2 * Y_DOMAIN,
         ];
         const normalized = Math.min(1, Math.exp(logDensity(point)) / maximumDensity);
-        const [red, green, blue] = infernoColor(0.88 * normalized ** 0.48);
+        const [plasmaRed, plasmaGreen, plasmaBlue] = plasmaColor(0.8 * normalized ** 0.52);
+        const intensity = 0.68;
+        const red = Math.round(9 + intensity * (plasmaRed - 9));
+        const green = Math.round(9 + intensity * (plasmaGreen - 9));
+        const blue = Math.round(11 + intensity * (plasmaBlue - 11));
         const offset = 4 * (y * map.width + x);
         image.data[offset] = red;
         image.data[offset + 1] = green;
@@ -257,7 +259,7 @@
     const pixelChain = visibleChain.map(toPixel);
 
     context.save();
-    context.fillStyle = CYAN;
+    context.fillStyle = MINT;
     context.strokeStyle = "rgba(255, 255, 255, 0.24)";
     context.lineWidth = 4;
     for (const visit of run.acceptedVisits) {
@@ -275,7 +277,7 @@
     const recentChain = pixelChain.slice(Math.max(0, pixelChain.length - trailLength));
     drawTrajectories(context, [recentChain], recentChain.length - 1, {
       strokeWidth: 10,
-      color: CYAN,
+      color: MINT,
       opacity: 0.9,
       pointRadius: 16,
       showPreview: false,
@@ -287,7 +289,7 @@
       context.save();
       context.beginPath();
       context.arc(head[0], head[1], 16, 0, 2 * Math.PI);
-      context.fillStyle = CYAN;
+      context.fillStyle = MINT;
       context.fill();
       context.strokeStyle = "rgba(255, 255, 255, 0.28)";
       context.lineWidth = 5;
@@ -370,7 +372,7 @@
   ></canvas>
   <div class="controls">
     <div class="timeline">
-      <TimeSlider timeline={player} color={CYAN} />
+      <TimeSlider timeline={player} color={MINT} />
     </div>
     <button type="button" onclick={exportVideo} disabled={exporting}>
       {exporting ? "Exporting…" : "Export 1920 × 1200 video"}
@@ -380,8 +382,8 @@
 
 <style>
   :global(body) {
-    --link-color: #67e8f9;
-    --link-hover-color: #a5f3fc;
+    --link-color: #72f1b8;
+    --link-hover-color: #b0f8d8;
     --muted-color: #a1a1aa;
     color: #e5e7eb;
     background: #09090b;
@@ -425,8 +427,8 @@
   }
 
   button:hover:not(:disabled) {
-    border-color: #22d3ee;
-    color: #67e8f9;
+    border-color: #72f1b8;
+    color: #b0f8d8;
   }
 
   button:disabled {
