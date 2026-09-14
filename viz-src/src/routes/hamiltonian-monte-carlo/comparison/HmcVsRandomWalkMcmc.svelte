@@ -4,7 +4,7 @@
   import { downloadBlob, streamingVideoExport } from "@helblazer811/tempus";
 
   const WIDTH = 1920;
-  const HEIGHT = 1200;
+  const HEIGHT = 1080;
   const FPS = 30;
   const FRAME_COUNT = 720;
   const DURATION_SECONDS = FRAME_COUNT / FPS;
@@ -15,8 +15,8 @@
   const PANEL_SIZE = 940;
   const PLOT_INSET = 50;
   const PLOT_WIDTH = PANEL_SIZE - 2 * PLOT_INSET;
-  const PLOT_TOP = 170;
-  const PLOT_HEIGHT = 940;
+  const PLOT_TOP = 155;
+  const PLOT_HEIGHT = 855;
   const X_DOMAIN = 1.2;
   const Y_DOMAIN = 1.85;
   const TARGET_SIGMA = 0.16;
@@ -270,7 +270,7 @@
       const [x, y] = toPixel(visit.point);
       context.beginPath();
       context.arc(x, y, 10, 0, 2 * Math.PI);
-      context.globalAlpha = 0.55;
+      context.globalAlpha = 0.45;
       context.fill();
       context.globalAlpha = 1;
       context.stroke();
@@ -342,7 +342,7 @@
         },
         { bitrate: 16_000_000, backgroundColor: BACKGROUND },
       );
-      downloadBlob(video, "hmc-vs-random-walk-mcmc-1920x1200.webm");
+      downloadBlob(video, "hmc-vs-random-walk-mcmc-1920x1080.webm");
     } finally {
       exporting = false;
       player.seek(savedT);
@@ -378,7 +378,7 @@
       <TimeSlider timeline={player} color={RED} />
     </div>
     <button type="button" onclick={exportVideo} disabled={exporting}>
-      {exporting ? "Exporting…" : "Export 1920 × 1200 video"}
+      {exporting ? "Exporting…" : "Export 1920 × 1080 video"}
     </button>
   </div>
 </div>
@@ -402,7 +402,7 @@
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: 8 / 5;
+    aspect-ratio: 16 / 9;
     background: #000000;
   }
 
