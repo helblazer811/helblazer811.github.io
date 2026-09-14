@@ -178,9 +178,9 @@
         const normalized = Math.min(1, Math.exp(logDensity(point)) / maximumDensity);
         const alpha = Math.round(255 * 0.62 * normalized ** 0.58);
         const offset = 4 * (y * map.width + x);
-        image.data[offset] = 15;
-        image.data[offset + 1] = 139;
-        image.data[offset + 2] = 141;
+        image.data[offset] = 59;
+        image.data[offset + 1] = 130;
+        image.data[offset + 2] = 246;
         image.data[offset + 3] = alpha;
       }
     }
