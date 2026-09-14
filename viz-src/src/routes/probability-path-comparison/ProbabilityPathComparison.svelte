@@ -12,6 +12,7 @@
   const MOVING_COUNT = 150;
   const POINT_RADIUS = 7.5;
   const ORANGE = "#f17720";
+  const BLUE = "#3b82f6";
   const INK = "#252525";
 
   type Point = [number, number];
@@ -25,6 +26,8 @@
   let target: Point[] = [];
   let targetBackdrop: Point[] = [];
   let selectedIndex = 0;
+  let previousT = 0;
+  const highlightRandom = mulberry32(1919);
   let equationImages: HTMLImageElement[] = [];
 
   function mulberry32(seed: number) {
@@ -54,21 +57,44 @@
     ];
   }
 
+  function clipTrajectoriesToStartingRadius(
+    trajectories: Point[][],
+    radius: number,
+  ): Point[][] {
+    if (trajectories.length === 0) return trajectories;
+    const validIndices = trajectories[0]
+      .map((point, index) => Math.hypot(point[0], point[1]) <= radius ? index : -1)
+      .filter((index) => index >= 0);
+    return trajectories.map((timestep) => validIndices.map((index) => timestep[index]));
+  }
+
   function prepareSamples() {
     const movingRandom = mulberry32(811);
-    source = Array.from({ length: MOVING_COUNT }, () => gaussian(movingRandom));
-    target = Array.from({ length: MOVING_COUNT }, () => sampleTarget(movingRandom));
+    const candidateCount = 220;
+    const candidateSource = Array.from({ length: candidateCount }, () => gaussian(movingRandom));
+    const candidateTarget = Array.from({ length: candidateCount }, () => sampleTarget(movingRandom));
+    const clippedTrajectories = clipTrajectoriesToStartingRadius(
+      [candidateSource, candidateTarget],
+      2.35,
+    );
+    source = clippedTrajectories[0].slice(0, MOVING_COUNT);
+    target = clippedTrajectories[1].slice(0, MOVING_COUNT);
     targetBackdrop = target;
-    selectedIndex = source.reduce((best, point, index) => {
-      const score = Math.hypot(point[0], point[1]) <= 0.65
-        ? Math.abs(point[0] * target[index][1] - point[1] * target[index][0])
-        : -1;
-      const bestPoint = source[best];
-      const bestScore = Math.hypot(bestPoint[0], bestPoint[1]) <= 0.65
-        ? Math.abs(bestPoint[0] * target[best][1] - bestPoint[1] * target[best][0])
-        : -1;
-      return score > bestScore ? index : best;
-    }, 0);
+    chooseHighlightedTrajectory();
+  }
+
+  function chooseHighlightedTrajectory() {
+    const eligibleIndices = source
+      .map((point, index) => ({ point, index }))
+      .filter(({ point, index }) =>
+        Math.hypot(point[0], point[1]) <= 0.75
+        && Math.abs(point[0] * target[index][1] - point[1] * target[index][0]) >= 0.65
+      )
+      .map(({ index }) => index);
+    const candidates = eligibleIndices.length > 0
+      ? eligibleIndices
+      : source.map((_, index) => index);
+    selectedIndex = candidates[Math.floor(highlightRandom() * candidates.length)];
   }
 
   function pathWeights(t: number, variancePreserving: boolean): [number, number] {
@@ -105,9 +131,9 @@
     t: number,
     variancePreserving: boolean,
   ) {
-    const panelY = 120;
+    const panelY = 80;
     const panelSize = 940;
-    const plotInset = 34;
+    const plotInset = 50;
     const plotSize = panelSize - 2 * plotInset;
     const domain = 2.75;
     const toPixel = (point: Point): Point => [
@@ -117,22 +143,39 @@
 
     context.textAlign = "center";
     context.fillStyle = INK;
-    context.font = "600 60px Inter, Arial, sans-serif";
+    context.font = "600 68px Inter, Arial, sans-serif";
     context.fillText(title, panelX + panelSize / 2, 78);
     context.save();
     context.filter = "brightness(0.65)";
-    context.drawImage(equationImage, panelX, 1035, panelSize, 100);
+    const equationScale = 1.4;
+    const equationWidth = panelSize * equationScale;
+    const equationHeight = 100 * equationScale;
+    context.drawImage(
+      equationImage,
+      panelX + (panelSize - equationWidth) / 2,
+      995,
+      equationWidth,
+      equationHeight,
+    );
     context.restore();
 
     context.save();
-    roundedRect(context, panelX + 2, panelY + 2, panelSize - 4, panelSize - 4, 16);
+    roundedRect(
+      context,
+      panelX + plotInset,
+      panelY + plotInset,
+      plotSize,
+      plotSize,
+      16,
+    );
     context.clip();
 
     const [sourceWeight, targetWeight] = pathWeights(t, variancePreserving);
 
-    context.fillStyle = ORANGE;
+    context.fillStyle = BLUE;
     context.globalAlpha = 0.72;
     for (let index = 0; index < source.length; index++) {
+      if (index === selectedIndex) continue;
       const point: Point = [
         sourceWeight * source[index][0] + targetWeight * target[index][0],
         sourceWeight * source[index][1] + targetWeight * target[index][1],
@@ -143,9 +186,11 @@
       context.fill();
     }
 
-    context.fillStyle = "#8f8b86";
+    context.fillStyle = BLUE;
     context.globalAlpha = 0.35;
-    for (const point of targetBackdrop) {
+    for (let index = 0; index < targetBackdrop.length; index++) {
+      if (index === selectedIndex) continue;
+      const point = targetBackdrop[index];
       const [x, y] = toPixel(point);
       context.beginPath();
       context.arc(x, y, POINT_RADIUS, 0, 2 * Math.PI);
@@ -167,20 +212,20 @@
     const sourcePixel = toPixel(source[selectedIndex]);
     const targetPixel = toPixel(target[selectedIndex]);
     context.globalAlpha = 1;
-    context.lineWidth = 5;
-    context.strokeStyle = "#c9570e";
-    context.fillStyle = "#ffffff";
+    context.lineWidth = 4;
+    context.strokeStyle = "#ffffff";
+    context.fillStyle = ORANGE;
     for (const [x, y] of [sourcePixel, targetPixel]) {
       context.beginPath();
-      context.arc(x, y, 10, 0, 2 * Math.PI);
+      context.arc(x, y, 12, 0, 2 * Math.PI);
       context.fill();
       context.stroke();
     }
     drawTrajectories(context, [selectedPath], t * 99, {
-      strokeWidth: 5,
-      color: "#c9570e",
+      strokeWidth: 8,
+      color: ORANGE,
       opacity: 0.95,
-      pointRadius: 11,
+      pointRadius: 13,
       showPreview: true,
       previewOpacity: 0.18,
       showHeadMarker: true,
@@ -203,27 +248,6 @@
     if (equationImages.length !== 2) return;
     drawPanel(ctx, 10, "Linear Interpolant", equationImages[0], t, false);
     drawPanel(ctx, 970, "Variance-Preserving Path", equationImages[1], t, true);
-
-    const sliderX = 280;
-    const sliderY = 1180;
-    const sliderWidth = 1360;
-    ctx.lineCap = "round";
-    ctx.lineWidth = 8;
-    ctx.strokeStyle = "#dedbd7";
-    ctx.beginPath();
-    ctx.moveTo(sliderX, sliderY);
-    ctx.lineTo(sliderX + sliderWidth, sliderY);
-    ctx.stroke();
-    ctx.strokeStyle = ORANGE;
-    ctx.beginPath();
-    ctx.moveTo(sliderX, sliderY);
-    ctx.lineTo(sliderX + sliderWidth * t, sliderY);
-    ctx.stroke();
-    ctx.fillStyle = ORANGE;
-    ctx.beginPath();
-    ctx.arc(sliderX + sliderWidth * t, sliderY, 13, 0, 2 * Math.PI);
-    ctx.fill();
-
   }
 
   function setupTimeline() {
@@ -233,7 +257,11 @@
       clips: [],
     });
     player = new Player(timeline, { looping: true });
-    player.onTick((t: number) => draw(t));
+    player.onTick((t: number) => {
+      if (t < previousT) chooseHighlightedTrajectory();
+      previousT = t;
+      draw(t);
+    });
     draw(0);
     player.play();
   }
