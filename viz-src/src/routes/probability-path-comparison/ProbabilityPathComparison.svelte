@@ -18,8 +18,8 @@
   const PANEL_SIZE = 940;
   const PLOT_INSET = 50;
   const PLOT_WIDTH = PANEL_SIZE - 2 * PLOT_INSET;
-  const PLOT_TOP = 95;
-  const PLOT_HEIGHT = 750;
+  const PLOT_TOP = 135;
+  const PLOT_HEIGHT = 710;
   const COORDINATE_DOMAIN = 2.75;
 
   type Point = [number, number];
