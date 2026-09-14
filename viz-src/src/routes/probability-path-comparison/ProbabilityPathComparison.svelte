@@ -5,7 +5,7 @@
   import { base } from "$app/paths";
 
   const WIDTH = 1920;
-  const HEIGHT = 1200;
+  const HEIGHT = 1080;
   const FPS = 30;
   const FRAME_COUNT = 240;
   const DURATION_SECONDS = FRAME_COUNT / FPS;
@@ -18,8 +18,8 @@
   const PANEL_SIZE = 940;
   const PLOT_INSET = 50;
   const PLOT_WIDTH = PANEL_SIZE - 2 * PLOT_INSET;
-  const PLOT_TOP = 85;
-  const PLOT_HEIGHT = 880;
+  const PLOT_TOP = 95;
+  const PLOT_HEIGHT = 750;
   const COORDINATE_DOMAIN = 2.75;
 
   type Point = [number, number];
@@ -60,7 +60,7 @@
     const noise = gaussian(random);
     return [
       componentRadius * Math.cos(angle) + componentSigma * noise[0],
-      componentRadius * Math.sin(angle) + componentSigma * noise[1],
+      -(componentRadius * Math.sin(angle) + componentSigma * noise[1]),
     ];
   }
 
@@ -146,7 +146,7 @@
     context.textAlign = "center";
     context.fillStyle = INK;
     context.font = "600 62px Inter, Arial, sans-serif";
-    context.fillText(title, panelX + PANEL_SIZE / 2, 108);
+    context.fillText(title, panelX + PANEL_SIZE / 2, 118);
     context.save();
     context.filter = "brightness(0.65)";
     const equationWidth = Math.min(equationImage.width, PANEL_SIZE * 0.9);
@@ -287,7 +287,7 @@
         },
         { bitrate: 16_000_000, backgroundColor: "#ffffff" },
       );
-      downloadBlob(video, "linear-vs-variance-preserving-path-1920x1200.webm");
+      downloadBlob(video, "linear-vs-variance-preserving-path-1920x1080.webm");
     } finally {
       exporting = false;
       player.seek(savedT);
@@ -326,7 +326,7 @@
       <TimeSlider timeline={player} color={ORANGE} />
     </div>
     <button type="button" onclick={exportVideo} disabled={exporting}>
-      {exporting ? "Exporting…" : "Export 1920 × 1200 video"}
+      {exporting ? "Exporting…" : "Export 1920 × 1080 video"}
     </button>
   </div>
 </div>
@@ -342,7 +342,7 @@
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: 8 / 5;
+    aspect-ratio: 16 / 9;
     background: white;
   }
 
