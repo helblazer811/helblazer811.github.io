@@ -42,6 +42,10 @@
     const denominator = 1 + sine * sine;
     return [1.55 * sine * cosine / denominator, 1.2 * cosine / denominator];
   });
+  const targetWeights = targetCurve.map(([x, y]) => {
+    const distanceSquared = x * x + y * y;
+    return 1 - 0.55 * Math.exp(-distanceSquared / (2 * 0.22 ** 2));
+  });
 
   function mulberry32(seed: number) {
     return () => {
@@ -65,7 +69,7 @@
     for (let index = 0; index < targetCurve.length; index++) {
       const dx = point[0] - targetCurve[index][0];
       const dy = point[1] - targetCurve[index][1];
-      const value = -(dx * dx + dy * dy) * inverseTwoVariance;
+      const value = -(dx * dx + dy * dy) * inverseTwoVariance + Math.log(targetWeights[index]);
       logits[index] = value;
       if (value > maximum) maximum = value;
     }
@@ -81,7 +85,7 @@
     for (let index = 0; index < targetCurve.length; index++) {
       const dx = point[0] - targetCurve[index][0];
       const dy = point[1] - targetCurve[index][1];
-      const value = -0.5 * (dx * dx + dy * dy) * inverseVariance;
+      const value = -0.5 * (dx * dx + dy * dy) * inverseVariance + Math.log(targetWeights[index]);
       logits[index] = value;
       if (value > maximum) maximum = value;
     }
