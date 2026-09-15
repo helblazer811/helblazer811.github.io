@@ -1,5 +1,16 @@
 [
   {
+    "id": "barnes-hut",
+    "title": "Barnes–Hut Galaxy Collision",
+    "date": "2026-09-15",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "Two 200-body spiral galaxies interact while their Barnes–Hut quadtree is rebuilt live.",
+    "previewUrl": "data/images/barnes-hut-preview.mp4",
+    "posterUrl": "data/images/barnes-hut-preview-poster.jpg",
+    "link": "https://alechelbling.com/visualizations/barnes-hut/"
+  },
+  {
     "id": "hmc-vs-random-walk-mcmc",
     "title": "Random-Walk MCMC vs. Hamiltonian Monte Carlo",
     "date": "2026-09-15",
