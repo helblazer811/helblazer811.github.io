@@ -9,9 +9,9 @@
   const FRAME_COUNT = 720;
   const DURATION_SECONDS = FRAME_COUNT / FPS;
   const CHAIN_LENGTH = 140;
-  const ACCENT = "#5DFFB2";
-  const INK = "#F6F1F3";
-  const BACKGROUND = "#0B090C";
+  const ORANGE = "#f17720";
+  const INK = "#3c3c3c";
+  const BACKGROUND = "#ffffff";
   const PANEL_SIZE = 940;
   const PLOT_INSET = 50;
   const PLOT_WIDTH = PANEL_SIZE - 2 * PLOT_INSET;
@@ -167,29 +167,6 @@
     hmcRun = hamiltonianMonteCarlo(mulberry32(811));
   }
 
-  function sequentialColor(value: number): [number, number, number] {
-    const stops: Array<[number, number, number, number]> = [
-      [0, 20, 9, 11],
-      [0.2, 42, 16, 22],
-      [0.4, 70, 23, 34],
-      [0.6, 104, 32, 49],
-      [0.8, 143, 45, 67],
-      [1, 182, 65, 89],
-    ];
-    const upperIndex = Math.min(
-      stops.length - 1,
-      Math.max(1, stops.findIndex((stop) => value <= stop[0])),
-    );
-    const lower = stops[upperIndex - 1];
-    const upper = stops[upperIndex];
-    const mix = (value - lower[0]) / (upper[0] - lower[0]);
-    return [
-      Math.round(lower[1] + mix * (upper[1] - lower[1])),
-      Math.round(lower[2] + mix * (upper[2] - lower[2])),
-      Math.round(lower[3] + mix * (upper[3] - lower[3])),
-    ];
-  }
-
   function makeHeatmap() {
     const map = document.createElement("canvas");
     map.width = 320;
@@ -204,12 +181,12 @@
           Y_DOMAIN - ((y + 0.5) / map.height) * 2 * Y_DOMAIN,
         ];
         const normalized = Math.min(1, Math.exp(logDensity(point)) / maximumDensity);
-        const [red, green, blue] = sequentialColor(normalized ** 0.5);
+        const alpha = Math.round(255 * 0.62 * normalized ** 0.58);
         const offset = 4 * (y * map.width + x);
-        image.data[offset] = red;
-        image.data[offset + 1] = green;
-        image.data[offset + 2] = blue;
-        image.data[offset + 3] = 255;
+        image.data[offset] = 59;
+        image.data[offset + 1] = 130;
+        image.data[offset + 2] = 246;
+        image.data[offset + 3] = alpha;
       }
     }
     mapContext.putImageData(image, 0, 0);
@@ -258,8 +235,8 @@
     const pixelChain = visibleChain.map(toPixel);
 
     context.save();
-    context.fillStyle = ACCENT;
-    context.strokeStyle = "rgba(11, 9, 12, 0.88)";
+    context.fillStyle = ORANGE;
+    context.strokeStyle = "rgba(255, 255, 255, 0.24)";
     context.lineWidth = 4;
     for (const visit of run.acceptedVisits) {
       if (visit.pathIndex > completeIndex) break;
@@ -276,7 +253,7 @@
     const recentChain = pixelChain.slice(Math.max(0, pixelChain.length - trailLength));
     drawTrajectories(context, [recentChain], recentChain.length - 1, {
       strokeWidth: 10,
-      color: ACCENT,
+      color: ORANGE,
       opacity: 0.9,
       pointRadius: 16,
       showPreview: false,
@@ -288,9 +265,9 @@
       context.save();
       context.beginPath();
       context.arc(head[0], head[1], 16, 0, 2 * Math.PI);
-      context.fillStyle = ACCENT;
+      context.fillStyle = ORANGE;
       context.fill();
-      context.strokeStyle = "rgba(11, 9, 12, 0.92)";
+      context.strokeStyle = "rgba(255, 255, 255, 0.28)";
       context.lineWidth = 5;
       context.stroke();
       context.restore();
@@ -371,7 +348,7 @@
   ></canvas>
   <div class="controls">
     <div class="timeline">
-      <TimeSlider timeline={player} color={ACCENT} />
+      <TimeSlider timeline={player} color={ORANGE} />
     </div>
     <button type="button" onclick={exportVideo} disabled={exporting}>
       {exporting ? "Exporting…" : "Export 1920 × 1080 video"}
@@ -381,11 +358,11 @@
 
 <style>
   :global(body) {
-    --link-color: #5dffb2;
-    --link-hover-color: #9bffd0;
-    --muted-color: #ad9fa5;
-    color: #f6f1f3;
-    background: #0b090c;
+    --link-color: #f17720;
+    --link-hover-color: #d75f0d;
+    --muted-color: #777;
+    color: #3c3c3c;
+    background: #ffffff;
   }
 
   .mcmc-comparison-figure {
@@ -399,7 +376,7 @@
     width: 100%;
     height: auto;
     aspect-ratio: 16 / 9;
-    background: #0b090c;
+    background: #ffffff;
   }
 
   .controls {
@@ -415,10 +392,10 @@
   }
 
   button {
-    border: 1px solid #49343b;
+    border: 1px solid #d9d4ce;
     border-radius: 5px;
-    background: #14090b;
-    color: #f6f1f3;
+    background: #ffffff;
+    color: #444444;
     padding: 0.58rem 0.85rem;
     font: 600 0.82rem Inter, Arial, sans-serif;
     cursor: pointer;
@@ -426,8 +403,8 @@
   }
 
   button:hover:not(:disabled) {
-    border-color: #5dffb2;
-    color: #5dffb2;
+    border-color: #f17720;
+    color: #d75f0d;
   }
 
   button:disabled {
