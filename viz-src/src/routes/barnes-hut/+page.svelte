@@ -2,13 +2,18 @@
 	import { onMount } from 'svelte';
 	import PageHeader from '$lib/PageHeader.svelte';
 
-	type Particle = { x: number; y: number; vx: number; vy: number; ax: number; ay: number; mass: number; galaxy: 0 | 1 };
+	type Particle = { x: number; y: number; vx: number; vy: number; ax: number; ay: number; mass: number; central: boolean };
 	const BODY_COUNT = 400;
 	const G = 1.05;
 	const SOFTENING_SQ = 0.00024;
 	const DT = 0.0022;
 	const MAX_DEPTH = 18;
 	const LOOP_SECONDS = 18;
+	const PARTICLES_PER_GALAXY = BODY_COUNT / 2;
+	const BULGE_MASS = 0.52;
+	const DISK_MASS = 1 - BULGE_MASS;
+	const BULGE_SCALE = 0.12;
+	const SPIRAL_PITCH = 20 * Math.PI / 180;
 
 	let canvas: HTMLCanvasElement;
 	let particles: Particle[] = [];
@@ -88,26 +93,29 @@
 		return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * random());
 	}
 
-	function addGalaxy(list: Particle[], cx: number, cy: number, radius: number, bulkVx: number, bulkVy: number, spin: number, galaxy: 0 | 1, random: () => number) {
-		for (let i = 0; i < BODY_COUNT / 2; i++) {
-			const normalizedRadius = 0.025 + 0.975 * Math.pow(random(), 1.25);
+	function addGalaxy(list: Particle[], cx: number, cy: number, radius: number, bulkVx: number, bulkVy: number, random: () => number) {
+		list.push({ x: cx, y: cy, vx: bulkVx, vy: bulkVy, ax: 0, ay: 0, mass: BULGE_MASS, central: true });
+		const starMass = DISK_MASS / (PARTICLES_PER_GALAXY - 1);
+		for (let i = 0; i < PARTICLES_PER_GALAXY - 1; i++) {
+			const normalizedRadius = 0.055 + 0.945 * Math.pow(random(), 1.2);
 			const r = radius * normalizedRadius;
 			const inArm = random() < 0.84;
+			const spiralAngle = Math.log(normalizedRadius / 0.055) / Math.tan(SPIRAL_PITCH);
 			const angle = inArm
-				? (i % 2) * Math.PI + normalizedRadius * 5.9 + gaussian(random) * (0.1 + normalizedRadius * 0.13)
+				? (i % 2) * Math.PI + spiralAngle + gaussian(random) * (0.07 + normalizedRadius * 0.11)
 				: random() * Math.PI * 2;
-			const jitter = gaussian(random) * (0.006 + normalizedRadius * 0.008);
+			const jitter = gaussian(random) * (0.003 + normalizedRadius * 0.006);
 			const x = cx + Math.cos(angle) * r + jitter;
 			const y = cy + Math.sin(angle) * r * 0.76 + jitter * 0.7;
-			const dx = x - cx;
-			const dy = y - cy;
-			const distance = Math.max(Math.hypot(dx, dy), 0.012);
-			const speed = (0.24 + 0.76 * normalizedRadius) * spin;
+			const radialFraction = Math.pow((normalizedRadius - 0.055) / 0.945, 1 / 1.2);
+			const bulgeAcceleration = BULGE_MASS * r / Math.pow(r * r + BULGE_SCALE * BULGE_SCALE, 1.5);
+			const diskAcceleration = DISK_MASS * radialFraction / Math.max(r * r, 0.0016);
+			const speed = Math.sqrt(G * r * (bulgeAcceleration + diskAcceleration));
 			list.push({
 				x, y,
-				vx: bulkVx - (dy / distance) * speed + gaussian(random) * 0.012,
-				vy: bulkVy + (dx / distance) * speed + gaussian(random) * 0.012,
-				ax: 0, ay: 0, mass: 1 / 200, galaxy
+				vx: bulkVx - Math.sin(angle) * speed + gaussian(random) * 0.009,
+				vy: bulkVy + Math.cos(angle) * speed * 0.76 + gaussian(random) * 0.009,
+				ax: 0, ay: 0, mass: starMass, central: false
 			});
 		}
 	}
@@ -117,8 +125,8 @@
 		const next: Particle[] = [];
 		// Equal masses at opposite sides of their barycenter. These bulk velocities
 		// are tangential and close to the circular-orbit speed for their separation.
-		addGalaxy(next, -0.56, 0, 0.34, 0, -0.68, 0.5, 0, random);
-		addGalaxy(next, 0.56, 0, 0.34, 0, 0.68, 0.5, 1, random);
+		addGalaxy(next, -0.56, 0, 0.34, 0, -0.685, random);
+		addGalaxy(next, 0.56, 0, 0.34, 0, 0.685, random);
 		particles = next;
 		root = buildTree(particles);
 		loopElapsed = 0;
@@ -196,7 +204,7 @@
 		}
 		for (const p of particles) {
 			const [x, y] = worldToScreen(p.x, p.y);
-			const radius = 1.15 + Math.min(Math.hypot(p.vx, p.vy), 1) * 0.7;
+			const radius = p.central ? 2.6 : 1.05 + Math.min(Math.hypot(p.vx, p.vy), 2) * 0.28;
 			ctx.fillStyle = 'rgba(45, 49, 54, 0.88)';
 			ctx.beginPath(); ctx.arc(x, y, radius, 0, Math.PI * 2); ctx.fill();
 		}
