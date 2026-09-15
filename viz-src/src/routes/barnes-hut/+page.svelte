@@ -8,7 +8,7 @@
 	const SOFTENING_SQ = 0.00024;
 	const DT = 0.0015;
 	const MAX_DEPTH = 18;
-	const LOOP_SECONDS = 20;
+	const LOOP_SECONDS = 60;
 	const PARTICLES_PER_GALAXY = BODY_COUNT / 2;
 	const BULGE_MASS = 0.68;
 	const DISK_MASS = 1 - BULGE_MASS;
