@@ -362,11 +362,29 @@
 		}
 	}
 
+	function cameraComposition() {
+		const cycle = loopElapsed % 8;
+		const smooth = (value: number) => {
+			const t = Math.max(0, Math.min(1, value));
+			return t * t * (3 - 2 * t);
+		};
+		let detail = 0;
+		if (cycle >= 0.8 && cycle < 1.6) detail = smooth((cycle - 0.8) / 0.8);
+		else if (cycle >= 1.6 && cycle < 3.4) detail = 1;
+		else if (cycle >= 3.4 && cycle < 4.4) detail = 1 - smooth((cycle - 3.4) / 1);
+		const galaxy = Math.floor(loopElapsed / 8) % 2;
+		return { detail, galaxy, timeScale: 1 - detail * 0.72 };
+	}
+
 	function draw(ctx: CanvasRenderingContext2D, width: number, height: number, dpr: number) {
 		ctx.fillStyle = '#ffffff';
 		ctx.fillRect(0, 0, width, height);
-		const scale = Math.min(width / 3.05, height / 2.1);
-		const worldToScreen = (x: number, y: number) => [width / 2 + x * scale, height / 2 + y * scale] as const;
+		const composition = cameraComposition();
+		const focus = particles[composition.galaxy * PARTICLES_PER_GALAXY];
+		const scale = Math.min(width / 3.05, height / 2.1) * (1 + composition.detail * 1.45);
+		const focusX = (focus?.x ?? 0) * composition.detail;
+		const focusY = (focus?.y ?? 0) * composition.detail;
+		const worldToScreen = (x: number, y: number) => [width / 2 + (x - focusX) * scale, height / 2 + (y - focusY) * scale] as const;
 		const fadeIn = Math.min(1, loopElapsed / 0.7);
 		const fadeOut = Math.min(1, (LOOP_SECONDS - loopElapsed) / 0.9);
 		ctx.globalAlpha = Math.max(0, Math.min(fadeIn, fadeOut));
@@ -375,7 +393,8 @@
 			const drawNode = (node: QuadNode) => {
 				if (node.mass === 0 || node.depth > 10) return;
 				const [x, y] = worldToScreen(node.x, node.y);
-				ctx.strokeStyle = `rgba(23, 114, 208, ${Math.max(0.025, 0.18 - node.depth * 0.014)})`;
+				const opacity = Math.max(0.025, 0.18 - node.depth * 0.014) * (1 + composition.detail * 0.55);
+				ctx.strokeStyle = `rgba(23, 114, 208, ${opacity})`;
 				ctx.strokeRect(x, y, node.size * scale, node.size * scale);
 				if (node.children) for (const child of node.children) drawNode(child);
 			};
@@ -384,7 +403,7 @@
 		for (const p of particles) {
 			const [x, y] = worldToScreen(p.x, p.y);
 			const radius = (p.central ? 2.4 : 0.72 + Math.min(Math.hypot(p.vx, p.vy), 2) * 0.06) * dpr;
-			ctx.fillStyle = 'rgba(45, 49, 54, 0.82)';
+			ctx.fillStyle = 'rgba(45, 49, 54, 0.9)';
 			ctx.beginPath(); ctx.arc(x, y, radius, 0, Math.PI * 2); ctx.fill();
 		}
 		ctx.globalAlpha = 1;
@@ -406,7 +425,7 @@
 			const delta = Math.min(now - previous, 32); previous = now;
 			loopElapsed += delta / 1000;
 			if (loopElapsed >= LOOP_SECONDS) resetSimulation();
-			integrationAccumulator += delta;
+			integrationAccumulator += delta * cameraComposition().timeScale;
 			const integrationSteps = Math.min(2, Math.floor(integrationAccumulator / 16.67));
 			if (integrationSteps > 0) {
 				if (gpuSimulation && !gpuBusy && root) {
