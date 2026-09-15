@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import PageHeader from '$lib/PageHeader.svelte';
 
-	type Particle = { x: number; y: number; vx: number; vy: number; ax: number; ay: number; mass: number; central: boolean };
+	type Particle = { x: number; y: number; vx: number; vy: number; ax: number; ay: number; mass: number; central: boolean; softeningSq: number };
 	const BODY_COUNT = 600;
 	const G = 1.05;
 	const SOFTENING_SQ = 0.00024;
@@ -10,10 +10,10 @@
 	const MAX_DEPTH = 18;
 	const LOOP_SECONDS = 60;
 	const PARTICLES_PER_GALAXY = BODY_COUNT / 2;
-	const BULGE_MASS = 0.68;
+	const BULGE_MASS = 0.8;
 	const DISK_MASS = 1 - BULGE_MASS;
-	const BULGE_SCALE = 0.12;
-	const SPIRAL_PITCH = 20 * Math.PI / 180;
+	const BULGE_SCALE = 0.34;
+	const SPIRAL_PITCH = 24 * Math.PI / 180;
 
 	let canvas: HTMLCanvasElement;
 	let particles: Particle[] = [];
@@ -94,20 +94,20 @@
 	}
 
 	function addGalaxy(list: Particle[], cx: number, cy: number, radius: number, bulkVx: number, bulkVy: number, random: () => number) {
-		list.push({ x: cx, y: cy, vx: bulkVx, vy: bulkVy, ax: 0, ay: 0, mass: BULGE_MASS, central: true });
+		list.push({ x: cx, y: cy, vx: bulkVx, vy: bulkVy, ax: 0, ay: 0, mass: BULGE_MASS, central: true, softeningSq: BULGE_SCALE * BULGE_SCALE });
 		const starMass = DISK_MASS / (PARTICLES_PER_GALAXY - 1);
 		for (let i = 0; i < PARTICLES_PER_GALAXY - 1; i++) {
-			const normalizedRadius = 0.055 + 0.945 * Math.pow(random(), 1.2);
+			const normalizedRadius = 0.14 + 0.86 * Math.sqrt(random());
 			const r = radius * normalizedRadius;
-			const inArm = random() < 0.84;
-			const spiralAngle = Math.log(normalizedRadius / 0.055) / Math.tan(SPIRAL_PITCH);
+			const inArm = random() < 0.92;
+			const spiralAngle = Math.log(normalizedRadius / 0.14) / Math.tan(SPIRAL_PITCH);
 			const angle = inArm
-				? (i % 2) * Math.PI + spiralAngle + gaussian(random) * (0.07 + normalizedRadius * 0.11)
+				? (i % 2) * Math.PI + spiralAngle + gaussian(random) * (0.055 + normalizedRadius * 0.075)
 				: random() * Math.PI * 2;
-			const jitter = gaussian(random) * (0.003 + normalizedRadius * 0.006);
+			const jitter = gaussian(random) * (0.002 + normalizedRadius * 0.004);
 			const x = cx + Math.cos(angle) * r + jitter;
 			const y = cy + Math.sin(angle) * r * 0.76 + jitter * 0.7;
-			const radialFraction = Math.pow((normalizedRadius - 0.055) / 0.945, 1 / 1.2);
+			const radialFraction = Math.pow((normalizedRadius - 0.14) / 0.86, 2);
 			const bulgeAcceleration = BULGE_MASS * r / Math.pow(r * r + BULGE_SCALE * BULGE_SCALE, 1.5);
 			const diskAcceleration = DISK_MASS * radialFraction / Math.max(r * r, 0.0016);
 			const speed = Math.sqrt(G * r * (bulgeAcceleration + diskAcceleration));
@@ -115,7 +115,7 @@
 				x, y,
 				vx: bulkVx - Math.sin(angle) * speed + gaussian(random) * 0.009,
 				vy: bulkVy + Math.cos(angle) * speed * 0.76 + gaussian(random) * 0.009,
-				ax: 0, ay: 0, mass: starMass, central: false
+				ax: 0, ay: 0, mass: starMass, central: false, softeningSq: SOFTENING_SQ
 			});
 		}
 	}
@@ -125,8 +125,8 @@
 		const next: Particle[] = [];
 		// Equal masses at opposite sides of their barycenter. These bulk velocities
 		// are tangential and close to the circular-orbit speed for their separation.
-		addGalaxy(next, -0.56, 0, 0.34, 0, -0.685, random);
-		addGalaxy(next, 0.56, 0, 0.34, 0, 0.685, random);
+		addGalaxy(next, -0.58, 0, 0.38, 0, -0.67, random);
+		addGalaxy(next, 0.58, 0, 0.38, 0, 0.67, random);
 		particles = next;
 		root = buildTree(particles);
 		loopElapsed = 0;
@@ -144,9 +144,9 @@
 		return node;
 	}
 
-	function applyMass(body: Particle, x: number, y: number, mass: number) {
+	function applyMass(body: Particle, x: number, y: number, mass: number, softeningSq = SOFTENING_SQ) {
 		const dx = x - body.x, dy = y - body.y;
-		const distanceSq = dx * dx + dy * dy + SOFTENING_SQ;
+		const distanceSq = dx * dx + dy * dy + softeningSq;
 		const inverseDistance = 1 / Math.sqrt(distanceSq);
 		const scale = G * mass * inverseDistance * inverseDistance * inverseDistance;
 		body.ax += dx * scale;
@@ -156,7 +156,7 @@
 	function accumulateForce(body: Particle, node: QuadNode) {
 		if (node.mass === 0) return;
 		if (!node.children) {
-			for (const other of node.bodies) if (other !== body) applyMass(body, other.x, other.y, other.mass);
+			for (const other of node.bodies) if (other !== body) applyMass(body, other.x, other.y, other.mass, other.softeningSq);
 			return;
 		}
 		const dx = node.cx - body.x, dy = node.cy - body.y;
