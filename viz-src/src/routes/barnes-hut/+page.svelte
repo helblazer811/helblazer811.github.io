@@ -381,20 +381,10 @@
 			};
 			drawNode(root);
 		}
-		const cores = [particles[0], particles[PARTICLES_PER_GALAXY]];
 		for (const p of particles) {
 			const [x, y] = worldToScreen(p.x, p.y);
 			const radius = (p.central ? 2.4 : 0.72 + Math.min(Math.hypot(p.vx, p.vy), 2) * 0.06) * dpr;
-			let alpha = 0.92;
-			if (!p.central) {
-				const core = cores[p.galaxy];
-				const dx = p.x - core.x, dy = p.y - core.y;
-				const r = Math.max(Math.hypot(dx, dy), 0.02);
-				const armPhase = 2 * (Math.atan2(dy, dx) - GALAXY_PHASES[p.galaxy] - patternAngle - Math.log(r / 0.03) / Math.tan(SPIRAL_PITCH));
-				const armDensity = Math.pow((Math.cos(armPhase) + 1) * 0.5, 3);
-				alpha = 0.25 + armDensity * 0.65;
-			}
-			ctx.fillStyle = `rgba(45, 49, 54, ${alpha})`;
+			ctx.fillStyle = 'rgba(45, 49, 54, 0.82)';
 			ctx.beginPath(); ctx.arc(x, y, radius, 0, Math.PI * 2); ctx.fill();
 		}
 		ctx.globalAlpha = 1;
