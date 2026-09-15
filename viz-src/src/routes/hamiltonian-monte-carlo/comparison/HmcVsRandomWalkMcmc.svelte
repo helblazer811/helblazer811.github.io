@@ -15,6 +15,7 @@
   const PANEL_SIZE = 940;
   const PLOT_INSET = 50;
   const PLOT_WIDTH = PANEL_SIZE - 2 * PLOT_INSET;
+  const TITLE_Y = 116;
   const PLOT_TOP = 155;
   const PLOT_HEIGHT = 855;
   const X_DOMAIN = 1.2;
@@ -209,7 +210,7 @@
     context.textAlign = "center";
     context.fillStyle = INK;
     context.font = "600 62px Inter, Arial, sans-serif";
-    context.fillText(title, panelX + PANEL_SIZE / 2, 108);
+    context.fillText(title, panelX + PANEL_SIZE / 2, TITLE_Y);
 
     context.save();
     context.beginPath();
