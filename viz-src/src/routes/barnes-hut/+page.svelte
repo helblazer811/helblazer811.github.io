@@ -8,11 +8,13 @@
 	const SOFTENING_SQ = 0.00024;
 	const DT = 0.0022;
 	const MAX_DEPTH = 18;
+	const LOOP_SECONDS = 18;
 
 	let canvas: HTMLCanvasElement;
 	let particles: Particle[] = [];
 	let root: QuadNode | null = null;
 	let animationFrame = 0;
+	let loopElapsed = 0;
 	const theta = 0.7;
 
 	class QuadNode {
@@ -88,16 +90,19 @@
 
 	function addGalaxy(list: Particle[], cx: number, cy: number, radius: number, bulkVx: number, bulkVy: number, spin: number, galaxy: 0 | 1, random: () => number) {
 		for (let i = 0; i < BODY_COUNT / 2; i++) {
-			const normalizedRadius = Math.pow(random(), 0.72);
+			const normalizedRadius = 0.025 + 0.975 * Math.pow(random(), 1.25);
 			const r = radius * normalizedRadius;
-			const angle = random() * Math.PI * 2 + (i % 2) * Math.PI + normalizedRadius * 4.8;
-			const jitter = gaussian(random) * 0.018;
+			const inArm = random() < 0.84;
+			const angle = inArm
+				? (i % 2) * Math.PI + normalizedRadius * 5.9 + gaussian(random) * (0.1 + normalizedRadius * 0.13)
+				: random() * Math.PI * 2;
+			const jitter = gaussian(random) * (0.006 + normalizedRadius * 0.008);
 			const x = cx + Math.cos(angle) * r + jitter;
-			const y = cy + Math.sin(angle) * r * 0.62 + jitter * 0.55;
+			const y = cy + Math.sin(angle) * r * 0.76 + jitter * 0.7;
 			const dx = x - cx;
 			const dy = y - cy;
 			const distance = Math.max(Math.hypot(dx, dy), 0.012);
-			const speed = (0.28 + 0.76 * normalizedRadius) * spin;
+			const speed = (0.24 + 0.76 * normalizedRadius) * spin;
 			list.push({
 				x, y,
 				vx: bulkVx - (dy / distance) * speed + gaussian(random) * 0.012,
@@ -110,10 +115,13 @@
 	function resetSimulation() {
 		const random = seededRandom(811);
 		const next: Particle[] = [];
-		addGalaxy(next, -0.63, -0.12, 0.42, 0.11, 0.095, 0.49, 0, random);
-		addGalaxy(next, 0.63, 0.12, 0.42, -0.11, -0.095, -0.49, 1, random);
+		// Equal masses at opposite sides of their barycenter. These bulk velocities
+		// are tangential and close to the circular-orbit speed for their separation.
+		addGalaxy(next, -0.56, 0, 0.34, 0, -0.68, 0.5, 0, random);
+		addGalaxy(next, 0.56, 0, 0.34, 0, 0.68, 0.5, 1, random);
 		particles = next;
 		root = buildTree(particles);
+		loopElapsed = 0;
 	}
 
 	function buildTree(items: Particle[]) {
@@ -172,6 +180,9 @@
 		ctx.fillStyle = gradient; ctx.fillRect(0, 0, width, height);
 		const scale = Math.min(width / 3.05, height / 2.1);
 		const worldToScreen = (x: number, y: number) => [width / 2 + x * scale, height / 2 + y * scale] as const;
+		const fadeIn = Math.min(1, loopElapsed / 0.7);
+		const fadeOut = Math.min(1, (LOOP_SECONDS - loopElapsed) / 0.9);
+		ctx.globalAlpha = Math.max(0, Math.min(fadeIn, fadeOut));
 		if (root) {
 			ctx.lineWidth = 1;
 			const drawNode = (node: QuadNode) => {
@@ -189,6 +200,7 @@
 			ctx.fillStyle = 'rgba(45, 49, 54, 0.88)';
 			ctx.beginPath(); ctx.arc(x, y, radius, 0, Math.PI * 2); ctx.fill();
 		}
+		ctx.globalAlpha = 1;
 	}
 
 	onMount(() => {
@@ -203,6 +215,8 @@
 			const height = Math.max(1, Math.round(rect.height * dpr));
 			if (canvas.width !== width || canvas.height !== height) { canvas.width = width; canvas.height = height; }
 			const delta = Math.min(now - previous, 32); previous = now;
+			loopElapsed += delta / 1000;
+			if (loopElapsed >= LOOP_SECONDS) resetSimulation();
 			for (let i = 0; i < Math.max(1, Math.round((delta / 16.67) * 2)); i++) step();
 			draw(ctx, width, height);
 			animationFrame = requestAnimationFrame(frame);
