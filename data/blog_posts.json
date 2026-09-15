@@ -1,5 +1,16 @@
 [
   {
+    "id": "flow-reasoning-models-attractor-landscape",
+    "title": "Flow Reasoning Model Attractor Landscape",
+    "date": "2026-09-15",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "Iterative reasoning as movement through a learned three-dimensional attractor landscape.",
+    "previewUrl": "visualizations/flow-reasoning-models-attractor-landscape.mp4",
+    "posterUrl": "visualizations/flow-reasoning-models-attractor-landscape-poster.jpg",
+    "link": "https://alechelbling.com/visualizations/flow-reasoning-models-attractor-landscape/"
+  },
+  {
     "id": "barnes-hut",
     "title": "Barnes–Hut Galaxy Collision",
     "date": "2026-09-15",
