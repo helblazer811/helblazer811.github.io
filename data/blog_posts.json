@@ -5,7 +5,7 @@
     "date": "2026-09-15",
     "year": 2026,
     "type": "visualization",
-    "summary": "Two 200-body spiral galaxies interact while their Barnes–Hut quadtree is rebuilt live.",
+    "summary": "Two 300-body spiral galaxies interact while their Barnes–Hut quadtree is rebuilt live.",
     "previewUrl": "data/images/barnes-hut-preview.mp4",
     "posterUrl": "data/images/barnes-hut-preview-poster.jpg",
     "link": "https://alechelbling.com/visualizations/barnes-hut/"

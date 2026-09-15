@@ -3,14 +3,14 @@
 	import PageHeader from '$lib/PageHeader.svelte';
 
 	type Particle = { x: number; y: number; vx: number; vy: number; ax: number; ay: number; mass: number; central: boolean };
-	const BODY_COUNT = 400;
+	const BODY_COUNT = 600;
 	const G = 1.05;
 	const SOFTENING_SQ = 0.00024;
-	const DT = 0.0022;
+	const DT = 0.0015;
 	const MAX_DEPTH = 18;
-	const LOOP_SECONDS = 18;
+	const LOOP_SECONDS = 20;
 	const PARTICLES_PER_GALAXY = BODY_COUNT / 2;
-	const BULGE_MASS = 0.52;
+	const BULGE_MASS = 0.68;
 	const DISK_MASS = 1 - BULGE_MASS;
 	const BULGE_SCALE = 0.12;
 	const SPIRAL_PITCH = 20 * Math.PI / 180;
@@ -181,7 +181,7 @@
 		}
 	}
 
-	function draw(ctx: CanvasRenderingContext2D, width: number, height: number) {
+	function draw(ctx: CanvasRenderingContext2D, width: number, height: number, dpr: number) {
 		ctx.clearRect(0, 0, width, height);
 		const gradient = ctx.createRadialGradient(width * 0.5, height * 0.48, 0, width * 0.5, height * 0.48, width * 0.7);
 		gradient.addColorStop(0, '#ffffff'); gradient.addColorStop(0.68, '#fbfcfe'); gradient.addColorStop(1, '#f4f7fa');
@@ -204,7 +204,7 @@
 		}
 		for (const p of particles) {
 			const [x, y] = worldToScreen(p.x, p.y);
-			const radius = p.central ? 2.6 : 1.05 + Math.min(Math.hypot(p.vx, p.vy), 2) * 0.28;
+			const radius = (p.central ? 2.8 : 1.35 + Math.min(Math.hypot(p.vx, p.vy), 2) * 0.18) * dpr;
 			ctx.fillStyle = 'rgba(45, 49, 54, 0.88)';
 			ctx.beginPath(); ctx.arc(x, y, radius, 0, Math.PI * 2); ctx.fill();
 		}
@@ -216,6 +216,7 @@
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
 		let previous = performance.now();
+		let integrationAccumulator = 0;
 		const frame = (now: number) => {
 			const rect = canvas.getBoundingClientRect();
 			const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -225,8 +226,11 @@
 			const delta = Math.min(now - previous, 32); previous = now;
 			loopElapsed += delta / 1000;
 			if (loopElapsed >= LOOP_SECONDS) resetSimulation();
-			for (let i = 0; i < Math.max(1, Math.round((delta / 16.67) * 2)); i++) step();
-			draw(ctx, width, height);
+			integrationAccumulator += delta;
+			const integrationSteps = Math.min(2, Math.floor(integrationAccumulator / 16.67));
+			for (let i = 0; i < integrationSteps; i++) step();
+			integrationAccumulator -= integrationSteps * 16.67;
+			draw(ctx, width, height, dpr);
 			animationFrame = requestAnimationFrame(frame);
 		};
 		animationFrame = requestAnimationFrame(frame);
