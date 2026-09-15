@@ -1,5 +1,15 @@
 [
   {
+    "id": "hmc-vs-random-walk-mcmc",
+    "title": "Random-Walk MCMC vs. Hamiltonian Monte Carlo",
+    "date": "2026-09-15",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "How Hamiltonian Monte Carlo explores a target distribution more efficiently than random-walk MCMC.",
+    "previewUrl": "data/images/hmc-vs-random-walk-mcmc-preview.mp4",
+    "link": "https://alechelbling.com/visualizations/hamiltonian-monte-carlo/comparison/"
+  },
+  {
     "id": "probability-path-comparison",
     "title": "Linear vs. Variance-Preserving Paths",
     "date": "2026-09-14",
