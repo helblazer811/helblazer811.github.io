@@ -6,7 +6,7 @@
     "year": 2026,
     "type": "visualization",
     "summary": "How Hamiltonian Monte Carlo explores a target distribution more efficiently than random-walk MCMC.",
-    "previewUrl": "data/images/hmc-vs-random-walk-mcmc-preview-titles-lower.mp4",
+    "previewUrl": "data/images/hmc-vs-random-walk-mcmc-preview-lower-blue-opacity.mp4",
     "link": "https://alechelbling.com/visualizations/hamiltonian-monte-carlo/comparison/"
   },
   {

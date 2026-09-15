@@ -182,7 +182,7 @@
           Y_DOMAIN - ((y + 0.5) / map.height) * 2 * Y_DOMAIN,
         ];
         const normalized = Math.min(1, Math.exp(logDensity(point)) / maximumDensity);
-        const alpha = Math.round(255 * 0.62 * normalized ** 0.58);
+        const alpha = Math.round(255 * 0.5 * normalized ** 0.58);
         const offset = 4 * (y * map.width + x);
         image.data[offset] = 59;
         image.data[offset + 1] = 130;
