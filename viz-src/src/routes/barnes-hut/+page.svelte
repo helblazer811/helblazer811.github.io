@@ -199,10 +199,8 @@
 	}
 
 	function draw(ctx: CanvasRenderingContext2D, width: number, height: number, dpr: number) {
-		ctx.clearRect(0, 0, width, height);
-		const gradient = ctx.createRadialGradient(width * 0.5, height * 0.48, 0, width * 0.5, height * 0.48, width * 0.7);
-		gradient.addColorStop(0, '#ffffff'); gradient.addColorStop(0.68, '#fbfcfe'); gradient.addColorStop(1, '#f4f7fa');
-		ctx.fillStyle = gradient; ctx.fillRect(0, 0, width, height);
+		ctx.fillStyle = '#ffffff';
+		ctx.fillRect(0, 0, width, height);
 		const scale = Math.min(width / 3.05, height / 2.1);
 		const worldToScreen = (x: number, y: number) => [width / 2 + x * scale, height / 2 + y * scale] as const;
 		const fadeIn = Math.min(1, loopElapsed / 0.7);
@@ -268,6 +266,7 @@
 
 <style>
 	:global(:root) { --page-max-width: 920px; }
+	:global(html), :global(body) { background: #fff; }
 	.simulation-shell { margin: 1.25rem 0 0; background: #fff; }
-	canvas { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; touch-action: none; }
+	canvas { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: #fff; touch-action: none; }
 </style>
