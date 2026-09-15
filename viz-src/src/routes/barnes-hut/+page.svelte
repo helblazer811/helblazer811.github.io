@@ -371,11 +371,11 @@
 		const fadeOut = Math.min(1, (LOOP_SECONDS - loopElapsed) / 0.9);
 		ctx.globalAlpha = Math.max(0, Math.min(fadeIn, fadeOut));
 		if (root) {
-			ctx.lineWidth = 0.8 * dpr;
+			ctx.lineWidth = 0.65 * dpr;
 			const drawNode = (node: QuadNode) => {
 				if (node.mass === 0 || node.depth > 10) return;
 				const [x, y] = worldToScreen(node.x, node.y);
-				ctx.strokeStyle = `rgba(23, 114, 208, ${Math.max(0.08, 0.38 - node.depth * 0.025)})`;
+				ctx.strokeStyle = `rgba(23, 114, 208, ${Math.max(0.025, 0.18 - node.depth * 0.014)})`;
 				ctx.strokeRect(x, y, node.size * scale, node.size * scale);
 				if (node.children) for (const child of node.children) drawNode(child);
 			};
