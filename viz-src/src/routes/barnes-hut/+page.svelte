@@ -363,17 +363,15 @@
 	}
 
 	function cameraComposition() {
-		const cycle = loopElapsed % 8;
 		const smooth = (value: number) => {
 			const t = Math.max(0, Math.min(1, value));
 			return t * t * (3 - 2 * t);
 		};
 		let detail = 0;
-		if (cycle >= 0.8 && cycle < 1.6) detail = smooth((cycle - 0.8) / 0.8);
-		else if (cycle >= 1.6 && cycle < 3.4) detail = 1;
-		else if (cycle >= 3.4 && cycle < 4.4) detail = 1 - smooth((cycle - 3.4) / 1);
-		const galaxy = Math.floor(loopElapsed / 8) % 2;
-		return { detail, galaxy, timeScale: 1 - detail * 0.72 };
+		if (loopElapsed >= 4.5 && loopElapsed < 5.5) detail = smooth(loopElapsed - 4.5);
+		else if (loopElapsed >= 5.5 && loopElapsed < 10.5) detail = 1;
+		else if (loopElapsed >= 10.5 && loopElapsed < 11.5) detail = 1 - smooth(loopElapsed - 10.5);
+		return { detail, galaxy: 0, timeScale: 1 - detail * 0.72 };
 	}
 
 	function draw(ctx: CanvasRenderingContext2D, width: number, height: number, dpr: number) {
@@ -389,11 +387,11 @@
 		const fadeOut = Math.min(1, (LOOP_SECONDS - loopElapsed) / 0.9);
 		ctx.globalAlpha = Math.max(0, Math.min(fadeIn, fadeOut));
 		if (root) {
-			ctx.lineWidth = 0.65 * dpr;
+			ctx.lineWidth = (0.65 + composition.detail * 0.2) * dpr;
 			const drawNode = (node: QuadNode) => {
 				if (node.mass === 0 || node.depth > 10) return;
 				const [x, y] = worldToScreen(node.x, node.y);
-				const opacity = Math.max(0.025, 0.18 - node.depth * 0.014) * (1 + composition.detail * 0.55);
+				const opacity = Math.max(0.025, 0.18 - node.depth * 0.014) * (1 + composition.detail * 0.9);
 				ctx.strokeStyle = `rgba(23, 114, 208, ${opacity})`;
 				ctx.strokeRect(x, y, node.size * scale, node.size * scale);
 				if (node.children) for (const child of node.children) drawNode(child);
