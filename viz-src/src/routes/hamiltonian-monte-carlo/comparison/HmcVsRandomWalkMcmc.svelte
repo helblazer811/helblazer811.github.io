@@ -367,7 +367,7 @@
   }
 
   .mcmc-comparison-figure {
-    width: min(96vw, 1600px);
+    width: min(96vw, 960px);
     margin: 1.5rem 50% 0;
     transform: translateX(-50%);
   }
