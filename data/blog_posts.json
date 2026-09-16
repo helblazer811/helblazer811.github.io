@@ -11,6 +11,17 @@
     "link": "https://alechelbling.com/visualizations/flow-reasoning-models-attractor-landscape/"
   },
   {
+    "id": "flow-reasoning-models-looped",
+    "title": "Flow Reasoning Models Are Looped Models",
+    "date": "2026-09-15",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "A recurrent flow reasoning model unrolled into refinement steps with independent training losses.",
+    "previewUrl": "data/images/flow-reasoning-models-looped-preview.mp4",
+    "posterUrl": "data/images/flow-reasoning-models-looped-preview-poster.jpg",
+    "link": "https://alechelbling.com/visualizations/flow-reasoning-models-looped/"
+  },
+  {
     "id": "barnes-hut",
     "title": "Barnes–Hut Galaxy Collision",
     "date": "2026-09-15",
