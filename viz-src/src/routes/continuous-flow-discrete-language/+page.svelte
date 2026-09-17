@@ -13,7 +13,7 @@
 </script>
 
 <svelte:head>
-	<title>Continuous Flows for Discrete Language — Alec Helbling</title>
+	<title>Continuous Flows for Discrete Language | Alec Helbling</title>
 	<meta name="description" content="A visual explanation of continuous flow models generating discrete word embeddings." />
 </svelte:head>
 
