@@ -1,5 +1,16 @@
 [
   {
+    "id": "continuous-flow-discrete-language",
+    "title": "Continuous Flows for Discrete Language",
+    "date": "2026-09-17",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "How continuous flow models transport Gaussian noise into discrete language embeddings on a simplex.",
+    "previewUrl": "visualizations/continuous-flow-discrete-language.mp4",
+    "posterUrl": "visualizations/continuous-flow-discrete-language-poster.jpg",
+    "link": "https://alechelbling.com/visualizations/continuous-flow-discrete-language/"
+  },
+  {
     "id": "flow-reasoning-models-attractor-landscape",
     "title": "Flow Reasoning Model Attractor Landscape",
     "date": "2026-09-15",
