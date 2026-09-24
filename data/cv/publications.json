@@ -68,7 +68,7 @@
         "isHighlighted": false
       }
     ],
-    "venue": "arXiv preprint",
+    "venue": "NeurIPS",
     "year": 2026,
     "description": "We show that flow matching models can be trained without explicit time conditioning: high-dimensional data geometry lets the model recover time from the noisy state, with a closed-form estimator converging at rate O(1/√(d−k)). Empirically on CIFAR-10, CelebA-HQ, and FFHQ, the choice of coupling matters more for sample quality than removing time conditioning.",
     "imageUrl": "data/images/WhatTimeIsIt.png",
