@@ -1,0 +1,415 @@
+{
+  "format": "training-snapshot-trajectory",
+  "version": 1,
+  "representation": {
+    "type": "3d-gaussians",
+    "version": 1
+  },
+  "encoding": {
+    "storage": "binary",
+    "scalarType": "float32",
+    "endianness": "little",
+    "rotation": "xyzw",
+    "colorSpace": "linear-srgb"
+  },
+  "metadata": {
+    "backend": "gsplat",
+    "device": "cuda",
+    "optimizer": "adam",
+    "learningRate": 0.032,
+    "resolution": 64,
+    "cameraIds": [
+      "A",
+      "B",
+      "C"
+    ],
+    "trainingSeconds": 27.09125053230673
+  },
+  "snapshots": [
+    {
+      "step": 0,
+      "loss": 0.18970155715942383,
+      "count": 100000,
+      "file": "step-000000.bin",
+      "byteLength": 5600000,
+      "sha256": "c82c690fc30cb023ce2be4ee2045ee2bc464b0fd62e36aef0dd289eed76392bd",
+      "fields": {
+        "positions": {
+          "byteOffset": 0,
+          "length": 300000,
+          "components": 3
+        },
+        "scales": {
+          "byteOffset": 1200000,
+          "length": 300000,
+          "components": 3
+        },
+        "rotations": {
+          "byteOffset": 2400000,
+          "length": 400000,
+          "components": 4
+        },
+        "opacities": {
+          "byteOffset": 4000000,
+          "length": 100000,
+          "components": 1
+        },
+        "colors": {
+          "byteOffset": 4400000,
+          "length": 300000,
+          "components": 3
+        }
+      }
+    },
+    {
+      "step": 100,
+      "loss": 0.004111862741410732,
+      "count": 100000,
+      "file": "step-000100.bin",
+      "byteLength": 5600000,
+      "sha256": "b4e33a5fb6ec0ba92bcbb47511cce3c9f4488278b2efcdc518e746b14d108915",
+      "fields": {
+        "positions": {
+          "byteOffset": 0,
+          "length": 300000,
+          "components": 3
+        },
+        "scales": {
+          "byteOffset": 1200000,
+          "length": 300000,
+          "components": 3
+        },
+        "rotations": {
+          "byteOffset": 2400000,
+          "length": 400000,
+          "components": 4
+        },
+        "opacities": {
+          "byteOffset": 4000000,
+          "length": 100000,
+          "components": 1
+        },
+        "colors": {
+          "byteOffset": 4400000,
+          "length": 300000,
+          "components": 3
+        }
+      }
+    },
+    {
+      "step": 200,
+      "loss": 0.002390150912106037,
+      "count": 100000,
+      "file": "step-000200.bin",
+      "byteLength": 5600000,
+      "sha256": "39156cd6b1080df9348cd00fdd29debb31025c960d786df28ceac037a84b3d15",
+      "fields": {
+        "positions": {
+          "byteOffset": 0,
+          "length": 300000,
+          "components": 3
+        },
+        "scales": {
+          "byteOffset": 1200000,
+          "length": 300000,
+          "components": 3
+        },
+        "rotations": {
+          "byteOffset": 2400000,
+          "length": 400000,
+          "components": 4
+        },
+        "opacities": {
+          "byteOffset": 4000000,
+          "length": 100000,
+          "components": 1
+        },
+        "colors": {
+          "byteOffset": 4400000,
+          "length": 300000,
+          "components": 3
+        }
+      }
+    },
+    {
+      "step": 300,
+      "loss": 0.0017204320611199364,
+      "count": 100000,
+      "file": "step-000300.bin",
+      "byteLength": 5600000,
+      "sha256": "e271d6b991c9f17f0cb36d96084354248c383ac0b77aac0e4bb82436996dcc65",
+      "fields": {
+        "positions": {
+          "byteOffset": 0,
+          "length": 300000,
+          "components": 3
+        },
+        "scales": {
+          "byteOffset": 1200000,
+          "length": 300000,
+          "components": 3
+        },
+        "rotations": {
+          "byteOffset": 2400000,
+          "length": 400000,
+          "components": 4
+        },
+        "opacities": {
+          "byteOffset": 4000000,
+          "length": 100000,
+          "components": 1
+        },
+        "colors": {
+          "byteOffset": 4400000,
+          "length": 300000,
+          "components": 3
+        }
+      }
+    },
+    {
+      "step": 400,
+      "loss": 0.0013756827829638496,
+      "count": 100000,
+      "file": "step-000400.bin",
+      "byteLength": 5600000,
+      "sha256": "cc7799850a1bce4aab19a284e2581fa0b004feb7c98a2600ebef6e53f3cf3fde",
+      "fields": {
+        "positions": {
+          "byteOffset": 0,
+          "length": 300000,
+          "components": 3
+        },
+        "scales": {
+          "byteOffset": 1200000,
+          "length": 300000,
+          "components": 3
+        },
+        "rotations": {
+          "byteOffset": 2400000,
+          "length": 400000,
+          "components": 4
+        },
+        "opacities": {
+          "byteOffset": 4000000,
+          "length": 100000,
+          "components": 1
+        },
+        "colors": {
+          "byteOffset": 4400000,
+          "length": 300000,
+          "components": 3
+        }
+      }
+    },
+    {
+      "step": 500,
+      "loss": 0.0012904378672828898,
+      "count": 100000,
+      "file": "step-000500.bin",
+      "byteLength": 5600000,
+      "sha256": "c4fce02d0090eb6a387ad26c3f2a0c9c7604df20c8a57fb514668dfb48520ae5",
+      "fields": {
+        "positions": {
+          "byteOffset": 0,
+          "length": 300000,
+          "components": 3
+        },
+        "scales": {
+          "byteOffset": 1200000,
+          "length": 300000,
+          "components": 3
+        },
+        "rotations": {
+          "byteOffset": 2400000,
+          "length": 400000,
+          "components": 4
+        },
+        "opacities": {
+          "byteOffset": 4000000,
+          "length": 100000,
+          "components": 1
+        },
+        "colors": {
+          "byteOffset": 4400000,
+          "length": 300000,
+          "components": 3
+        }
+      }
+    },
+    {
+      "step": 600,
+      "loss": 0.0011412975363782607,
+      "count": 100000,
+      "file": "step-000600.bin",
+      "byteLength": 5600000,
+      "sha256": "85c05df2c239309c098c673610a57743b9f53c509e4ab73a0f5be7feecfec87f",
+      "fields": {
+        "positions": {
+          "byteOffset": 0,
+          "length": 300000,
+          "components": 3
+        },
+        "scales": {
+          "byteOffset": 1200000,
+          "length": 300000,
+          "components": 3
+        },
+        "rotations": {
+          "byteOffset": 2400000,
+          "length": 400000,
+          "components": 4
+        },
+        "opacities": {
+          "byteOffset": 4000000,
+          "length": 100000,
+          "components": 1
+        },
+        "colors": {
+          "byteOffset": 4400000,
+          "length": 300000,
+          "components": 3
+        }
+      }
+    },
+    {
+      "step": 700,
+      "loss": 0.0013218336753197946,
+      "count": 100000,
+      "file": "step-000700.bin",
+      "byteLength": 5600000,
+      "sha256": "65df676547d883a532492e60def063b0865097cbdb2006291e27c8a100c9ebf7",
+      "fields": {
+        "positions": {
+          "byteOffset": 0,
+          "length": 300000,
+          "components": 3
+        },
+        "scales": {
+          "byteOffset": 1200000,
+          "length": 300000,
+          "components": 3
+        },
+        "rotations": {
+          "byteOffset": 2400000,
+          "length": 400000,
+          "components": 4
+        },
+        "opacities": {
+          "byteOffset": 4000000,
+          "length": 100000,
+          "components": 1
+        },
+        "colors": {
+          "byteOffset": 4400000,
+          "length": 300000,
+          "components": 3
+        }
+      }
+    },
+    {
+      "step": 800,
+      "loss": 0.0007240898557938635,
+      "count": 100000,
+      "file": "step-000800.bin",
+      "byteLength": 5600000,
+      "sha256": "f303a7224a3f8b6b883504129e4e8f6bbbab157448dff77566d5a042704377ae",
+      "fields": {
+        "positions": {
+          "byteOffset": 0,
+          "length": 300000,
+          "components": 3
+        },
+        "scales": {
+          "byteOffset": 1200000,
+          "length": 300000,
+          "components": 3
+        },
+        "rotations": {
+          "byteOffset": 2400000,
+          "length": 400000,
+          "components": 4
+        },
+        "opacities": {
+          "byteOffset": 4000000,
+          "length": 100000,
+          "components": 1
+        },
+        "colors": {
+          "byteOffset": 4400000,
+          "length": 300000,
+          "components": 3
+        }
+      }
+    },
+    {
+      "step": 900,
+      "loss": 0.000841380882775411,
+      "count": 100000,
+      "file": "step-000900.bin",
+      "byteLength": 5600000,
+      "sha256": "0f9770c9f88d76dc858b94e6b78788bbc2b30821b915aa7d3fb24af481e74e21",
+      "fields": {
+        "positions": {
+          "byteOffset": 0,
+          "length": 300000,
+          "components": 3
+        },
+        "scales": {
+          "byteOffset": 1200000,
+          "length": 300000,
+          "components": 3
+        },
+        "rotations": {
+          "byteOffset": 2400000,
+          "length": 400000,
+          "components": 4
+        },
+        "opacities": {
+          "byteOffset": 4000000,
+          "length": 100000,
+          "components": 1
+        },
+        "colors": {
+          "byteOffset": 4400000,
+          "length": 300000,
+          "components": 3
+        }
+      }
+    },
+    {
+      "step": 1000,
+      "loss": 0.0006524956188513897,
+      "count": 100000,
+      "file": "step-001000.bin",
+      "byteLength": 5600000,
+      "sha256": "9ba4b732002355086861f7980307f6454631d48b8e665eec6e1da961ce22aaba",
+      "fields": {
+        "positions": {
+          "byteOffset": 0,
+          "length": 300000,
+          "components": 3
+        },
+        "scales": {
+          "byteOffset": 1200000,
+          "length": 300000,
+          "components": 3
+        },
+        "rotations": {
+          "byteOffset": 2400000,
+          "length": 400000,
+          "components": 4
+        },
+        "opacities": {
+          "byteOffset": 4000000,
+          "length": 100000,
+          "components": 1
+        },
+        "colors": {
+          "byteOffset": 4400000,
+          "length": 300000,
+          "components": 3
+        }
+      }
+    }
+  ]
+}

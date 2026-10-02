@@ -1,0 +1,60 @@
+{
+  "format": "training-snapshot-trajectory",
+  "version": 1,
+  "representation": {
+    "type": "3d-gaussians",
+    "version": 1
+  },
+  "encoding": {
+    "storage": "binary",
+    "scalarType": "float32",
+    "endianness": "little",
+    "rotation": "xyzw",
+    "colorSpace": "linear-srgb"
+  },
+  "metadata": {
+    "source": "NeRF Synthetic Lego",
+    "backend": "gsplat",
+    "cameraPoses": "ground-truth Blender transforms",
+    "resolution": 400,
+    "trainingSeconds": 100.38335300888866,
+    "colorModel": "RGB (spherical harmonics degree 0)"
+  },
+  "snapshots": [
+    {
+      "step": 6000,
+      "loss": 0.01057456061244011,
+      "count": 317228,
+      "file": "step-006000.bin",
+      "byteLength": 17764768,
+      "sha256": "7063cc90453653d12c470268550b6b47851d00a71dfdfc2eb5591d0622648207",
+      "fields": {
+        "positions": {
+          "byteOffset": 0,
+          "length": 951684,
+          "components": 3
+        },
+        "scales": {
+          "byteOffset": 3806736,
+          "length": 951684,
+          "components": 3
+        },
+        "rotations": {
+          "byteOffset": 7613472,
+          "length": 1268912,
+          "components": 4
+        },
+        "opacities": {
+          "byteOffset": 12689120,
+          "length": 317228,
+          "components": 1
+        },
+        "colors": {
+          "byteOffset": 13958032,
+          "length": 951684,
+          "components": 3
+        }
+      }
+    }
+  ]
+}

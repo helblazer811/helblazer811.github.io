@@ -1,0 +1,1 @@
+export const env={"PUBLIC_BASE_PATH":"/blog/gaussian-splatting-8f3c7a91d4e6b2a5"}
