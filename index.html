@@ -42,7 +42,7 @@
       */
       let publications = [];
       let showAllPublications = false;
-      fetch("data/cv/publications.json?v=selected-publications-4")
+      fetch("data/cv/publications.json?v=news-timeline-1")
         .then((response) => response.json())
         .then((data) => {
           publications = data;
@@ -180,6 +180,17 @@
             renderPublications();
             fetchGitHubStars();
           });
+
+        const newsToggle = document.getElementById("news-toggle");
+        const earlierNews = document.getElementById("earlier-news");
+        newsToggle?.addEventListener("click", () => {
+          const isExpanded = newsToggle.getAttribute("aria-expanded") === "true";
+          newsToggle.setAttribute("aria-expanded", String(!isExpanded));
+          earlierNews.hidden = isExpanded;
+          newsToggle.textContent = isExpanded
+            ? "Show earlier news ↓"
+            : "Show less ↑";
+        });
       });
 
       /**
@@ -382,10 +393,13 @@
             <name>Alec Helbling</name>
           </p>
           <p>
-            I am an ML PhD student at
-            <a href="https://www.gatech.edu/">Georgia Tech</a> advised by
-            <a href="https://poloclub.github.io/polochau/"> Polo Chau </a> and
-            supported by the NSF GRFP.
+            I am a Research Scientist at
+            <a href="https://research.ibm.com/">IBM Research</a>, working with
+            the <a href="https://mitibm.mit.edu/">MIT–IBM Computing Research Lab</a>.
+            I am also an ML PhD student at
+            <a href="https://www.gatech.edu/">Georgia Tech</a>, where I was awarded
+            the NSF GRFP and am advised by
+            <a href="https://poloclub.github.io/polochau/">Polo Chau</a>.
           </p>
 
           <p>
@@ -411,7 +425,7 @@
           <p>
             I have worked across academic and industry research at
             <a href="https://research.ibm.com/">IBM Research</a>, the
-            <a href="https://mitibmwatsonailab.mit.edu">MIT-IBM Watson AI Lab</a>,
+            <a href="https://mitibm.mit.edu">MIT–IBM Computing Research Lab</a>,
             <a href="https://machinelearning.apple.com/">Apple</a>,
             <a href="https://www.adobe.com/products/firefly.html">Adobe Firefly</a>,
             <a href="https://www.jpl.nasa.gov/">NASA JPL</a>, and the
@@ -441,6 +455,173 @@
           /></a>
         </div>
       </div>
+
+      <section class="news-section" aria-labelledby="news-heading">
+        <div class="section-header news-header">
+          <heading id="news-heading">News</heading>
+        </div>
+        <ol class="news-list">
+          <li class="news-item">
+            <time datetime="2026-10">Oct. 2026</time>
+            <p>
+              Started as a Research Scientist at
+              <a href="https://research.ibm.com/">IBM Research</a>, working with
+              the <a href="https://mitibm.mit.edu/">MIT–IBM Computing Research Lab</a>.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2026-09">Sep. 2026</time>
+            <p>
+              <a href="https://arxiv.org/abs/2605.08344"><em>What Time Is It?</em></a>
+              was accepted to NeurIPS 2026.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2026-09">Sep. 2026</time>
+            <p>
+              <a href="https://arxiv.org/abs/2606.29150"><em>Flow Reasoning Models</em></a>
+              was accepted to the
+              <a href="https://7amin.github.io/diffulm-neurips2026/">DiffuLM workshop</a>
+              at NeurIPS 2026.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2026-09">Sep. 2026</time>
+            <p>
+              The <a href="blog/rectified-flow/"><em>Rectified Flow Explainer</em></a>
+              was accepted to the VISxAI workshop at IEEE VIS 2026.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2026-06">Jun. 2026</time>
+            <p>
+              Started as a research intern at the
+              <a href="https://mitibm.mit.edu/">MIT–IBM Computing Research Lab</a>.
+            </p>
+          </li>
+        </ol>
+        <ol class="news-list news-list--earlier" id="earlier-news" start="6" hidden>
+          <li class="news-item">
+            <time datetime="2026-04">Apr. 2026</time>
+            <p>
+              Passed the Georgia Tech Machine Learning PhD qualifier; my
+              <a href="blog/qualifier-writeup/">visual write-up</a> covers flow matching
+              and rectified flow.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2026-02">Feb. 2026</time>
+            <p>
+              <a href="https://arxiv.org/abs/2510.21120"><em>SafetyPairs</em></a>
+              was accepted to the Trustworthy AI workshop at ICLR 2026.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2026-01">Jan. 2026</time>
+            <p>
+              <a href="https://arxiv.org/abs/2408.04619"><em>Transformer Explainer</em></a>
+              was accepted to CHI 2026.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2026-01">Jan. 2026</time>
+            <p>
+              <a href="https://arxiv.org/abs/2602.04192"><em>LORE</em></a>
+              was accepted to ICLR 2026.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2025-07">Jul. 2025</time>
+            <p>
+              <a href="https://arxiv.org/abs/2507.01178"><em>Diffusion Explorer</em></a>
+              was accepted to IEEE VIS 2025.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2025-06">Jun. 2025</time>
+            <p>
+              Started as an AI research intern on Apple's Responsible AI team.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2025-05">May 2025</time>
+            <p>
+              <a href="https://arxiv.org/abs/2502.04320"><em>ConceptAttention</em></a>
+              was selected for an oral presentation at ICML 2025.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2025-05">May 2025</time>
+            <p>
+              <a href="https://arxiv.org/abs/2502.04320"><em>ConceptAttention</em></a>
+              won Best Paper at the CVPR Workshop on Visual Concepts.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2024-10">Oct. 2024</time>
+            <p>
+              <a href="https://arxiv.org/abs/2408.04619"><em>Transformer Explainer</em></a>
+              was presented at IEEE VIS 2024 and won Best Poster.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2024-05">May 2024</time>
+            <p>
+              <a href="https://arxiv.org/abs/2404.04376"><em>ClickDiffusion</em></a>
+              was accepted to the AI for Content Creation workshop at CVPR 2024.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2024-04">Apr. 2024</time>
+            <p>Received the National Science Foundation Graduate Research Fellowship.</p>
+          </li>
+          <li class="news-item">
+            <time datetime="2024-03">Mar. 2024</time>
+            <p>
+              <a href="https://openreview.net/forum?id=YoqgcIA19o"><em>LLM Self Defense</em></a>
+              was accepted to the ICLR 2024 Tiny Paper Track.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2024-02">Feb. 2024</time>
+            <p>
+              <a href="https://openreview.net/forum?id=lVE1VeGQwg"><em>Manifold Contrastive Learning</em></a>
+              was accepted to Transactions on Machine Learning Research (TMLR).
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2023-12">Dec. 2023</time>
+            <p>
+              <a href="https://arxiv.org/abs/2310.06968"><em>ObjectComposer</em></a>
+              was accepted to the NeurIPS 2023 Workshop on Machine Learning for
+              Creativity and Design.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2023-10">Oct. 2023</time>
+            <p>
+              <a href="https://arxiv.org/abs/2306.17108"><em>ManimML</em></a>
+              was presented at IEEE VIS 2023 and won Best Poster.
+            </p>
+          </li>
+          <li class="news-item">
+            <time datetime="2023-08">Aug. 2023</time>
+            <p>
+              Started my Machine Learning PhD at Georgia Tech with a President's
+              Fellowship.
+            </p>
+          </li>
+        </ol>
+        <button
+          id="news-toggle"
+          class="news-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="earlier-news"
+        >
+          Show earlier news ↓
+        </button>
+      </section>
 
       <div class="section-header">
         <heading>Blogs and Visualizations</heading>

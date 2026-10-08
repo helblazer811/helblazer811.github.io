@@ -1,5 +1,16 @@
 [
   {
+    "institution": "IBM Research",
+    "location": "Cambridge, MA",
+    "position": "Research Scientist",
+    "group": "MIT-IBM Computing Research Lab",
+    "year": "Present",
+    "year-extra": "Oct. 2026 —",
+    "institution-url": "https://research.ibm.com",
+    "group-url": "https://mitibm.mit.edu/",
+    "type": "industry"
+  },
+  {
     "institution": "Georgia Institute of Technology",
     "location": "Atlanta, GA",
     "position": "Graduate Research Assistant",
@@ -46,11 +57,11 @@
     "type": "academic"
   },
   {
-    "institution": "MIT-IBM Watson AI Lab",
+    "institution": "MIT-IBM Computing Research Lab",
     "location": "Cambridge, MA",
     "position": "Research Intern",
     "year": "Summer 2026",
-    "institution-url": "https://mitibmwatsonailab.mit.edu",
+    "institution-url": "https://mitibm.mit.edu/",
     "type": "industry"
   },
   {

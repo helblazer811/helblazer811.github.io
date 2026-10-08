@@ -34,9 +34,11 @@
       </div>
 
       <div class="cv-intro">
-        I have worked with researchers and engineers at IBM Research, the
-        MIT-IBM Watson AI Lab, Georgia Tech, Apple, Adobe, NASA Jet Propulsion
-        Laboratory, Microsoft, and the University of Pittsburgh.
+        I am a Research Scientist at IBM Research, working with the MIT-IBM
+        Computing Research Lab. I am also an ML PhD student at Georgia Tech.
+        Previously, I have worked with researchers and engineers at Apple,
+        Adobe, NASA Jet Propulsion Laboratory, Microsoft, and the University
+        of Pittsburgh.
       </div>
 
       <div id="social-links" class="cv-image-links-wrapper"></div>
@@ -441,7 +443,7 @@
       async function renderPublications() {
         try {
           // Load publications from JSON
-          const publications = await loadJSON("data/cv/publications.json");
+          const publications = await loadJSON("data/cv/publications.json?v=news-timeline-1");
           if (!publications) return;
 
           // Separate selected and non-selected publications

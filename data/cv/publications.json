@@ -28,7 +28,7 @@
         "isHighlighted": false
       }
     ],
-    "venue": "arXiv preprint",
+    "venue": "DiffuLM Workshop at NeurIPS",
     "year": 2026,
     "description": "We introduce Flow Reasoning Models, which adapt discrete flows into recurrent reasoners that revise interdependent decisions in parallel. Fixed-Point Forcing trains FRMs on states produced by their own inference dynamics, reaching 99.5% on Sudoku-Extreme and matching the next-best method's 98.7% solve rate with 44× fewer inference FLOPs.",
     "imageUrl": "data/images/flow-reasoning-models.png",
@@ -221,6 +221,48 @@
       "arxiv": "https://arxiv.org/abs/2510.21120"
     },
     "githubRepo": null,
+    "show_star_count": false,
+    "awards": [],
+    "selected": false
+  },
+  {
+    "id": "lore",
+    "title": "LORE: Jointly Learning the Intrinsic Dimensionality and Relative Similarity Structure From Ordinal Data",
+    "authors": [
+      {
+        "name": "Vivek Anand",
+        "isHighlighted": false
+      },
+      {
+        "name": "Alec Helbling",
+        "isHighlighted": true
+      },
+      {
+        "name": "Mark A. Davenport",
+        "isHighlighted": false
+      },
+      {
+        "name": "Gordon J. Berman",
+        "isHighlighted": false
+      },
+      {
+        "name": "Sankaraleengam Alagapan",
+        "isHighlighted": false
+      },
+      {
+        "name": "Christopher J. Rozell",
+        "isHighlighted": false
+      }
+    ],
+    "venue": "ICLR",
+    "year": 2026,
+    "description": "LORE jointly learns an ordinal embedding and its intrinsic dimensionality from noisy relative-similarity judgments, avoiding the need to choose the embedding dimension in advance.",
+    "imageUrl": null,
+    "links": {
+      "arxiv": "https://arxiv.org/abs/2602.04192",
+      "github": "https://github.com/vivek2000anand/lore_iclr"
+    },
+    "githubRepo": "vivek2000anand/lore_iclr",
     "show_star_count": false,
     "awards": [],
     "selected": false
@@ -581,7 +623,7 @@
         "isHighlighted": false
       }
     ],
-    "venue": "Preprint",
+    "venue": "NeurIPS 2023, Workshop on Machine Learning for Creativity and Design",
     "year": 2023,
     "description": "We developed a technique for generating image compositions containing multiple concepts that are faithful to reference images.",
     "imageUrl": "data/images/ObjectComposerTeaser.png",
@@ -597,15 +639,27 @@
     "title": "LLM Self Defense: By Self Examination, LLMs Know They Are Being Tricked",
     "authors": [
       {
-        "name": "Alec Helbling",
-        "isHighlighted": true
-      },
-      {
         "name": "Mansi Phute",
         "isHighlighted": false
       },
       {
+        "name": "Alec Helbling",
+        "isHighlighted": true
+      },
+      {
         "name": "Matthew Hull",
+        "isHighlighted": false
+      },
+      {
+        "name": "ShengYun Peng",
+        "isHighlighted": false
+      },
+      {
+        "name": "Sebastian Szyller",
+        "isHighlighted": false
+      },
+      {
+        "name": "Cory Cornelius",
         "isHighlighted": false
       },
       {
@@ -613,8 +667,8 @@
         "isHighlighted": false
       }
     ],
-    "venue": "Preprint",
-    "year": 2023,
+    "venue": "ICLR Tiny Paper Track",
+    "year": 2024,
     "description": "We showed that it is possible to defend against adversarial attacks on language models, which encourage LLMs to produce harmful content, by simply filtering out this content using another instance of an LLM.",
     "imageUrl": "data/images/SimpleHarmFilter.png",
     "links": {
