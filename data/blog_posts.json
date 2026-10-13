@@ -1,5 +1,16 @@
 [
   {
+    "id": "what-time-is-it",
+    "title": "What Time Is It?",
+    "date": "2026-10-13",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "How high-dimensional data geometry lets flow-matching models recover time without explicit time conditioning.",
+    "previewUrl": "data/videos/what-time-is-it-flow-matching.mp4",
+    "posterUrl": "data/images/what-time-is-it-flow-matching-poster.jpg",
+    "link": "https://alechelbling.com/visualizations/what-time-is-it/"
+  },
+  {
     "id": "neon-diffusion",
     "title": "Neon Diffusion",
     "date": "2026-09-23",
