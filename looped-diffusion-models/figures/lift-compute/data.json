@@ -1,0 +1,38 @@
+{
+  "source": "https://arxiv.org/html/2610.05538v1#A1.SS3",
+  "table": 6,
+  "model": "LiFT L/2 R10",
+  "rows": [
+    {
+      "steps": 10,
+      "loops": 2,
+      "tflops": 1.614,
+      "fid": 33.633
+    },
+    {
+      "steps": 25,
+      "loops": 2,
+      "tflops": 4.035,
+      "fid": 22.57
+    },
+    {
+      "steps": 50,
+      "loops": 2,
+      "tflops": 8.07,
+      "fid": 20.304
+    },
+    {
+      "steps": 100,
+      "loops": 2,
+      "tflops": 16.139,
+      "fid": 19.422
+    },
+    {
+      "steps": 25,
+      "loops": 4,
+      "tflops": 7.397,
+      "fid": 13.165
+    }
+  ],
+  "note": "Same frozen checkpoint; reported inference TFLOPs exclude VAE decoding. Line segments only connect measured settings; they are not interpolated experiments."
+}

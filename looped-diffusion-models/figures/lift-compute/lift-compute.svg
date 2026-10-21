@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 425" role="img" aria-labelledby="title desc">
+<title id="title">Fewer sampling steps can give better quality with more inner loops</title>
+<desc id="desc">Same frozen LiFT L/2 R10 checkpoint. At two loops, 10, 25, 50, and 100 sampling steps give FIDs 33.633, 22.570, 20.304, and 19.422 at 1.614, 4.035, 8.070, and 16.139 TFLOPs per image. Four loops and 25 steps give FID 13.165 at 7.397 TFLOPs: better FID at lower cost than both the 50 and 100 step settings.</desc>
+<style>text{font-family:Arial,sans-serif;fill:#36383d;font-size:13px}.muted{fill:#747982}.grid{stroke:#ececef;stroke-width:1}.accent{fill:#6651b8}</style>
+<rect width="760" height="425" fill="white"/>
+<text x="67" y="27" style="font-size:20px">Fewer sampling steps, better quality</text>
+<text x="67" y="51" class="muted">Same LiFT checkpoint · change only loops and sampling steps</text>
+<path d="M67 345.0H677" class="grid"/>
+<text x="53" y="349.0" text-anchor="end" class="muted">10</text>
+<path d="M67 296.9230769230769H677" class="grid"/>
+<text x="53" y="300.9230769230769" text-anchor="end" class="muted">15</text>
+<path d="M67 248.84615384615384H677" class="grid"/>
+<text x="53" y="252.84615384615384" text-anchor="end" class="muted">20</text>
+<path d="M67 200.76923076923077H677" class="grid"/>
+<text x="53" y="204.76923076923077" text-anchor="end" class="muted">25</text>
+<path d="M67 152.69230769230768H677" class="grid"/>
+<text x="53" y="156.69230769230768" text-anchor="end" class="muted">30</text>
+<path d="M67 104.61538461538461H677" class="grid"/>
+<text x="53" y="108.61538461538461" text-anchor="end" class="muted">35</text>
+<text x="67.0" y="368" text-anchor="middle" class="muted">0</text>
+<text x="202.55555555555554" y="368" text-anchor="middle" class="muted">4</text>
+<text x="338.1111111111111" y="368" text-anchor="middle" class="muted">8</text>
+<text x="473.66666666666663" y="368" text-anchor="middle" class="muted">12</text>
+<text x="609.2222222222222" y="368" text-anchor="middle" class="muted">16</text>
+<path d="M121.697 117.760 L203.742 224.135 L340.483 245.923 L613.933 254.404" fill="none" stroke="#a2a5ad" stroke-width="2"/>
+<circle cx="121.69666666666667" cy="117.75961538461536" r="4.5" fill="#8d929c"><title>10 steps, 2 loops; FID 33.633, 1.614 TFLOPs</title></circle>
+<text x="131.69666666666666" y="106.75961538461536">10 steps</text>
+<circle cx="203.74166666666667" cy="224.13461538461536" r="4.5" fill="#8d929c"><title>25 steps, 2 loops; FID 22.57, 4.035 TFLOPs</title></circle>
+<text x="213.74166666666667" y="213.13461538461536">25 steps</text>
+<circle cx="340.48333333333335" cy="245.92307692307693" r="4.5" fill="#8d929c"><title>50 steps, 2 loops; FID 20.304, 8.07 TFLOPs</title></circle>
+<text x="350.48333333333335" y="234.92307692307693">50 steps</text>
+<text x="350.48333333333335" y="253.92307692307693" class="muted" style="font-size:12px">FID 20.30</text>
+<circle cx="613.9327777777777" cy="254.40384615384613" r="4.5" fill="#8d929c"><title>100 steps, 2 loops; FID 19.422, 16.139 TFLOPs</title></circle>
+<text x="623.9327777777777" y="243.40384615384613">100 steps</text>
+<text x="623.9327777777777" y="262.40384615384613" class="muted" style="font-size:12px">FID 19.42</text>
+<text x="484" y="154" class="muted">2 inner loops</text>
+<text x="484" y="173" class="muted" style="font-size:12px">Increase sampling steps →</text>
+<path d="M340.48333333333335 256.9230769230769L317.67611111111114 301.5673076923077" fill="none" stroke="#b7a9d9" stroke-width="1.5" stroke-dasharray="4 4"/>
+<circle cx="317.67611111111114" cy="314.5673076923077" r="6" fill="#6651b8"/>
+<text x="333.67611111111114" y="310.5673076923077" class="accent" style="font-weight:600">25 steps · 4 loops</text>
+<text x="333.67611111111114" y="330.5673076923077" class="accent">FID 13.17 · 7.40 TFLOPs</text>
+<text x="67" y="79" class="muted" style="font-size:12px">FID ↓ better quality</text>
+<text x="372" y="402" text-anchor="middle">Inference compute (TFLOPs / image) →</text>
+</svg>

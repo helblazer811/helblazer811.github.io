@@ -1,0 +1,110 @@
+{
+  "model": "JiT-L/16 + trained corrector",
+  "source": {},
+  "device": "mps",
+  "precision": "float32",
+  "torch": "2.8.0",
+  "seed": 3,
+  "class_id": 985,
+  "steps": 56,
+  "corrections": 0,
+  "noise_fraction_interval": [
+    1.0,
+    0.6
+  ],
+  "sampler": "official Heun with final Euler",
+  "seconds": 6.895776667020982,
+  "evaluations": [
+    {
+      "evaluation": 0,
+      "native_time": 0.0,
+      "noise_fraction": 1.0,
+      "input": "eval-000/input.png",
+      "predictions": [
+        "eval-000/prediction-00.png"
+      ]
+    },
+    {
+      "evaluation": 6,
+      "native_time": 0.0535714328289032,
+      "noise_fraction": 0.9464285671710968,
+      "input": "eval-006/input.png",
+      "predictions": [
+        "eval-006/prediction-00.png"
+      ]
+    },
+    {
+      "evaluation": 12,
+      "native_time": 0.1071428656578064,
+      "noise_fraction": 0.8928571343421936,
+      "input": "eval-012/input.png",
+      "predictions": [
+        "eval-012/prediction-00.png"
+      ]
+    },
+    {
+      "evaluation": 18,
+      "native_time": 0.1607142984867096,
+      "noise_fraction": 0.8392857015132904,
+      "input": "eval-018/input.png",
+      "predictions": [
+        "eval-018/prediction-00.png"
+      ]
+    },
+    {
+      "evaluation": 24,
+      "native_time": 0.2142857313156128,
+      "noise_fraction": 0.7857142686843872,
+      "input": "eval-024/input.png",
+      "predictions": [
+        "eval-024/prediction-00.png"
+      ]
+    },
+    {
+      "evaluation": 36,
+      "native_time": 0.3214285969734192,
+      "noise_fraction": 0.6785714030265808,
+      "input": "eval-036/input.png",
+      "predictions": [
+        "eval-036/prediction-00.png"
+      ]
+    },
+    {
+      "evaluation": 44,
+      "native_time": 0.392857164144516,
+      "noise_fraction": 0.607142835855484,
+      "input": "eval-044/input.png",
+      "predictions": [
+        "eval-044/prediction-00.png"
+      ]
+    },
+    {
+      "evaluation": 56,
+      "native_time": 0.5,
+      "noise_fraction": 0.5,
+      "input": "eval-056/input.png",
+      "predictions": [
+        "eval-056/prediction-00.png"
+      ]
+    },
+    {
+      "evaluation": 84,
+      "native_time": 0.7500000596046448,
+      "noise_fraction": 0.24999994039535522,
+      "input": "eval-084/input.png",
+      "predictions": [
+        "eval-084/prediction-00.png"
+      ]
+    },
+    {
+      "evaluation": 110,
+      "native_time": 0.9821429252624512,
+      "noise_fraction": 0.017857074737548828,
+      "input": "eval-110/input.png",
+      "predictions": [
+        "eval-110/prediction-00.png"
+      ]
+    }
+  ],
+  "note": "Each row holds the noisy input and native time fixed; frame 0 is the base prediction. PNG display clips model outputs to [-1,1]. CPU-seeded initial noise; FP32 MPS differs from the official BF16 CUDA recipe."
+}
