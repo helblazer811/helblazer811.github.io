@@ -1,5 +1,15 @@
 [
   {
+    "id": "looped-transformers",
+    "title": "Looped Transformers: From Sequence Recurrence to Depth Recurrence",
+    "date": "2026-10-22",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "A synchronized visual comparison of sequence RNNs and looped transformers: recurrence over token positions versus computational depth.",
+    "imageUrl": "visualizations/looped-transformers/preview.svg",
+    "link": "https://alechelbling.com/visualizations/looped-transformers/"
+  },
+  {
     "id": "what-time-is-it",
     "title": "What Time Is It?",
     "date": "2026-10-13",

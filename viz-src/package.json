@@ -25,6 +25,7 @@
 	},
 	"dependencies": {
 		"@helblazer811/tempus": "github:helblazer811/tempus",
-		"@helblazer811/tempus-ui": "github:helblazer811/tempus#ui"
+		"@helblazer811/tempus-ui": "github:helblazer811/tempus#ui",
+		"katex": "^0.16.22"
 	}
 }
