@@ -1,5 +1,15 @@
 [
   {
+    "id": "backpropagation-through-time",
+    "title": "Backpropagation Through Time: Full and Truncated",
+    "date": "2026-10-22",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "A visual comparison of full and truncated backpropagation through recurrent applications of a shared core.",
+    "imageUrl": "visualizations/backpropagation-through-time/preview.png",
+    "link": "https://alechelbling.com/visualizations/backpropagation-through-time/"
+  },
+  {
     "id": "looped-transformers",
     "title": "Looped Transformers: From Sequence Recurrence to Depth Recurrence",
     "date": "2026-10-22",
