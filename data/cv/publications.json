@@ -33,10 +33,11 @@
     "description": "We introduce Flow Reasoning Models, which adapt discrete flows into recurrent reasoners that revise interdependent decisions in parallel. Fixed-Point Forcing trains FRMs on states produced by their own inference dynamics, reaching 99.5% on Sudoku-Extreme and matching the next-best method's 98.7% solve rate with 44× fewer inference FLOPs.",
     "imageUrl": "data/images/flow-reasoning-models.png",
     "links": {
-      "arxiv": "https://arxiv.org/abs/2606.29150"
+      "arxiv": "https://arxiv.org/abs/2606.29150",
+      "github": "https://github.com/helblazer811/Flow-Reasoning-Models"
     },
-    "githubRepo": null,
-    "show_star_count": false,
+    "githubRepo": "helblazer811/Flow-Reasoning-Models",
+    "show_star_count": true,
     "awards": [],
     "selected": true,
     "homepageSelected": true,
