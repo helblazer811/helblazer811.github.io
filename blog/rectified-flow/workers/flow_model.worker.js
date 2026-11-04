@@ -61289,6 +61289,71 @@ var Model = class _Model {
     throw new Error("Method 'sample_from_initial_points()' not implemented.");
   }
 };
+var ConditionalModel = class _ConditionalModel {
+  // dimension of the conditioning vector
+  constructor(dim = 2, condDim = 0, hidden = 64) {
+    __publicField(this, "model");
+    __publicField(this, "dim");
+    __publicField(this, "condDim");
+    if (new.target === _ConditionalModel) {
+      throw new Error("Cannot instantiate abstract class ConditionalModel directly.");
+    }
+    this.dim = dim;
+    this.condDim = condDim;
+    this.model = sequential();
+    this.model.add(exports_layers_exports.dense({
+      inputShape: [dim + 1 + condDim],
+      units: hidden,
+      activation: "elu"
+    }));
+    this.model.add(exports_layers_exports.dense({ units: hidden, activation: "elu" }));
+    this.model.add(exports_layers_exports.dense({ units: hidden, activation: "elu" }));
+    this.model.add(exports_layers_exports.dense({ units: dim }));
+  }
+  /**
+   * Factory constructor for ConditionalModel subclasses from config.
+   */
+  static fromConfig(config) {
+    const { dim, condDim, hidden } = config;
+    if (dim === void 0) throw new Error("Missing required field 'dim' in config");
+    if (condDim === void 0) throw new Error("Missing required field 'condDim' in config");
+    if (hidden === void 0) throw new Error("Missing required field 'hidden' in config");
+    return new this(dim, condDim, hidden);
+  }
+  async download() {
+    await this.model.save("downloads://conditional_model");
+  }
+  setModel(model2) {
+    this.model = model2;
+  }
+  /**
+   * Train the model with conditional inputs
+   * @param data tf.Tensor2D of shape [num_samples, dim]
+   * @param cond tf.Tensor2D of shape [num_samples, condDim]
+   */
+  train(data, cond, epochs = 1e3, batchSize = 32, updateInterval = 50, endEpochCallback = () => {
+  }, stopTraining = () => false) {
+    throw new Error("Method 'train()' not implemented.");
+  }
+  /**
+   * Compute the vector field or noise prediction at (x_t, t) conditioned on c
+   * @param x_t tf.Tensor2D of shape [batch, dim]
+   * @param t tf.Tensor1D or tf.Tensor2D of shape [batch] or [batch,1]
+   * @param c tf.Tensor2D of shape [batch, condDim]
+   */
+  forward(x_t, t, c) {
+    throw new Error("Method 'forward()' not implemented.");
+  }
+  step(x_t, t_start, t_end, c) {
+    throw new Error("Method 'step()' not implemented.");
+  }
+  sample(num_samples, num_total_steps = 100, options) {
+    throw new Error("Method 'sample()' not implemented.");
+  }
+  sample_from_initial_points(initial_points, num_total_steps = 100, options) {
+    throw new Error("Method 'sample_from_initial_points()' not implemented.");
+  }
+};
 
 // ../../packages/diffusion/src/utils.ts
 function generateUniformGridSamples(gridResolution, domainRange, asTensor = false) {
@@ -61633,11 +61698,223 @@ var FlowModel = class extends Model {
   }
 };
 
+// ../../packages/diffusion/src/flow_matching/conditional_flow_matching.ts
+var ConditionalFlowModel = class extends ConditionalModel {
+  constructor(dim = 2, condDim = 0, hidden = 64) {
+    super(dim, condDim, hidden);
+  }
+  convertToOneHot(labels, numClasses) {
+    return tidy(() => oneHot(labels.toInt(), numClasses).toFloat());
+  }
+  prepareCondTensor(cond, batchSize) {
+    if (cond.rank === 1) {
+      return this.convertToOneHot(cond, this.condDim);
+    }
+    if (cond.shape[0] !== batchSize) {
+      throw new Error(
+        `Conditioning batch size mismatch: cond.shape[0]=${cond.shape[0]}, expected ${batchSize}`
+      );
+    }
+    return cond;
+  }
+  /**
+   * Train using the flow matching objective with optional CFG dropout.
+   *
+   * @param data target distribution samples [N, dim]
+   * @param cond per-sample conditioning. Tensor1D of int class labels OR Tensor2D one-hot
+   * @param epochs number of training epochs
+   * @param batchSize minibatch size
+   * @param updateInterval epochs between intermediate sample callbacks
+   * @param stopTraining cooperative cancellation hook
+   * @param endEpochCallback callback (epoch, samples, loss). samples drawn at random classes.
+   * @param source_distribution optional fixed source coupling [N, dim]; if null, fresh N(0,I) each batch
+   * @param condDropProb probability of replacing conditioning with zeros (CFG dropout)
+   */
+  async train(data, cond, epochs = 1e3, batchSize = 32, updateInterval = 50, stopTraining = () => false, endEpochCallback = () => {
+  }, source_distribution = null, condDropProb = 0.1) {
+    console.log("ConditionalFlowModel training started.");
+    console.log("Training data shape:", data.shape, "condDim:", this.condDim);
+    const lossFn = (pred, target) => losses.meanSquaredError(target, pred);
+    const optimizer = train.adam(0.01);
+    const condTensor = cond.rank === 1 ? this.convertToOneHot(cond, this.condDim) : cond;
+    const numSamples = data.shape[0];
+    const numBatches = Math.ceil(numSamples / batchSize);
+    for (let epoch = 0; epoch < epochs; epoch++) {
+      const indices = util_exports.createShuffledIndices(numSamples);
+      let epochLoss = 0;
+      let batchCount = 0;
+      for (let batchIdx = 0; batchIdx < numBatches; batchIdx++) {
+        const batchLoss = tidy(() => {
+          const batchIndicesArray = indices.slice(
+            batchIdx * batchSize,
+            Math.min((batchIdx + 1) * batchSize, numSamples)
+          );
+          const batchIndices = tensor1d(Array.from(batchIndicesArray), "int32");
+          const x_1 = gather(data, batchIndices);
+          const c = gather(condTensor, batchIndices);
+          const actualBatchSize = x_1.shape[0];
+          const t = randomUniform([actualBatchSize, 1]);
+          const x_0 = source_distribution === null ? randomNormal([actualBatchSize, this.dim]) : gather(source_distribution, batchIndices);
+          const x_t = x_0.mul(sub(1, t)).add(x_1.mul(t));
+          const dx_t = x_1.sub(x_0);
+          const useCond = Math.random() > condDropProb;
+          const cInput = useCond ? c : zerosLike(c);
+          let lossValue = 0;
+          optimizer.minimize(() => {
+            const pred = this.forward(x_t, t, cInput);
+            const loss = lossFn(pred, dx_t);
+            lossValue = loss.dataSync()[0];
+            return loss;
+          });
+          return lossValue;
+        });
+        epochLoss += batchLoss;
+        batchCount++;
+      }
+      const avgEpochLoss = epochLoss / batchCount;
+      let intermediateSamples = null;
+      if (epoch % updateInterval === 0) {
+        const monitorBatch = 500;
+        const randomClasses = randomUniform([monitorBatch], 0, this.condDim, "int32");
+        const allTimeSamples = await this.sample(
+          monitorBatch,
+          30,
+          { cond: randomClasses }
+        );
+        if (allTimeSamples) {
+          const lastTimeStep = allTimeSamples.gather(allTimeSamples.shape[0] - 1, 0);
+          intermediateSamples = lastTimeStep.arraySync();
+          lastTimeStep.dispose();
+          allTimeSamples.dispose();
+        }
+        randomClasses.dispose();
+      }
+      endEpochCallback(epoch, intermediateSamples, avgEpochLoss);
+      await nextFrame();
+      if (stopTraining()) {
+        console.log("Training stopped by user.");
+        break;
+      }
+    }
+    if (cond.rank === 1) condTensor.dispose();
+  }
+  /**
+   * Predict the velocity field at (x_t, t) conditioned on c.
+   */
+  forward(x_t, t, c) {
+    return tidy(() => {
+      const cond2D = this.prepareCondTensor(c, x_t.shape[0]);
+      const t_expanded = t.reshape([x_t.shape[0], 1]);
+      const input2 = concat([x_t, t_expanded, cond2D], 1);
+      return this.model.predict(input2);
+    });
+  }
+  /**
+   * Integrate one step from t_start to t_end. With guidanceScale > 0,
+   * applies classifier-free guidance: v_hat = v_uncond + g * (v_cond - v_uncond).
+   */
+  step(x_t, t_start, t_end, c, scheduler = "euler_midpoint", guidanceScale = 0) {
+    const stepFn = getScheduler(scheduler);
+    const vectorField = (x, tt) => {
+      if (guidanceScale > 0) {
+        return tidy(() => {
+          const vCond = this.forward(x, tt, c);
+          const vUncond = this.forward(x, tt, zerosLike(c));
+          return vUncond.add(vCond.sub(vUncond).mul(guidanceScale));
+        });
+      }
+      return this.forward(x, tt, c);
+    };
+    return stepFn(x_t, t_start, t_end, vectorField);
+  }
+  /**
+   * Draw `num_samples` conditioned samples from N(0, I).
+   * If `cond` is not given, classes are uniformly random in [0, condDim).
+   */
+  async sample(num_samples, num_total_steps = 100, options = {}, perStepCallback, shouldStop = () => false) {
+    const initial_points = randomNormal([num_samples, this.dim]);
+    return this.sample_from_initial_points(initial_points, num_total_steps, options, perStepCallback, shouldStop);
+  }
+  /**
+   * Draw conditioned samples from caller-provided initial points.
+   */
+  async sample_from_initial_points(initial_points, num_total_steps = 100, options = {}, perStepCallback, shouldStop = () => false) {
+    const scheduler = options.scheduler ?? "euler_midpoint";
+    const reverse5 = options.reverse ?? false;
+    const guidanceScale = options.guidanceScale ?? 0;
+    const num_samples = initial_points.shape[0];
+    const defaultStart = reverse5 ? 1 : 0;
+    const defaultEnd = reverse5 ? 0 : 1;
+    const t_start = options.t_start ?? defaultStart;
+    const t_end = options.t_end ?? defaultEnd;
+    const t_steps = linspace(t_start, t_end, num_total_steps + 1);
+    let condInput;
+    if (options.cond === void 0) {
+      condInput = randomUniform([num_samples], 0, this.condDim, "int32");
+    } else if (Array.isArray(options.cond)) {
+      condInput = tensor(options.cond, void 0, "int32");
+    } else {
+      condInput = options.cond;
+    }
+    const condTensor = condInput.rank === 1 ? this.convertToOneHot(condInput, this.condDim) : condInput;
+    if (condTensor.shape[0] !== num_samples) {
+      condTensor.dispose();
+      if (options.cond === void 0 || Array.isArray(options.cond)) {
+        condInput.dispose();
+      }
+      t_steps.dispose();
+      throw new Error(
+        `Conditioning size ${condTensor.shape[0]} does not match initial_points size ${num_samples}`
+      );
+    }
+    let x_t = initial_points;
+    const all_step_data = [];
+    for (let i = 0; i < num_total_steps; i++) {
+      if (shouldStop()) {
+        t_steps.dispose();
+        condTensor.dispose();
+        if (options.cond === void 0 || Array.isArray(options.cond)) {
+          condInput.dispose();
+        }
+        all_step_data.forEach((t) => t.dispose());
+        return null;
+      }
+      const x_next = tidy(() => {
+        const t_i = tile(t_steps.slice([i], [1]), [num_samples]);
+        const t_next = tile(t_steps.slice([i + 1], [1]), [num_samples]);
+        return this.step(x_t, t_i, t_next, condTensor, scheduler, guidanceScale);
+      });
+      x_t = x_next;
+      all_step_data.push(x_t);
+      if (perStepCallback) {
+        perStepCallback(i, x_t.arraySync());
+      }
+      await nextFrame();
+    }
+    t_steps.dispose();
+    if (options.cond === void 0 || Array.isArray(options.cond) || condInput !== options.cond) {
+      condTensor.dispose();
+    }
+    if (options.cond === void 0 || Array.isArray(options.cond)) {
+      condInput.dispose();
+    }
+    return stack(all_step_data);
+  }
+  /**
+   * Sample from a uniform grid of initial points with conditioning.
+   */
+  async sample_grid(gridResolution, domainRange, num_total_steps = 100, options = {}, perStepCallback, shouldStop = () => false) {
+    const initialPoints = generateUniformGridSamples(gridResolution, domainRange, true);
+    return this.sample_from_initial_points(initialPoints, num_total_steps, options, perStepCallback, shouldStop);
+  }
+};
+
 // ../../packages/diffusion/src/workers/flow_model.worker.ts
 setWasmPaths("/tfjs-backend-wasm/");
 var backend2 = "webgl";
 var trainingObjectiveToModelClass = {
-  "Flow Matching": FlowModel
+  "Flow Matching": FlowModel,
+  "Conditional Flow Matching": ConditionalFlowModel
 };
 var activeRequests = /* @__PURE__ */ new Map();
 var verbose = false;
@@ -61749,7 +62026,18 @@ async function handleSamplingRequest(requestId, type, data) {
     const gridPoints = generateUniformGridSamples(gridResolution, gridDomainRange, true);
     const numPoints = gridPoints.shape[0];
     const t = fill([numPoints, 1], timeValue || 0.5);
-    const velocities = ourModel.forward(gridPoints, t);
+    let velocities;
+    if (trainingObjective === "Conditional Flow Matching") {
+      let condTensor;
+      if (samplingOptions.cond) {
+        condTensor = samplingOptions.cond.rank === 1 ? oneHot(samplingOptions.cond.toInt(), modelConfig.condDim).toFloat() : samplingOptions.cond;
+      } else {
+        condTensor = zeros([numPoints, modelConfig.condDim]);
+      }
+      velocities = ourModel.forward(gridPoints, t, condTensor);
+    } else {
+      velocities = ourModel.forward(gridPoints, t);
+    }
     const gridPointsArray = gridPoints.arraySync();
     const velocitiesArray = velocities.arraySync();
     gridPoints.dispose();
@@ -61786,8 +62074,18 @@ async function handleTrainRequest(requestId, data) {
   const { trainingObjective, modelConfig, datasetPath, trainingConfig } = data;
   await initializeBackend();
   const ModelClass = trainingObjectiveToModelClass[trainingObjective];
-  const ourModel = new ModelClass(modelConfig.dim, modelConfig.hidden);
+  const isConditional = trainingObjective === "Conditional Diffusion" || trainingObjective === "Conditional Flow Matching";
+  const ourModel = isConditional ? new ModelClass(modelConfig.dim, modelConfig.condDim ?? 0, modelConfig.hidden) : new ModelClass(modelConfig.dim, modelConfig.hidden);
   const { pointsTensor, classesTensor } = await loadDataset(datasetPath);
+  const emitEpoch = (epoch, intermediateSamples, loss) => {
+    self.postMessage({
+      requestId,
+      type: "epoch_chunk",
+      epoch,
+      intermediateSamples,
+      loss
+    });
+  };
   if (trainingObjective === "Conditional Diffusion") {
     if (classesTensor === null) {
       throw new Error("Classes tensor is null for conditional diffusion model");
@@ -61799,15 +62097,23 @@ async function handleTrainRequest(requestId, data) {
       trainingConfig.batchSize,
       trainingConfig.updateInterval,
       shouldStop,
-      (epoch, intermediateSamples, loss) => {
-        self.postMessage({
-          requestId,
-          type: "epoch_chunk",
-          epoch,
-          intermediateSamples,
-          loss
-        });
-      }
+      emitEpoch
+    );
+  } else if (trainingObjective === "Conditional Flow Matching") {
+    if (classesTensor === null) {
+      throw new Error("Classes tensor is null for conditional flow matching model");
+    }
+    await ourModel.train(
+      pointsTensor,
+      classesTensor,
+      trainingConfig.epochs,
+      trainingConfig.batchSize,
+      trainingConfig.updateInterval,
+      shouldStop,
+      emitEpoch,
+      null,
+      // source_distribution
+      trainingConfig.condDropProb ?? 0.1
     );
   } else {
     await ourModel.train(
@@ -61816,15 +62122,7 @@ async function handleTrainRequest(requestId, data) {
       trainingConfig.batchSize,
       trainingConfig.updateInterval,
       shouldStop,
-      (epoch, intermediateSamples, loss) => {
-        self.postMessage({
-          requestId,
-          type: "epoch_chunk",
-          epoch,
-          intermediateSamples,
-          loss
-        });
-      }
+      emitEpoch
     );
   }
   const modelSaveName = await saveModel(ourModel.model, trainingObjective);
