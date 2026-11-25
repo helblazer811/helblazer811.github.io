@@ -1,5 +1,16 @@
 [
   {
+    "id": "attention-residuals",
+    "title": "Attention Residuals",
+    "date": "2026-11-25",
+    "year": 2026,
+    "type": "visualization",
+    "summary": "A visual comparison of attention across token positions and the additional attention mechanism across depth introduced by Attention Residuals.",
+    "previewUrl": "visualizations/attention-residuals/preview.mp4",
+    "posterUrl": "visualizations/attention-residuals/preview.png",
+    "link": "https://alechelbling.com/visualizations/attention-residuals/"
+  },
+  {
     "id": "backpropagation-through-time",
     "title": "Backpropagation Through Time: Full and Truncated",
     "date": "2026-10-22",
