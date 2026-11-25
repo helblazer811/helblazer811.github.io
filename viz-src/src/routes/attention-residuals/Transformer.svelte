@@ -268,8 +268,8 @@
      <rect x={centerX(activeIndex)-60} y={layers[0].inside-28} width="120" height={layerInside(finalLayer)-layers[0].inside+56} rx="13" fill="none" stroke="#ff9d4d" stroke-width="2" stroke-opacity={.7*depthFocus}/>
     {/if}
 
-    {#if finalProgress>=.08 && finalProgress<.40}
-     <text x="480" y={layers[finalLayer].top+layerHeight(finalLayer)+30} class="operation-caption" opacity={ease((finalProgress-.08)/.03)*(1-ease((finalProgress-.36)/.04))}>Attention along token dimensions</text>
+    {#if finalProgress>=.08 && finalProgress<(panel===0 ? .82 : .40)}
+     <text x="480" y={layers[finalLayer].top+layerHeight(finalLayer)+30} class="operation-caption" opacity={ease((finalProgress-.08)/.03)*(1-ease((finalProgress-(panel===0 ? .74 : .36))/(panel===0 ? .08 : .04)))}>Attention along token dimensions</text>
     {:else if panel===1 && finalProgress>=.43 && finalProgress<.82}
      <text x={centerX(activeIndex)} y={layers[finalLayer].top+layerHeight(finalLayer)+30} class="operation-caption" opacity={ease((finalProgress-.43)/.03)*(1-ease((finalProgress-.74)/.08))}>Attention along depth</text>
     {/if}
